@@ -1,0 +1,17 @@
+server:
+  port: 1071
+spring:
+  application:
+    name: USER-MANAGER-SERVICE-APPLICATION
+  datasource:
+    password: password
+    username: postgres
+    url: jdbc:postgresql://localhost:5433/gravitateDb
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true

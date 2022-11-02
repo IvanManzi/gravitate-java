@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="model" />
+        <module name="project_manager_service" />
+        <module name="content_manager_service" />
+        <module name="user_manager_service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="payment_management_service" target="17" />
+      <module name="payment_manager_service" target="17" />
+      <module name="untitled" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
