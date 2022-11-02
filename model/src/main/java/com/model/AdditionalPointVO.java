@@ -25,7 +25,7 @@ public class AdditionalPointVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "additional_point_id", updatable = false, nullable = false)
+    @Column(name = "additional_point_id", updatable = false)
     private UUID additionalPointId;
 
     @ManyToOne

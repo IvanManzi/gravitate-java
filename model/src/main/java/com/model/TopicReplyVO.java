@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "topic_reply")
@@ -25,18 +26,24 @@ public class TopicReplyVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "topic_reply_id", updatable = false, nullable = false)
+    @Column(name = "topic_reply_id", updatable = false)
     private UUID topicReplyId;
 
     @ManyToOne
     @JoinColumn(name = "user_topic_id")
     private UserTopicVO userTopic;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserVO user;
 
+    @Column(nullable = false)
     private String comment;
 
-    private UUID parentTopicId;
+    @OneToMany
+    @JoinColumn(name = "topic_reply_id")
+    @Column(name = "parent")
+    private Set<TopicReplyVO> topicReplies;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)
     private Date createdAt;

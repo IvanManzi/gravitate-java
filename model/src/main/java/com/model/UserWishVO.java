@@ -24,13 +24,14 @@ public class UserWishVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_wish_id", updatable = false, nullable = false)
+    @Column(name = "user_wish_id", updatable = false)
     private UUID userWishId;
 
     @ManyToOne
     @JoinColumn(name = "wish_id",nullable = false)
     private WishVO wish;
 
+    @Column(nullable = false)
     private String message;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

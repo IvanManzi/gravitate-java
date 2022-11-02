@@ -24,7 +24,7 @@ public class UserVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_id", updatable = false, nullable = false)
+    @Column(name = "user_id", updatable = false)
     private UUID userId;
 
     private String email;
@@ -59,19 +59,19 @@ public class UserVO implements Serializable {
 
     private String accountNumber;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<UserSkillVO> userSkills = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<UserBlogVO> userBlogs = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<UserTopicVO> userTopics = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<UserSuggestionVO> userSuggestions = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<WishVO> userWishes = new HashSet<>();
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

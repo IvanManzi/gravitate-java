@@ -28,15 +28,19 @@ public class PolicyVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "policy_id", updatable = false, nullable = false)
+    @Column(name = "policy_id", updatable = false)
     private UUID policyId;
 
+    @Column(nullable = false)
     private String policyType;
 
+    @Column(nullable = false)
     private String policyName;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private String policyFilePath;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

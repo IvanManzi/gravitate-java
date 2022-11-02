@@ -24,18 +24,20 @@ public class UserBlogVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_blog_id", updatable = false, nullable = false)
+    @Column(name = "user_blog_id", updatable = false)
     private UUID userBlogId;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private UserVO user;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
-    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
     private AdditionalPointVO additionalPoint;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

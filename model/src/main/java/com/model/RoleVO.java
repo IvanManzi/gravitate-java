@@ -24,17 +24,19 @@ public class RoleVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "role_id", updatable = false, nullable = false)
+    @Column(name = "role_id", updatable = false)
     private UUID roleId;
 
+    @Column(nullable = false)
     private String roleName;
 
+    @Column(nullable = false)
     private String roleKRA;
 
-    @OneToOne(mappedBy = "role",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "role",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private RolePerformanceEvaluationVO rolePerformanceEvaluation;
 
-    @OneToOne(mappedBy = "role",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "role",fetch = FetchType.LAZY)
     private UserVO user;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

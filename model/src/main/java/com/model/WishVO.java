@@ -32,11 +32,13 @@ public class WishVO implements Serializable {
     @JoinColumn(name = "user_id")
     private UserVO user;
 
+    @Column(nullable = false)
     private String withType;
 
+    @Column(nullable = false)
     private String comment;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "wish",orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE,mappedBy = "wish",orphanRemoval = true)
     Set<UserWishVO> userWishes = new HashSet<>();
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

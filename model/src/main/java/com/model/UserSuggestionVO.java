@@ -23,17 +23,20 @@ public class UserSuggestionVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_suggestion_id", updatable = false, nullable = false)
+    @Column(name = "user_suggestion_id", updatable = false)
     private UUID userSuggestionId;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private UserVO user;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String suggestion;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

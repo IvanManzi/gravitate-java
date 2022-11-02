@@ -27,23 +27,26 @@ public class UserTopicVO implements Serializable {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_topic_id", updatable = false, nullable = false)
+    @Column(name = "user_topic_id", updatable = false)
     private UUID userTopicId;
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private UserVO user;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String tags;
 
+    @Column(nullable = false)
     private String problemDescription;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "userTopic",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "userTopic",cascade = CascadeType.REMOVE,orphanRemoval = true)
     Set<TopicReplyVO> replies = new HashSet<>();
 
-    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
     private AdditionalPointVO additionalPoint;
 
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)

@@ -30,14 +30,19 @@ public class ProjectVO implements Serializable {
     @Column(name = "project_id", updatable = false)
     private UUID projectId;
 
+    @Column(nullable = false)
     private String projectName;
 
+    @Column(nullable = false)
     private String clientName;
 
+    @Column(nullable = false)
     private String clientEmail;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String projectDescription;
 
 }
