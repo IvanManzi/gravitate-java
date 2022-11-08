@@ -25,15 +25,15 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.additional_point (
-    additional_point_id uuid NOT NULL,
+    additional_point_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     points integer,
     quarter character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid,
-    user_blog_id uuid,
-    user_skill_id uuid,
-    user_topic_id uuid
+    user_id bigserial,
+    user_blog_id bigserial,
+    user_skill_id bigserial,
+    user_topic_id bigserial
 );
 
 
@@ -44,16 +44,19 @@ ALTER TABLE public.additional_point OWNER TO postgres;
 --
 
 CREATE TABLE public.app_user (
-    user_id uuid NOT NULL,
+    user_id bigserial NOT NULL,
+    user_type character varying(255),
     account_number character varying(255),
-    alternate_email character varying(255),
+    password character varying(255),
+    alternate_email character varying(255) UNIQUE,
     bank_name character varying(255),
-    billing integer,
+    billing character varying(255),
     contract_path character varying(255),
     country character varying(255),
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     date_of_birth timestamp without time zone,
-    email character varying(255),
+    joining_date timestamp without time zone,
+    email character varying(255) UNIQUE,
     employment_status character varying(255),
     first_name character varying(255),
     last_name character varying(255),
@@ -61,7 +64,7 @@ CREATE TABLE public.app_user (
     profile_picture_path character varying(255),
     responsibility character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    role_id uuid
+    role_id bigserial
 );
 
 
@@ -72,39 +75,27 @@ ALTER TABLE public.app_user OWNER TO postgres;
 --
 
 CREATE TABLE public.blog_reply (
-    blog_reply_id uuid NOT NULL,
+    blog_reply_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     reply character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL
+    user_id bigserial NOT NULL
 );
 
 
 ALTER TABLE public.blog_reply OWNER TO postgres;
 
 --
--- Name: blog_reply_blog_replies; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.blog_reply_blog_replies (
-    blog_reply_blog_reply_id uuid NOT NULL,
-    blog_replies_blog_reply_id uuid NOT NULL
-);
-
-
-ALTER TABLE public.blog_reply_blog_replies OWNER TO postgres;
-
---
 -- Name: performance_evaluation; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.performance_evaluation (
-    role_performance_evaluation_id uuid NOT NULL,
+    role_performance_evaluation_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     criteria character varying(255),
     description character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    role_id uuid
+    role_id bigserial
 );
 
 
@@ -115,7 +106,7 @@ ALTER TABLE public.performance_evaluation OWNER TO postgres;
 --
 
 CREATE TABLE public.policy (
-    policy_id uuid NOT NULL,
+    policy_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     description character varying(255) NOT NULL,
     policy_file_path character varying(255) NOT NULL,
@@ -132,7 +123,7 @@ ALTER TABLE public.policy OWNER TO postgres;
 --
 
 CREATE TABLE public.project (
-    project_id uuid NOT NULL,
+    project_id bigserial NOT NULL,
     client_email character varying(255) NOT NULL,
     client_name character varying(255) NOT NULL,
     phone_number character varying(255) NOT NULL,
@@ -148,7 +139,7 @@ ALTER TABLE public.project OWNER TO postgres;
 --
 
 CREATE TABLE public.role (
-    role_id uuid NOT NULL,
+    role_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     rolekra character varying(255) NOT NULL,
     role_name character varying(255) NOT NULL,
@@ -163,12 +154,12 @@ ALTER TABLE public.role OWNER TO postgres;
 --
 
 CREATE TABLE public.topic_reply (
-    topic_reply_id uuid NOT NULL,
+    topic_reply_id bigserial NOT NULL,
     comment character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL,
-    user_topic_id uuid
+    user_id bigserial NOT NULL,
+    user_topic_id bigserial
 );
 
 
@@ -179,12 +170,12 @@ ALTER TABLE public.topic_reply OWNER TO postgres;
 --
 
 CREATE TABLE public.user_blog (
-    user_blog_id uuid NOT NULL,
+    user_blog_id bigserial NOT NULL,
     content character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     title character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL
+    user_id bigserial NOT NULL
 );
 
 
@@ -195,14 +186,14 @@ ALTER TABLE public.user_blog OWNER TO postgres;
 --
 
 CREATE TABLE public.user_skill (
-    user_skill_id uuid NOT NULL,
+    user_skill_id bigserial NOT NULL,
     category character varying(255) NOT NULL,
     certificate_path character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     expertise character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL
+    user_id bigserial NOT NULL
 );
 
 
@@ -213,13 +204,13 @@ ALTER TABLE public.user_skill OWNER TO postgres;
 --
 
 CREATE TABLE public.user_suggestion (
-    user_suggestion_id uuid NOT NULL,
+    user_suggestion_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     email character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
     suggestion character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL
+    user_id bigserial NOT NULL
 );
 
 
@@ -230,13 +221,13 @@ ALTER TABLE public.user_suggestion OWNER TO postgres;
 --
 
 CREATE TABLE public.user_topic (
-    user_topic_id uuid NOT NULL,
+    user_topic_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     problem_description character varying(255) NOT NULL,
     tags character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id uuid NOT NULL
+    user_id bigserial NOT NULL
 );
 
 
@@ -247,11 +238,11 @@ ALTER TABLE public.user_topic OWNER TO postgres;
 --
 
 CREATE TABLE public.user_wish (
-    user_wish_id uuid NOT NULL,
+    user_wish_id bigserial NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     message character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    wish_id uuid NOT NULL
+    wish_id bigserial NOT NULL
 );
 
 
@@ -262,12 +253,12 @@ ALTER TABLE public.user_wish OWNER TO postgres;
 --
 
 CREATE TABLE public.wish (
-    wish_id uuid NOT NULL,
+    wish_id bigserial NOT NULL,
     comment character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     with_type character varying(255) NOT NULL,
-    user_id uuid
+    user_id bigserial
 );
 
 
@@ -289,12 +280,6 @@ ALTER TABLE ONLY public.app_user
     ADD CONSTRAINT app_user_pkey PRIMARY KEY (user_id);
 
 
---
--- Name: blog_reply_blog_replies blog_reply_blog_replies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.blog_reply_blog_replies
-    ADD CONSTRAINT blog_reply_blog_replies_pkey PRIMARY KEY (blog_reply_blog_reply_id, blog_replies_blog_reply_id);
 
 
 --
@@ -343,14 +328,6 @@ ALTER TABLE ONLY public.role
 
 ALTER TABLE ONLY public.topic_reply
     ADD CONSTRAINT topic_reply_pkey PRIMARY KEY (topic_reply_id);
-
-
---
--- Name: blog_reply_blog_replies uk_tf59m63h1ttih65ifflah7ayj; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.blog_reply_blog_replies
-    ADD CONSTRAINT uk_tf59m63h1ttih65ifflah7ayj UNIQUE (blog_replies_blog_reply_id);
 
 
 --
@@ -422,7 +399,7 @@ ALTER TABLE ONLY public.blog_reply
 --
 
 ALTER TABLE ONLY public.user_suggestion
-    ADD CONSTRAINT fk3yrehjh7si57cab7h8r5dxg43 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fk3yrehjh7si57cab7h8r5dxg43 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -430,7 +407,7 @@ ALTER TABLE ONLY public.user_suggestion
 --
 
 ALTER TABLE ONLY public.user_topic
-    ADD CONSTRAINT fk435jqawocr69e749x6hux5exe FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fk435jqawocr69e749x6hux5exe FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -438,7 +415,7 @@ ALTER TABLE ONLY public.user_topic
 --
 
 ALTER TABLE ONLY public.app_user
-    ADD CONSTRAINT fk49hx9nj6onfot1fxtonj986ab FOREIGN KEY (role_id) REFERENCES public.role(role_id);
+    ADD CONSTRAINT fk49hx9nj6onfot1fxtonj986ab FOREIGN KEY (role_id) REFERENCES public.role(role_id) ON DELETE SET NULL;
 
 
 --
@@ -446,7 +423,7 @@ ALTER TABLE ONLY public.app_user
 --
 
 ALTER TABLE ONLY public.performance_evaluation
-    ADD CONSTRAINT fk56l9ero0msbedtn2dfyxdf925 FOREIGN KEY (role_id) REFERENCES public.role(role_id);
+    ADD CONSTRAINT fk56l9ero0msbedtn2dfyxdf925 FOREIGN KEY (role_id) REFERENCES public.role(role_id) ON DELETE CASCADE;
 
 
 --
@@ -454,7 +431,7 @@ ALTER TABLE ONLY public.performance_evaluation
 --
 
 ALTER TABLE ONLY public.user_wish
-    ADD CONSTRAINT fk6jaq2u20edu7luol40791em16 FOREIGN KEY (wish_id) REFERENCES public.wish(wish_id);
+    ADD CONSTRAINT fk6jaq2u20edu7luol40791em16 FOREIGN KEY (wish_id) REFERENCES public.wish(wish_id) ON DELETE CASCADE;
 
 
 --
@@ -462,7 +439,7 @@ ALTER TABLE ONLY public.user_wish
 --
 
 ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fk9bshydwwn2vy8ceai4qjgus1p FOREIGN KEY (user_skill_id) REFERENCES public.user_skill(user_skill_id);
+    ADD CONSTRAINT fk9bshydwwn2vy8ceai4qjgus1p FOREIGN KEY (user_skill_id) REFERENCES public.user_skill(user_skill_id) ON DELETE CASCADE;
 
 
 --
@@ -470,7 +447,7 @@ ALTER TABLE ONLY public.additional_point
 --
 
 ALTER TABLE ONLY public.user_skill
-    ADD CONSTRAINT fkc7vxgf2rjsuoxuclctcgoicgy FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fkc7vxgf2rjsuoxuclctcgoicgy FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -478,7 +455,7 @@ ALTER TABLE ONLY public.user_skill
 --
 
 ALTER TABLE ONLY public.user_blog
-    ADD CONSTRAINT fkf9vrdukekl9prmxwy8clbhgil FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fkf9vrdukekl9prmxwy8clbhgil FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -486,7 +463,7 @@ ALTER TABLE ONLY public.user_blog
 --
 
 ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkfabxvm8xxvump3vkexjvggfjn FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id);
+    ADD CONSTRAINT fkfabxvm8xxvump3vkexjvggfjn FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id) ON DELETE CASCADE;
 
 
 --
@@ -494,7 +471,7 @@ ALTER TABLE ONLY public.additional_point
 --
 
 ALTER TABLE ONLY public.wish
-    ADD CONSTRAINT fkfvn0c4y0fnsk1h6ll95s164om FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fkfvn0c4y0fnsk1h6ll95s164om FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -502,7 +479,7 @@ ALTER TABLE ONLY public.wish
 --
 
 ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkhm9okps0el9o162wwljp2xapx FOREIGN KEY (user_blog_id) REFERENCES public.user_blog(user_blog_id);
+    ADD CONSTRAINT fkhm9okps0el9o162wwljp2xapx FOREIGN KEY (user_blog_id) REFERENCES public.user_blog(user_blog_id) ON DELETE CASCADE ;
 
 
 --
@@ -510,7 +487,7 @@ ALTER TABLE ONLY public.additional_point
 --
 
 ALTER TABLE ONLY public.blog_reply
-    ADD CONSTRAINT fkocw8sh8oe15m7ybic88plc2jc FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fkocw8sh8oe15m7ybic88plc2jc FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -518,7 +495,7 @@ ALTER TABLE ONLY public.blog_reply
 --
 
 ALTER TABLE ONLY public.topic_reply
-    ADD CONSTRAINT fkp7eo1bgo0dugkh5cfs2gml8wi FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id);
+    ADD CONSTRAINT fkp7eo1bgo0dugkh5cfs2gml8wi FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id) ON DELETE CASCADE;
 
 
 --
@@ -526,7 +503,7 @@ ALTER TABLE ONLY public.topic_reply
 --
 
 ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkrwbjh4p12ohkwwh5d5oqixwd1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fkrwbjh4p12ohkwwh5d5oqixwd1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -534,7 +511,7 @@ ALTER TABLE ONLY public.additional_point
 --
 
 ALTER TABLE ONLY public.topic_reply
-    ADD CONSTRAINT fktoi6eifjvf4ej2en5ttkeqjei FOREIGN KEY (user_id) REFERENCES public.app_user(user_id);
+    ADD CONSTRAINT fktoi6eifjvf4ej2en5ttkeqjei FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
