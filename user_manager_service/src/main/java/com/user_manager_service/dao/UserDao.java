@@ -1,9 +1,16 @@
 package com.user_manager_service.dao;
 
 import com.model.UserVO;
-import org.springframework.data.repository.CrudRepository;
+import org.apache.ibatis.annotations.Mapper;
 
-import java.util.UUID;
+@Mapper
+public interface UserDao {
+    int createGravitateUser(UserVO userVO);
+    int checkIfUsernameExists(String username);
+    UserVO getGravitateUserByUsername(String username);
 
-public interface userDao extends CrudRepository<UserVO, UUID> {
+    int deleteGravitateUser(Long userId);
+
+
+
 }
