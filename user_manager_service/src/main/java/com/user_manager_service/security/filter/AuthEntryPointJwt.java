@@ -1,4 +1,4 @@
-package com.user_manager_service.security.jwt;
+package com.user_manager_service.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

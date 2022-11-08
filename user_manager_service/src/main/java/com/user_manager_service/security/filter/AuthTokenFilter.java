@@ -1,8 +1,9 @@
-package com.user_manager_service.security.jwt;
+package com.user_manager_service.security.filter;
 
 
 import com.user_manager_service.service.impl.GravitateUserManagerServiceImpl;
 import com.util.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
-      @Autowired
-      private JwtUtils jwtUtils;
 
       @Autowired
       private GravitateUserManagerServiceImpl userDetailsService;
@@ -33,15 +33,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
           throws ServletException, IOException {
           try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-              String username = jwtUtils.getUserNameFromJwtToken(jwt);
-
+            if (jwt != null && JwtUtils.validateJwtToken(jwt)) {
+              String username = JwtUtils.getUserNameFromJwtToken(jwt);
+              log.info("{}",username);
               UserDetails userDetails = userDetailsService.loadUserByUsername(username);
               UsernamePasswordAuthenticationToken authentication =
                   new UsernamePasswordAuthenticationToken(
                       userDetails,
                       null,
                       userDetails.getAuthorities());
+              log.info("{}",userDetails);
               authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
               SecurityContextHolder.getContext().setAuthentication(authentication);
