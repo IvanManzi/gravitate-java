@@ -4,13 +4,12 @@ package com.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import net.minidev.json.annotate.JsonIgnore;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-@Entity(name = "app_user")
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,18 +17,16 @@ public class UserVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "user_id", updatable = false)
-    private UUID userId;
+    private Long userId;
+
+    private String userType;
 
     private String email;
 
     private String alternateEmail;
+
+    @JsonIgnore
+    private String password;
 
     private String firstName;
 
@@ -39,45 +36,26 @@ public class UserVO implements Serializable {
 
     private Date dateOfBirth;
 
+    private Date joiningDate;
+
     private String phoneNumber;
 
     private String profilePicturePath;
 
     private String contractPath;
 
+    private Long roleId;
+
     private String employmentStatus;
 
-    @OneToOne
-    @JoinColumn(name = "role_id")
-    private RoleVO role;
-
-    private String responsibility;
-
-    private Integer billing;
+    private String billing;
 
     private String bankName;
 
     private String accountNumber;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
-    Set<UserSkillVO> userSkills = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
-    Set<UserBlogVO> userBlogs = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
-    Set<UserTopicVO> userTopics = new HashSet<>();
-
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
-    Set<UserSuggestionVO> userSuggestions = new HashSet<>();
-
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,orphanRemoval = true)
-    Set<WishVO> userWishes = new HashSet<>();
-
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)
     private Date createdAt;
 
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
 
 }

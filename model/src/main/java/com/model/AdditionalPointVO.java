@@ -4,14 +4,10 @@ package com.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity(name = "additional_point")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,38 +15,21 @@ public class AdditionalPointVO implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "additional_point_id", updatable = false)
-    private UUID additionalPointId;
+    private Long additionalPointId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserVO user;
+    private Long userId;
 
     private String quarter;
 
     private Integer points;
 
-    @OneToOne
-    @JoinColumn(name = "user_skill_id")
-    private UserSkillVO userSkill;
+    private Long userSkillId;
 
-    @OneToOne
-    @JoinColumn(name = "user_topic_id")
-    private UserTopicVO userTopic;
+    private Long userTopicId;
 
-    @OneToOne
-    @JoinColumn(name = "user_blog_id")
-    private UserBlogVO userBlog;
+    private Long userBlogId;
 
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",updatable = false)
     private Date createdAt;
 
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
 }

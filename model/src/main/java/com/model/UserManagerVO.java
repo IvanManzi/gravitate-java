@@ -9,19 +9,17 @@ import java.util.Date;
 
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserBlogVO implements Serializable {
+@AllArgsConstructor
+public class UserManagerVO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID=1L;
 
-    private Long userBlogId;
+    private Long userManagerId;
+
+    private Long managerId;
 
     private Long userId;
-
-    private String title;
-
-    private String content;
 
     private Date createdAt;
 
