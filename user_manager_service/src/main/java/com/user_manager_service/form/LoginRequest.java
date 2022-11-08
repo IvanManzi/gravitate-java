@@ -1,4 +1,6 @@
 package com.user_manager_service.form;
 
-public class LoginRequest {
+import javax.validation.constraints.NotBlank;
+
+public record LoginRequest(@NotBlank String username, @NotBlank String password) {
 }
