@@ -2,7 +2,7 @@ package com.content_manager_service.service.impl;
 
 
 import com.content_manager_service.dao.RolePerformanceEvaluationDao;
-import com.content_manager_service.service.PerformanceEvaluationService;
+import com.content_manager_service.service.RolePerformanceEvaluationService;
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PerformanceEvaluationServiceImpl implements PerformanceEvaluationService {
+public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEvaluationService {
 
     private final RolePerformanceEvaluationDao rolePerformanceEvaluationDao;
 
