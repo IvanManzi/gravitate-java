@@ -1,4 +1,4 @@
-package com.sawa_utils.utils;
+package com.util;
 
 import okhttp3.*;
 import org.json.JSONException;

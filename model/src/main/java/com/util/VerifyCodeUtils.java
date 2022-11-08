@@ -1,4 +1,4 @@
-package com.sawa_utils.utils;
+package com.util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

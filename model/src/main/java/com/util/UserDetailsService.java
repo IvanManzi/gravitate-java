@@ -1,4 +1,4 @@
-package com.user_manager_service.security.services;
+package com.util;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,18 +17,18 @@ public class UserDetailsService implements UserDetails {
 
     private String userType;
 
-    private String email;
+    private String username;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsService(Long userId, String userType, String email, String password,
+    public UserDetailsService(Long userId, String userType, String username, String password,
                               Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.userType = userType;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.authorities = authorities;
     }
@@ -51,10 +51,6 @@ public class UserDetailsService implements UserDetails {
       return userId;
     }
 
-    public String getEmail() {
-      return email;
-    }
-
     @Override
     public String getPassword() {
       return password;
@@ -62,7 +58,7 @@ public class UserDetailsService implements UserDetails {
 
     @Override
     public String getUsername() {
-      return userType;
+      return username;
     }
 
     @Override

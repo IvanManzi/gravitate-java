@@ -1,4 +1,4 @@
-package com.sawa_utils.utils;
+package com.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
