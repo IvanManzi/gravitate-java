@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.WishDao" >
+
+    <insert id="createWish" parameterType="com.model.WishVO">
+        INSERT INTO wish
+        (user_id,admin_id,wish_type,comment)
+        VALUES
+        (#{userId},#{adminId},#{wishType},#{comment})
+    </insert>
+
+    <select id="getAllWishes" resultType="com.model.WishVO">
+        SELECT W.admin_id,W.wish_type,W.comment FROM wish W
+        INNER JOIN
+        app_user A
+        W.user_id = A.user_id
+        WHERE
+        W.admin_id #{adminId}
+    </select>
+
+    <update id="updateWish" parameterType="com.model.WishVO">
+        UPDATE wish
+        SET
+        wish_type = #{wishType},
+        user_id = #{userId},
+        comment = ${comment}
+        WHERE
+        wish_id = #{wishId} AND admin_id = #{adminId}
+    </update>
+
+    <delete id="deleteWish" parameterType="Long">
+        DELETE FROM wish WHERE wish_id = #{wishId}
+    </delete>
+
+
+
+
+</mapper>

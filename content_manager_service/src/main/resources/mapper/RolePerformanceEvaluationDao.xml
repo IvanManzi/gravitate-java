@@ -1,1 +1,33 @@
- 
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.RolePerformanceEvaluationDao" >
+
+    <insert id="createRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">
+        INSERT INTO performance_evaluation
+        (role_id,admin_id,criteria,description)
+        VALUES
+        (#{roleId},#{adminId},#{criteria},#{description})
+    </insert>
+
+    <select id="getRolePerformanceEvaluation" resultType="com.model.PolicyVO">
+        SELECT * FROM performance_evaluation WHERE admin_id #{adminId}
+    </select>
+
+    <update id="updateRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">
+        UPDATE performance_evaluation
+        SET
+        role_id = #{roleId},
+        criteria = ${criteria},
+        description = #{description}
+        WHERE
+        role_performance_id = #{rolePerformanceEvaluationId} AND admin_id = #{adminId}
+    </update>
+
+    <delete id="deleteRolePerformanceEvaluation" parameterType="Long">
+        DELETE FROM performance_evaluation WHERE role_performance_id = #{rolePerformanceEvaluationId}
+    </delete>
+
+
+
+
+</mapper>
