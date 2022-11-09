@@ -47,7 +47,7 @@ public class GravitateUserManagerController {
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setBilling(createGravitateUserForm.billing());
         //create user manager object
-        userManagerVO.setManagerId(createGravitateUserForm.managerId());
+        userManagerVO.setAdminId(createGravitateUserForm.managerId());
         APIResponse apiResponse = gravitateUserManagerService.createGravitateUser(userVO,userManagerVO);
         return ResponseEntity.ok(
                 APIResponse.builder()

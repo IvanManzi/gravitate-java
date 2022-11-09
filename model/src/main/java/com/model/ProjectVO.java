@@ -17,6 +17,8 @@ public class ProjectVO implements Serializable {
 
     private Long projectId;
 
+    private Long adminId;
+
     private String projectName;
 
     private String clientName;

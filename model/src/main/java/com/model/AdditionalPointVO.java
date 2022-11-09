@@ -17,6 +17,8 @@ public class AdditionalPointVO implements Serializable {
 
     private Long additionalPointId;
 
+    private Long adminId;
+
     private Long userId;
 
     private String quarter;
