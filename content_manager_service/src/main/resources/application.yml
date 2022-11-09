@@ -1,0 +1,32 @@
+server:
+  port: 1072
+spring:
+  application:
+    name: CONTENT-MANAGER-SERVICE-APPLICATION
+  datasource:
+    password: password
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/gravitatedb
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.model
+  #Map underline style to hump style
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
