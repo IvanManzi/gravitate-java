@@ -12,6 +12,19 @@ public class Constants {
       * jwt 常量
      */
     public static final int jwtExpirationHrs = 10;
+
+    /*
+    * 返回常量
+     */
+    public static final int REQUEST_OK = 200;
+    public static final int RESOURCE_CREATED = 201;
+    public static final int SERVER_ERROR = 500;
+    public static final int BAD_REQUEST = 400;
+    public static final int UNAUTHORIZED_REQUEST = 401;
+    public static final int PAYMENT_REQUIRED = 402;
+    public static final int FORBIDDEN_REQUEST = 403;
+    public static final int NOT_FOUND = 404;
+    public static final int REQUEST_CONFLICT = 409;
     public static final String jwtSecret = "LazEX6t1KGdhEIeD7qxUr/zOD5+yWcA+ZKb3icrvAaFCagZN1fjjZR/30AWq1/OGTn9/AlTi7wNgkLYmDpteZA==";
     //在店铺付款
     public static final int PUSH_TYPE_ON_SHOP_PAYMENT=1;
