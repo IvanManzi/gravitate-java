@@ -10,7 +10,7 @@
     </insert>
 
     <select id="getRolePerformanceEvaluation" resultType="com.model.PolicyVO">
-        SELECT * FROM performance_evaluation WHERE admin_id #{adminId}
+        SELECT * FROM performance_evaluation WHERE admin_id = #{adminId}
     </select>
 
     <update id="updateRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">
