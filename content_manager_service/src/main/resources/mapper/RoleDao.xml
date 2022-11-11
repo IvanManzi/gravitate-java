@@ -6,11 +6,11 @@
         INSERT INTO role
         (admin_id,role_name,rolekra)
         VALUES
-        (#{admin_id},#{roleName},#{roleKRA})
+        (#{adminId},#{roleName},#{roleKRA})
     </insert>
 
-    <select id="getAllRoles" resultType="com.model.PolicyVO">
-        SELECT * FROM role WHERE admin_id #{adminId}
+    <select id="getAllRoles" resultType="com.model.RoleVO">
+        SELECT * FROM role WHERE admin_id = #{adminId}
     </select>
 
     <update id="updateGravitateUserRole" parameterType="com.model.RoleVO">
