@@ -2,9 +2,11 @@ package com.user_manager_service.controller;
 
 import com.util.APIResponse;
 import com.user_manager_service.form.LoginRequest;
+import com.util.Constants;
 import com.util.JwtUtils;
 import com.util.UserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +59,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(
                 APIResponse.builder()
-                        .statusCode(200)
+                        .status(HttpStatus.ACCEPTED)
                         .data(data)
                         .build()
         );
