@@ -21,6 +21,8 @@ public class UserVO implements Serializable {
 
     private String userType;
 
+    private Integer isAdmin;
+
     private String email;
 
     private String alternateEmail;
