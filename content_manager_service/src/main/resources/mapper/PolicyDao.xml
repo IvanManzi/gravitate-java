@@ -4,20 +4,20 @@
 
     <insert id="createGravitatePolicy" parameterType="com.model.PolicyVO">
         INSERT INTO policy
-        (admin_id,policy_type,policy_name,description)
+        (admin_id,policy_type,policy_name,description,policy_file_path)
         VALUES
-        (#{adminId},#{policyType},#{policyName},#{description})
+        (#{adminId},#{policyType},#{policyName},#{description},#{policyFilePath})
     </insert>
 
     <select id="getAllPolicies" resultType="com.model.PolicyVO">
-        SELECT * FROM policy WHERE admin_id #{adminId}
+        SELECT * FROM policy WHERE admin_id = #{adminId}
     </select>
 
     <update id="updateGravitatePolicy" parameterType="com.model.PolicyVO">
         UPDATE policy
         SET
         policy_name = #{policyName},
-        policy_type = ${policyType},
+        policy_type = #{policyType},
         description = #{description},
         policy_file_path = #{policyFilePath}
         WHERE
