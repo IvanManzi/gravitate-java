@@ -15,7 +15,7 @@
         app_user A
         W.user_id = A.user_id
         WHERE
-        W.admin_id #{adminId}
+        W.admin_id = #{adminId}
     </select>
 
     <update id="updateWish" parameterType="com.model.WishVO">
