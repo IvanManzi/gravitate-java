@@ -2,6 +2,7 @@ package com.content_manager_service.form;
 
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public record UpdateWishRequest(@NotBlank Long wishId,@NotBlank Long userId, @NotBlank String wishType, @NotBlank String comment) {
+public record UpdateWishRequest(@NotNull Long wishId, @NotNull Long userId, @NotBlank String wishType, @NotBlank String comment) {
 }
