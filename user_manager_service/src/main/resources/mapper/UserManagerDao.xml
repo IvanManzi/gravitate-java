@@ -4,9 +4,9 @@
 
     <insert id="createUserManagerRecord" parameterType="com.model.UserManagerVO">
         INSERT INTO user_manager
-        (manager_id,user_id)
+        (admin_id,user_id)
         VALUES
-        (#{managerId},#{userId})
+        (#{adminId},#{userId})
     </insert>
 
     <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="com.model.UserVO" >
@@ -14,7 +14,7 @@
         FULL JOIN
         use_manager Q ON
         P.user_id = Q.user_id
-        WHERE Q.manager_id = #{managerId}
+        WHERE Q.admin_id = #{adminId}
     </select>
 
 
