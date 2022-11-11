@@ -2,14 +2,15 @@ package com.content_manager_service.service;
 
 import com.model.WishVO;
 import com.util.APIResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface GravitateWallOfWishesService {
 
-    APIResponse createWish(WishVO wishVO);
+    ResponseEntity createWish(WishVO wishVO);
 
-    APIResponse getAllWishes(Long userId);
+    ResponseEntity getAllWishes(Long userId);
 
-    APIResponse updateWish(WishVO wishVO);
+    ResponseEntity updateWish(WishVO wishVO);
 
-    APIResponse deleteWish(Long wishId);
+    ResponseEntity deleteWish(Long wishId);
 }

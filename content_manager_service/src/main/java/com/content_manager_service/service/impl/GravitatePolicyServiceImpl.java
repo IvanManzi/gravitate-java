@@ -6,6 +6,7 @@ import com.content_manager_service.service.GravitatePolicyService;
 import com.model.PolicyVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,44 +23,45 @@ public class GravitatePolicyServiceImpl implements GravitatePolicyService {
 
 
     @Override
-    public APIResponse createGravitatePolicy(PolicyVO policyVO) {
+    public ResponseEntity createGravitatePolicy(PolicyVO policyVO) {
         int result = policyDao.createGravitatePolicy(policyVO);
         if(result > 0){
-            return new APIResponse(RESOURCE_CREATED,"Policy successfully created.");
+            return APIResponse.resultSuccess("Policy successfully created.");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse getGravitatePolicy(Long userId) {
+    public ResponseEntity getGravitatePolicy(Long userId) {
         List<PolicyVO> policies = policyDao.getAllPolicies(userId);
         if(policies.isEmpty()){
-            return new APIResponse(NOT_FOUND,"No policies found.");
+            return APIResponse.resultFail("No policies found.");
         }else{
             Map<String,Object> data = new HashMap<>();
             data.put("POLICIES",policies);
-            return new APIResponse(REQUEST_OK,data);
+            return APIResponse.resultSuccess(data);
         }
     }
 
     @Override
-    public APIResponse updateGravitatePolicy(PolicyVO policyVO) {
+    public ResponseEntity updateGravitatePolicy(PolicyVO policyVO) {
         int result = policyDao.updateGravitatePolicy(policyVO);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Policy updated successfully.");
+            return APIResponse.resultSuccess("Policy updated successfully.");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse deleteGravitatePolicy(Long policyId) {
+    public ResponseEntity deleteGravitatePolicy(Long policyId) {
         int result = policyDao.deleteGravitatePolicy(policyId);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Policy successfully deleted. ");
+            return APIResponse.resultSuccess("Policy successfully deleted. ");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
+
 }

@@ -5,15 +5,13 @@ import com.content_manager_service.dao.RoleDao;
 import com.content_manager_service.service.GravitateUserRoleService;
 import com.model.RoleVO;
 import com.util.APIResponse;
-import com.util.Constants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.util.Constants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,44 +20,44 @@ public class GravitateUserRoleServiceImpl implements GravitateUserRoleService {
     private final RoleDao roleDao;
 
     @Override
-    public APIResponse createUserRole(RoleVO roleVO) {
+    public ResponseEntity createUserRole(RoleVO roleVO) {
         int result = roleDao.createGravitateUserRole(roleVO);
         if(result > 0){
-            return new APIResponse(RESOURCE_CREATED,"Role successfully created. ");
+            return APIResponse.resultSuccess("Role successfully created. ");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse getAllUserRoles(Long userId) {
+    public ResponseEntity getAllUserRoles(Long userId) {
         List<RoleVO> roles = roleDao.getAllRoles(userId);
         if(roles.isEmpty()){
-            return new APIResponse(NOT_FOUND,"No roles found. ");
+            return APIResponse.resultFail("No roles found. ");
         }else{
             Map<String,Object> data = new HashMap<>();
             data.put("ROLES",roles);
-            return new APIResponse(REQUEST_OK,data);
+            return APIResponse.resultSuccess(data);
         }
     }
 
     @Override
-    public APIResponse updateUserRole(RoleVO roleVO) {
+    public ResponseEntity updateUserRole(RoleVO roleVO) {
         int result = roleDao.updateGravitateUserRole(roleVO);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Role successfully created. ");
+            return APIResponse.resultSuccess("Role successfully updated. ");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse deleteUserRole(Long roleId) {
+    public ResponseEntity deleteUserRole(Long roleId) {
         int result = roleDao.deleteGravitateUserRole(roleId);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Role successfully deleted. ");
+            return APIResponse.resultSuccess("Role successfully deleted. ");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 }

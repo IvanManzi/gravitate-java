@@ -8,10 +8,13 @@ import com.model.RoleVO;
 import com.util.APIResponse;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -23,37 +26,25 @@ public class GravitateUserRoleController {
     private final GravitateUserRoleService gravitateUserRoleService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<APIResponse> createRole(@Valid @RequestBody CreateUserRoleRequest createUserRoleRequest,HttpServletRequest request){
+    public ResponseEntity<APIResponse> createRole(@Valid @RequestBody CreateUserRoleRequest createUserRoleRequest,HttpServletRequest request) throws IOException {
         RoleVO roleVO = new RoleVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         roleVO.setAdminId(Long.valueOf(userId));
         roleVO.setRoleName(createUserRoleRequest.name());
         roleVO.setRoleKRA(createUserRoleRequest.kra());
-        APIResponse apiResponse = gravitateUserRoleService.createUserRole(roleVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitateUserRoleService.createUserRole(roleVO);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllRoles(HttpServletRequest request){
+    public ResponseEntity<APIResponse> getAllRoles(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        APIResponse apiResponse = gravitateUserRoleService.getAllUserRoles(Long.valueOf(userId));
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitateUserRoleService.getAllUserRoles(Long.valueOf(userId));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<APIResponse> updateRole(@Valid @RequestBody UpdateUserRoleRequest updateUserRoleRequest,HttpServletRequest request){
+    public ResponseEntity<APIResponse> updateRole(@Valid @RequestBody UpdateUserRoleRequest updateUserRoleRequest,HttpServletRequest request) throws IOException {
         RoleVO roleVO = new RoleVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
@@ -61,24 +52,12 @@ public class GravitateUserRoleController {
         roleVO.setRoleId(updateUserRoleRequest.roleId());
         roleVO.setRoleName(updateUserRoleRequest.name());
         roleVO.setRoleKRA(updateUserRoleRequest.kra());
-        APIResponse apiResponse = gravitateUserRoleService.updateUserRole(roleVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitateUserRoleService.updateUserRole(roleVO);
     }
 
     @DeleteMapping(value = "/{roleId}")
     public ResponseEntity<APIResponse> deleteRole(@PathVariable("roleId") Long roleId){
-        APIResponse apiResponse = gravitateUserRoleService.deleteUserRole(roleId);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitateUserRoleService.deleteUserRole(roleId);
     }
 
 

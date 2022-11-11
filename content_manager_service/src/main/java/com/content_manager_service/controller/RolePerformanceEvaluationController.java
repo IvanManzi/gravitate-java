@@ -1,6 +1,5 @@
 package com.content_manager_service.controller;
 
-import com.content_manager_service.form.CreatePolicyRequest;
 import com.content_manager_service.form.CreateRolePerformanceRequest;
 import com.content_manager_service.form.UpdateRolePerformanceRequest;
 import com.content_manager_service.service.RolePerformanceEvaluationService;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.io.IOException;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -25,7 +26,7 @@ public class RolePerformanceEvaluationController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<APIResponse> createPerformanceEvaluation(@Valid @RequestBody CreateRolePerformanceRequest createRolePerformanceRequest,
-                                                             HttpServletRequest request){
+                                                             HttpServletRequest request) throws IOException {
         RolePerformanceEvaluationVO rolePerformanceEvaluationVO = new RolePerformanceEvaluationVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
@@ -33,30 +34,18 @@ public class RolePerformanceEvaluationController {
         rolePerformanceEvaluationVO.setRoleId(createRolePerformanceRequest.roleId());
         rolePerformanceEvaluationVO.setCriteria(createRolePerformanceRequest.criteria());
         rolePerformanceEvaluationVO.setDescription(createRolePerformanceRequest.description());
-        APIResponse apiResponse = rolePerformanceEvaluationService.createPerformanceEvaluation(rolePerformanceEvaluationVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return rolePerformanceEvaluationService.createPerformanceEvaluation(rolePerformanceEvaluationVO);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllPerformanceEvaluations(HttpServletRequest request){
+    public ResponseEntity<APIResponse> getAllPerformanceEvaluations(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        APIResponse apiResponse = rolePerformanceEvaluationService.getAllRolePerformanceEvaluation(Long.valueOf(userId));
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return rolePerformanceEvaluationService.getAllRolePerformanceEvaluation(Long.valueOf(userId));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<APIResponse> updatePerformanceEvaluation(@Valid @RequestBody UpdateRolePerformanceRequest updateRolePerformanceRequest,HttpServletRequest request){
+    public ResponseEntity<APIResponse> updatePerformanceEvaluation(@Valid @RequestBody UpdateRolePerformanceRequest updateRolePerformanceRequest,HttpServletRequest request) throws IOException {
         RolePerformanceEvaluationVO rolePerformanceEvaluationVO = new RolePerformanceEvaluationVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
@@ -65,24 +54,12 @@ public class RolePerformanceEvaluationController {
         rolePerformanceEvaluationVO.setRoleId(updateRolePerformanceRequest.roleId());
         rolePerformanceEvaluationVO.setCriteria(updateRolePerformanceRequest.criteria());
         rolePerformanceEvaluationVO.setDescription(updateRolePerformanceRequest.description());
-        APIResponse apiResponse = rolePerformanceEvaluationService.updateRolePerformanceEvaluation(rolePerformanceEvaluationVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return rolePerformanceEvaluationService.updateRolePerformanceEvaluation(rolePerformanceEvaluationVO);
     }
 
     @DeleteMapping(value = "/{performanceId}")
     public ResponseEntity<APIResponse> deletePerformanceEvaluation(@PathVariable("performanceId") Long performanceId){
-        APIResponse apiResponse = rolePerformanceEvaluationService.deleteRolePerformanceEvaluation(performanceId);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return rolePerformanceEvaluationService.deleteRolePerformanceEvaluation(performanceId);
     }
 
 

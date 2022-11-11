@@ -1,15 +1,15 @@
 package com.content_manager_service.service;
 
 import com.model.RoleVO;
-import com.util.APIResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface GravitateUserRoleService {
 
-    APIResponse createUserRole(RoleVO roleVO);
+    ResponseEntity createUserRole(RoleVO roleVO);
 
-    APIResponse getAllUserRoles(Long userId);
+    ResponseEntity getAllUserRoles(Long userId);
 
-    APIResponse updateUserRole(RoleVO roleVO);
+    ResponseEntity updateUserRole(RoleVO roleVO);
 
-    APIResponse deleteUserRole(Long roleId);
+    ResponseEntity deleteUserRole(Long roleId);
 }

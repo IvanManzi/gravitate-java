@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.io.IOException;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -23,38 +25,27 @@ public class GravitatePolicyController {
     private final GravitatePolicyService gravitatePolicyService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<APIResponse> createGravitatePolicy(@Valid @RequestBody CreatePolicyRequest createPolicyRequest,HttpServletRequest request){
+    public ResponseEntity createGravitatePolicy(@Valid @RequestBody CreatePolicyRequest createPolicyRequest,HttpServletRequest request) throws IOException {
         PolicyVO policyVO = new PolicyVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         policyVO.setAdminId(Long.valueOf(userId));
         policyVO.setPolicyName(createPolicyRequest.policyName());
         policyVO.setPolicyType(createPolicyRequest.policyType());
+        policyVO.setDescription(createPolicyRequest.description());
         policyVO.setPolicyFilePath(createPolicyRequest.filePath());
-        APIResponse apiResponse = gravitatePolicyService.createGravitatePolicy(policyVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitatePolicyService.createGravitatePolicy(policyVO);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllPolicies(HttpServletRequest request){
+    public ResponseEntity getAllPolicies(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        APIResponse apiResponse = gravitatePolicyService.getGravitatePolicy(Long.valueOf(userId));
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitatePolicyService.getGravitatePolicy(Long.valueOf(userId));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<APIResponse> updatePolicy(@Valid @RequestBody UpdatePolicyRequest updatePolicyRequest,HttpServletRequest request){
+    public ResponseEntity updatePolicy(@Valid @RequestBody UpdatePolicyRequest updatePolicyRequest,HttpServletRequest request) throws IOException {
         PolicyVO policyVO = new PolicyVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
@@ -62,24 +53,13 @@ public class GravitatePolicyController {
         policyVO.setPolicyId(updatePolicyRequest.policyId());
         policyVO.setPolicyType(updatePolicyRequest.policyType());
         policyVO.setPolicyName(updatePolicyRequest.policyName());
+        policyVO.setDescription(updatePolicyRequest.description());
         policyVO.setPolicyFilePath(updatePolicyRequest.filePath());
-        APIResponse apiResponse = gravitatePolicyService.updateGravitatePolicy(policyVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitatePolicyService.updateGravitatePolicy(policyVO);
     }
     @DeleteMapping(value = "/{policyId}")
-    public ResponseEntity<APIResponse> deletePolicy(@PathVariable("policyId") Long policyId){
-        APIResponse apiResponse = gravitatePolicyService.deleteGravitatePolicy(policyId);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+    public ResponseEntity deletePolicy(@PathVariable("policyId") Long policyId){
+        return gravitatePolicyService.deleteGravitatePolicy(policyId);
     }
 
 

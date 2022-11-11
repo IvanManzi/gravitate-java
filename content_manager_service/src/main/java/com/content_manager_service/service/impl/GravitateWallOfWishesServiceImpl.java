@@ -6,6 +6,7 @@ import com.model.WishVO;
 import com.util.APIResponse;
 import com.util.Constants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,44 +22,44 @@ public class GravitateWallOfWishesServiceImpl implements GravitateWallOfWishesSe
     private final WishDao wishDao;
 
     @Override
-    public APIResponse createWish(WishVO wishVO) {
+    public ResponseEntity createWish(WishVO wishVO) {
         int result = wishDao.createWish(wishVO);
         if(result > 0){
-            return new APIResponse(RESOURCE_CREATED,"Wish successfully created. ");
+            return APIResponse.resultSuccess("Wish successfully created. ");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse getAllWishes(Long userId) {
+    public ResponseEntity getAllWishes(Long userId) {
         List<Map> wishes = wishDao.getAllWishes(userId);
         if(wishes.isEmpty()){
-            return new APIResponse(NOT_FOUND,"No wishes found. ");
+            return APIResponse.resultFail("No wishes found. ");
         }else{
             Map<String,Object> data = new HashMap<>();
             data.put("WISHES",wishes);
-            return new APIResponse(REQUEST_OK,data);
+            return APIResponse.resultSuccess(data);
         }
     }
 
     @Override
-    public APIResponse updateWish(WishVO wishVO) {
+    public ResponseEntity updateWish(WishVO wishVO) {
         int result = wishDao.updateWish(wishVO);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Wish successfully updated.");
+            return APIResponse.resultSuccess("Wish successfully updated.");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 
     @Override
-    public APIResponse deleteWish(Long wishId) {
+    public ResponseEntity deleteWish(Long wishId) {
         int result = wishDao.deleteWish(wishId);
         if(result > 0){
-            return new APIResponse(REQUEST_OK,"Wish successfully deleted.");
+            return APIResponse.resultSuccess("Wish successfully deleted.");
         }else{
-            return new APIResponse(BAD_REQUEST);
+            return APIResponse.resultFail();
         }
     }
 }

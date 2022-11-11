@@ -2,14 +2,15 @@ package com.content_manager_service.service;
 
 import com.model.PolicyVO;
 import com.util.APIResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface GravitatePolicyService {
 
-    APIResponse createGravitatePolicy(PolicyVO policyVO);
+    ResponseEntity createGravitatePolicy(PolicyVO policyVO);
 
-    APIResponse getGravitatePolicy(Long userId);
+    ResponseEntity getGravitatePolicy(Long userId);
 
-    APIResponse updateGravitatePolicy(PolicyVO policyVO);
+    ResponseEntity updateGravitatePolicy(PolicyVO policyVO);
 
-    APIResponse deleteGravitatePolicy(Long policyId);
+    ResponseEntity deleteGravitatePolicy(Long policyId);
 }

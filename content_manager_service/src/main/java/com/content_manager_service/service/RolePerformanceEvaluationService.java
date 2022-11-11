@@ -2,14 +2,15 @@ package com.content_manager_service.service;
 
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface RolePerformanceEvaluationService {
 
-    APIResponse createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
+    ResponseEntity createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
 
-    APIResponse getAllRolePerformanceEvaluation(Long userId);
+    ResponseEntity getAllRolePerformanceEvaluation(Long userId);
 
-    APIResponse updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
+    ResponseEntity updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
 
-    APIResponse deleteRolePerformanceEvaluation(Long performanceEvaluationId);
+    ResponseEntity deleteRolePerformanceEvaluation(Long performanceEvaluationId);
 }
