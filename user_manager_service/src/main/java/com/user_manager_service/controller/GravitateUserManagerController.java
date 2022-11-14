@@ -55,9 +55,11 @@ public class GravitateUserManagerController {
         //create user manager object
         return gravitateUserManagerService.createGravitateUser(userVO,userManagerVO);
     }
-    @GetMapping(value = "/")
-    public ResponseEntity getAllUsersByManagerId(@RequestParam("managerId") Long managerId){
-        return gravitateUserManagerService.getAllGravitateUsersByManagerId(managerId);
+    @GetMapping(value = "/all")
+    public ResponseEntity getAllUsersByManagerId(HttpServletRequest request) throws IOException{
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        return gravitateUserManagerService.getAllGravitateUsersByManagerId(Long.valueOf(userId));
     }
 
     @GetMapping(value = "/profile")
