@@ -12,7 +12,7 @@
     <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="com.model.UserVO" >
         SELECT * FROM app_user P
         FULL JOIN
-        use_manager Q ON
+        user_manager Q ON
         P.user_id = Q.user_id
         WHERE Q.admin_id = #{adminId}
     </select>
