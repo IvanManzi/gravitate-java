@@ -20,7 +20,7 @@ public class WishVO implements Serializable {
 
     private Long adminId;
 
-    private String withType;
+    private String wishType;
 
     private String comment;
 
