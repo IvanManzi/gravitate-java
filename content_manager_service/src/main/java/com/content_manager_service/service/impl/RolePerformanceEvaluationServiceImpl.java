@@ -25,7 +25,7 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
     public ResponseEntity createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO) {
         int result = rolePerformanceEvaluationDao.createRolePerformanceEvaluation(rolePerformanceEvaluationVO);
         if(result > 0){
-            return APIResponse.resultFail("Performance evaluation successfully created. ");
+            return APIResponse.resultSuccess("Performance evaluation successfully created. ");
         }else{
             return  APIResponse.resultSuccess();
         }
