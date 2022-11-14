@@ -29,6 +29,7 @@ public class GravitateWallOfWishesController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         wishVO.setAdminId(Long.valueOf(userId));
+        wishVO.setWishType(createWishRequest.wishType());
         wishVO.setUserId(createWishRequest.userId());
         wishVO.setComment(createWishRequest.comment());
         return gravitateWallOfWishesService.createWish(wishVO);
@@ -49,7 +50,7 @@ public class GravitateWallOfWishesController {
         wishVO.setAdminId(Long.valueOf(userId));
         wishVO.setWishId(updateWishRequest.wishId());
         wishVO.setUserId(updateWishRequest.userId());
-        wishVO.setWithType(updateWishRequest.wishType());
+        wishVO.setWishType(updateWishRequest.wishType());
         wishVO.setComment(updateWishRequest.comment());
         return gravitateWallOfWishesService.updateWish(wishVO);
     }
