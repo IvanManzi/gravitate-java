@@ -9,7 +9,7 @@
         (#{roleId},#{adminId},#{criteria},#{description})
     </insert>
 
-    <select id="getRolePerformanceEvaluation" resultType="com.model.PolicyVO">
+    <select id="getRolePerformanceEvaluation" resultType="com.model.RolePerformanceEvaluationVO">
         SELECT * FROM performance_evaluation WHERE admin_id = #{adminId}
     </select>
 
@@ -20,11 +20,11 @@
         criteria = ${criteria},
         description = #{description}
         WHERE
-        role_performance_id = #{rolePerformanceEvaluationId} AND admin_id = #{adminId}
+        role_performance_evaluation_id = #{rolePerformanceEvaluationId} AND admin_id = #{adminId}
     </update>
 
     <delete id="deleteRolePerformanceEvaluation" parameterType="Long">
-        DELETE FROM performance_evaluation WHERE role_performance_id = #{rolePerformanceEvaluationId}
+        DELETE FROM performance_evaluation WHERE role_performance_evaluation_id = #{rolePerformanceEvaluationId}
     </delete>
 
 
