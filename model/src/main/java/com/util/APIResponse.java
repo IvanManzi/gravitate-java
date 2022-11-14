@@ -29,7 +29,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(HttpStatus.NOT_FOUND.value())
                         .status(HttpStatus.NOT_FOUND)
-                        .message("Operation failed.")
+                        .message("No results found.")
                         .build()
         );
     }
