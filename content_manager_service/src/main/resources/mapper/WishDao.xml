@@ -9,11 +9,11 @@
         (#{userId},#{adminId},#{wishType},#{comment})
     </insert>
 
-    <select id="getAllWishes" resultType="com.model.WishVO">
-        SELECT W.admin_id,W.wish_type,W.comment FROM wish W
+    <select id="getAllWishes" resultType="Map">
+        SELECT W.wish_id,W.admin_id,W.wish_type,W.comment,A.user_id,A.email,A.country,A.first_name,A.last_name,A.phone_number FROM wish W
         INNER JOIN
         app_user A
-        W.user_id = A.user_id
+        ON W.user_id = A.user_id
         WHERE
         W.admin_id = #{adminId}
     </select>
