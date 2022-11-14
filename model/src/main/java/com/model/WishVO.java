@@ -18,7 +18,9 @@ public class WishVO implements Serializable {
 
     private Long userId;
 
-    private String withType;
+    private Long adminId;
+
+    private String wishType;
 
     private String comment;
 

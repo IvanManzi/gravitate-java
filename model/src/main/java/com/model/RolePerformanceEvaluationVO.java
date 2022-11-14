@@ -19,6 +19,8 @@ public class RolePerformanceEvaluationVO implements Serializable {
 
     private Long roleId;
 
+    private Long adminId;
+
     private String criteria;
 
     private String description;

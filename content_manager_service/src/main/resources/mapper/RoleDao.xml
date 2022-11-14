@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.RoleDao" >
+
+    <insert id="createGravitateUserRole" parameterType="com.model.RoleVO">
+        INSERT INTO role
+        (admin_id,role_name,rolekra)
+        VALUES
+        (#{adminId},#{roleName},#{roleKRA})
+    </insert>
+
+    <select id="getAllRoles" resultType="com.model.RoleVO">
+        SELECT * FROM role WHERE admin_id = #{adminId}
+    </select>
+
+    <update id="updateGravitateUserRole" parameterType="com.model.RoleVO">
+        UPDATE role
+        SET
+        role_name = #{roleName},
+        rolekra = #{roleKRA}
+        WHERE
+        role_id = #{roleId} AND admin_id = #{adminId}
+    </update>
+
+    <delete id="deleteGravitateUserRole" parameterType="Long">
+        DELETE FROM role WHERE role_id = #{roleId}
+    </delete>
+
+
+
+
+</mapper>

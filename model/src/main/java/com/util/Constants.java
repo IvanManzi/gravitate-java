@@ -1,5 +1,7 @@
 package com.util;
 
+import org.springframework.http.HttpStatus;
+
 public class Constants {
     public static final String ENCODE = "UTF-8";
     /**
@@ -8,10 +10,18 @@ public class Constants {
     public static final String DATE_YYYY_MM = "yyyy-MM";
     public static final String DATE_YYYY_MM_DD = "yyyy-MM-dd";
     public static final String DATE_YYYY_MM_DD_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
-    /*
-      * jwt 常量
-     */
+    //jwt 常量
     public static final int jwtExpirationHrs = 10;
+    //1-成功  2-失败
+    public final static String RETURN_CODE = "RETURN_CODE";
+    public final static String RETURN_MSG = "RETURN_MSG";
+    public final static String RETURN_DATA = "RETURN_DATA";
+
+    //用户角色
+    public static final String ADMIN_USER = "ROLE_ADMIN_USER";
+    public static final String NORMAL_USER = "ROLE_NORMAL_USER";
+
+    //jwt秘密
     public static final String jwtSecret = "LazEX6t1KGdhEIeD7qxUr/zOD5+yWcA+ZKb3icrvAaFCagZN1fjjZR/30AWq1/OGTn9/AlTi7wNgkLYmDpteZA==";
     //在店铺付款
     public static final int PUSH_TYPE_ON_SHOP_PAYMENT=1;

@@ -17,6 +17,8 @@ public class PolicyVO implements Serializable {
 
     private Long policyId;
 
+    private Long adminId;
+
     private String policyType;
 
     private String policyName;

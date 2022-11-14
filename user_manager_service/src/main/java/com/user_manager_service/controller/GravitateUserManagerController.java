@@ -1,10 +1,10 @@
 package com.user_manager_service.controller;
 
-import com.util.APIResponse;
 import com.model.UserManagerVO;
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
 import com.user_manager_service.service.GravitateUserManagerService;
+import com.util.APIResponse;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -25,7 +27,7 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<APIResponse> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm){
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm){
         UserVO userVO = new UserVO();
         UserManagerVO userManagerVO = new UserManagerVO();
         //create user obj
@@ -44,56 +46,37 @@ public class GravitateUserManagerController {
         userVO.setEmploymentStatus(createGravitateUserForm.employmentStatus());
         userVO.setBankName(createGravitateUserForm.bankName());
         userVO.setAccountNumber(createGravitateUserForm.accountNumber());
-        userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setBilling(createGravitateUserForm.billing());
+        userVO.setIsAdmin(createGravitateUserForm.isAdmin());
+        if(userVO.getIsAdmin() != 1){
+            userVO.setRoleId(createGravitateUserForm.roleId());
+            userManagerVO.setAdminId(createGravitateUserForm.managerId());
+        }
         //create user manager object
-        userManagerVO.setManagerId(createGravitateUserForm.managerId());
-        APIResponse apiResponse = gravitateUserManagerService.createGravitateUser(userVO,userManagerVO);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        return gravitateUserManagerService.createGravitateUser(userVO,userManagerVO);
     }
-    @GetMapping(value = "/")
-    public ResponseEntity<APIResponse> getAllUsersByManagerId(@RequestParam("managerId") Long managerId){
-        APIResponse apiResponse = gravitateUserManagerService.getAllGravitateUsersByManagerId(managerId);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+    @GetMapping(value = "/all")
+    public ResponseEntity getAllUsersByManagerId(HttpServletRequest request) throws IOException{
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        return gravitateUserManagerService.getAllGravitateUsersByManagerId(Long.valueOf(userId));
     }
 
     @GetMapping(value = "/profile")
-    public ResponseEntity<APIResponse> getGravitateUsernameProfile(HttpServletRequest request){
+    public ResponseEntity getGravitateUsernameProfile(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String username = JwtUtils.getUserNameFromJwtToken(token);
-        APIResponse apiResponse = gravitateUserManagerService.getGravitateUserByUsername(username);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+        String username = JwtUtils.getUserNameFromToken(token);
+        return gravitateUserManagerService.getGravitateUserByUsername(username);
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity<APIResponse> updateGravitateUser(){
+    public ResponseEntity updateGravitateUser(){
         return null;
     }
 
     @DeleteMapping(value = "/{userId}")
-    public ResponseEntity<APIResponse> deleteGravitateUser(Long userId){
-        APIResponse apiResponse = gravitateUserManagerService.deleteGravitateUser(userId);
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .statusCode(apiResponse.getStatusCode())
-                        .data(apiResponse.getData())
-                        .build()
-        );
+    public ResponseEntity deleteGravitateUser(Long userId){
+        return gravitateUserManagerService.deleteGravitateUser(userId);
     }
 
 

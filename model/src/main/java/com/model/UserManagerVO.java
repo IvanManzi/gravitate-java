@@ -17,7 +17,7 @@ public class UserManagerVO implements Serializable {
 
     private Long userManagerId;
 
-    private Long managerId;
+    private Long adminId;
 
     private Long userId;
 

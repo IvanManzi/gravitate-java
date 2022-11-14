@@ -9,7 +9,7 @@ SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on; 
+SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
@@ -33,7 +33,8 @@ CREATE TABLE public.additional_point (
     user_id bigint NOT NULL,
     user_blog_id bigint NOT NULL,
     user_skill_id bigint NOT NULL,
-    user_topic_id bigint NOT NULL
+    user_topic_id bigint NOT NULL,
+    admin_id bigint NOT NULL
 );
 
 
@@ -58,6 +59,27 @@ ALTER TABLE public.additional_point_additional_point_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.additional_point_additional_point_id_seq OWNED BY public.additional_point.additional_point_id;
+
+
+--
+-- Name: additional_point_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_admin_id_seq OWNED BY public.additional_point.admin_id;
 
 
 --
@@ -169,7 +191,8 @@ CREATE TABLE public.app_user (
     responsibility character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     role_id bigint NOT NULL,
-    billing character varying(255)
+    billing character varying(255),
+    is_admin integer DEFAULT 0
 );
 
 
@@ -284,11 +307,33 @@ CREATE TABLE public.performance_evaluation (
     criteria character varying(255),
     description character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    role_id bigint NOT NULL
+    role_id bigint NOT NULL,
+    admin_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.performance_evaluation OWNER TO postgres;
+
+--
+-- Name: performance_evaluation_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.performance_evaluation_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.performance_evaluation_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: performance_evaluation_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.performance_evaluation_admin_id_seq OWNED BY public.performance_evaluation.admin_id;
+
 
 --
 -- Name: performance_evaluation_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -343,11 +388,33 @@ CREATE TABLE public.policy (
     policy_file_path character varying(255) NOT NULL,
     policy_name character varying(255) NOT NULL,
     policy_type character varying(255) NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    admin_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.policy OWNER TO postgres;
+
+--
+-- Name: policy_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.policy_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.policy_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: policy_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.policy_admin_id_seq OWNED BY public.policy.admin_id;
+
 
 --
 -- Name: policy_policy_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -380,11 +447,33 @@ CREATE TABLE public.project (
     client_name character varying(255) NOT NULL,
     phone_number character varying(255) NOT NULL,
     project_description character varying(255) NOT NULL,
-    project_name character varying(255) NOT NULL
+    project_name character varying(255) NOT NULL,
+    admin_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.project OWNER TO postgres;
+
+--
+-- Name: project_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: project_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_admin_id_seq OWNED BY public.project.admin_id;
+
 
 --
 -- Name: project_project_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -586,7 +675,7 @@ ALTER SEQUENCE public.user_blog_user_id_seq OWNED BY public.user_blog.user_id;
 
 CREATE TABLE public.user_manager (
     user_manager_id bigint NOT NULL,
-    manager_id bigint NOT NULL,
+    admin_id bigint NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
@@ -613,7 +702,7 @@ ALTER TABLE public.user_manager_manager_id_seq OWNER TO postgres;
 -- Name: user_manager_manager_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.user_manager_manager_id_seq OWNED BY public.user_manager.manager_id;
+ALTER SEQUENCE public.user_manager_manager_id_seq OWNED BY public.user_manager.admin_id;
 
 
 --
@@ -903,11 +992,33 @@ CREATE TABLE public.wish (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     with_type character varying(255) NOT NULL,
-    user_id bigint NOT NULL
+    user_id bigint NOT NULL,
+    admin_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.wish OWNER TO postgres;
+
+--
+-- Name: wish_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.wish_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.wish_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: wish_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.wish_admin_id_seq OWNED BY public.wish.admin_id;
+
 
 --
 -- Name: wish_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -987,6 +1098,13 @@ ALTER TABLE ONLY public.additional_point ALTER COLUMN user_topic_id SET DEFAULT 
 
 
 --
+-- Name: additional_point admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN admin_id SET DEFAULT nextval('public.additional_point_admin_id_seq'::regclass);
+
+
+--
 -- Name: app_user user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1029,6 +1147,13 @@ ALTER TABLE ONLY public.performance_evaluation ALTER COLUMN role_id SET DEFAULT 
 
 
 --
+-- Name: performance_evaluation admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_evaluation ALTER COLUMN admin_id SET DEFAULT nextval('public.performance_evaluation_admin_id_seq'::regclass);
+
+
+--
 -- Name: policy policy_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1036,10 +1161,24 @@ ALTER TABLE ONLY public.policy ALTER COLUMN policy_id SET DEFAULT nextval('publi
 
 
 --
+-- Name: policy admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.policy ALTER COLUMN admin_id SET DEFAULT nextval('public.policy_admin_id_seq'::regclass);
+
+
+--
 -- Name: project project_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.project ALTER COLUMN project_id SET DEFAULT nextval('public.project_project_id_seq'::regclass);
+
+
+--
+-- Name: project admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project ALTER COLUMN admin_id SET DEFAULT nextval('public.project_admin_id_seq'::regclass);
 
 
 --
@@ -1092,10 +1231,10 @@ ALTER TABLE ONLY public.user_manager ALTER COLUMN user_manager_id SET DEFAULT ne
 
 
 --
--- Name: user_manager manager_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: user_manager admin_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_manager ALTER COLUMN manager_id SET DEFAULT nextval('public.user_manager_manager_id_seq'::regclass);
+ALTER TABLE ONLY public.user_manager ALTER COLUMN admin_id SET DEFAULT nextval('public.user_manager_manager_id_seq'::regclass);
 
 
 --
@@ -1173,6 +1312,13 @@ ALTER TABLE ONLY public.wish ALTER COLUMN wish_id SET DEFAULT nextval('public.wi
 --
 
 ALTER TABLE ONLY public.wish ALTER COLUMN user_id SET DEFAULT nextval('public.wish_user_id_seq'::regclass);
+
+
+--
+-- Name: wish admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.wish ALTER COLUMN admin_id SET DEFAULT nextval('public.wish_admin_id_seq'::regclass);
 
 
 --
@@ -1312,6 +1458,14 @@ ALTER TABLE ONLY public.wish
 
 
 --
+-- Name: additional_point additional_point_fk5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk5 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
 -- Name: topic_reply fk1eans8ed7rjpavcwfoejqppv4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1448,11 +1602,35 @@ ALTER TABLE ONLY public.topic_reply
 
 
 --
+-- Name: performance_evaluation performance_evaluation_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_evaluation
+    ADD CONSTRAINT performance_evaluation_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: policy policy_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.policy
+    ADD CONSTRAINT policy_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: project project_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project
+    ADD CONSTRAINT project_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
 -- Name: user_manager user_manager_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.user_manager
-    ADD CONSTRAINT user_manager_fk1 FOREIGN KEY (manager_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+    ADD CONSTRAINT user_manager_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -1461,6 +1639,14 @@ ALTER TABLE ONLY public.user_manager
 
 ALTER TABLE ONLY public.user_manager
     ADD CONSTRAINT user_manager_fk2 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: wish wish_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.wish
+    ADD CONSTRAINT wish_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --

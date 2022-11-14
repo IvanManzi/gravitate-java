@@ -1,13 +1,18 @@
 package com.util;
 
-import io.jsonwebtoken.*;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -16,40 +21,59 @@ public class JwtUtils {
       public static String generateJwtToken(Authentication authentication) throws ParseException {
 
           UserDetailsService userPrincipal = (UserDetailsService) authentication.getPrincipal();
-
-          return Jwts.builder()
-              .setSubject((userPrincipal.getUsername()))
-              .setId(userPrincipal.getUserId().toString())
-              .setIssuedAt(new Date())
-              .setExpiration(DateUtil.addYearsToCurrentDate(Constants.jwtExpirationHrs))
-              .signWith(SignatureAlgorithm.HS512, Constants.jwtSecret)
-              .compact();
+          Algorithm algorithm = Algorithm.HMAC256(Constants.jwtSecret.getBytes());
+          String access_token = JWT.create()
+                  .withSubject(userPrincipal.getUsername())
+                  .withKeyId(userPrincipal.getUserId().toString())
+                  .withExpiresAt(DateUtil.addYearsToCurrentDate(Constants.jwtExpirationHrs))
+                  .withClaim("roles",userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                  .sign(algorithm);
+          return access_token;
       }
 
-      public static String getUserNameFromJwtToken(String token) {
-          return Jwts.parser().setSigningKey(Constants.jwtSecret).parseClaimsJws(token).getBody().getSubject();
-      }
+    /**
+     * Get username from JWT token time 2022-04-14 14:20:11
+     *
+     * @Param HttpServletRequest, HttpServletResponse
+     * @return String
+     */
 
-      public static String getUserIdFromJwtToken(String token){
-          return Jwts.parser().setSigningKey(Constants.jwtSecret).parseClaimsJws(token).getBody().getId();
-      }
+    public static String getUserNameFromToken(String token) throws IOException {
+        Algorithm algorithm = Algorithm.HMAC256(Constants.jwtSecret.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        return username;
+    }
 
-      public static boolean validateJwtToken(String authToken) {
-          try {
-            Jwts.parser().setSigningKey(Constants.jwtSecret).parseClaimsJws(authToken);
-            return true;
-          } catch (SignatureException e) {
-            logger.error("Invalid JWT signature: {}", e.getMessage());
-          } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
-          } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
-          } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
-          } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
-          }
 
-          return false;
-      }
+    /**
+     * Get userId from JWT token time 2022-04-14 14:20:11
+     *
+     * @Param token
+     * @return String
+     */
+
+    public static String getUserIdFromJwtToken(String token) throws IOException {
+        Algorithm algorithm = Algorithm.HMAC256(Constants.jwtSecret.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String userId = decodedJWT.getKeyId();
+        return userId;
+    }
+
+    /**
+     * Verify JWT token time 2022-04-14 14:20:11
+     *
+     * @return String
+     * @Param token
+     */
+
+    public static DecodedJWT verifyJwtToken(String token) throws IOException {
+        Algorithm algorithm = Algorithm.HMAC256(Constants.jwtSecret.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        return decodedJWT;
+    }
+
 }

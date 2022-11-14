@@ -2,7 +2,7 @@ package com.user_manager_service.security;
 
 
 import com.user_manager_service.security.filter.AuthEntryPointJwt;
-import com.user_manager_service.security.filter.AuthTokenFilter;
+import com.user_manager_service.security.filter.CustomAuthorizationFilter;
 import com.user_manager_service.service.impl.GravitateUserManagerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +30,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
       private AuthEntryPointJwt unauthorizedHandler;
 
       @Bean
-      public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+      public CustomAuthorizationFilter authenticationJwtTokenFilter() {
+        return new CustomAuthorizationFilter();
       }
 
       @Bean
@@ -60,7 +60,9 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.cors();
           http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
           http.sessionManagement().sessionCreationPolicy(STATELESS);
-          http.authorizeRequests().antMatchers("/api/v1/user/create","/api/v1/user/login").permitAll();
+          http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
+          http.authorizeRequests().antMatchers("/api/v1/user/profile").hasAnyAuthority("ROLE_NORMAL_USER","ROLE_ADMIN_USER");
+          http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority("ROLE_ADMIN_USER");
           http.authorizeRequests().anyRequest().authenticated();
 
           http.authenticationProvider(authenticationProvider());
