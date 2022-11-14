@@ -190,7 +190,7 @@ CREATE TABLE public.app_user (
     profile_picture_path character varying(255),
     responsibility character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    role_id bigint NOT NULL,
+    role_id bigint DEFAULT NULL,
     billing character varying(255),
     is_admin integer DEFAULT 0
 );
