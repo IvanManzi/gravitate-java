@@ -13,6 +13,8 @@
         <module>user_manager_service</module>
         <module>project_manager_service</module>
         <module>content_manager_service</module>
+        <module>gravitate_apigw</module>
+        <module>gravitate_service_registry</module>
     </modules>
 
     <properties>
