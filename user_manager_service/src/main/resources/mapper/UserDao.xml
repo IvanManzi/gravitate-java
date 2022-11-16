@@ -28,6 +28,14 @@
         DELETE FROM app_user WHERE user_id = #{userId}
     </delete>
 
+    <update id="updateGravitateUserPassword" parameterType="com.model.UserVO">
+        UPDATE app_user
+        SET
+        password = #{password}
+        WHERE
+        user_id = #{userId}
+    </update>
+
 
 
 

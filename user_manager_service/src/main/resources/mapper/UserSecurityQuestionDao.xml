@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.user_manager_service.dao.UserSecurityQuestionDao" >
+
+    <insert id="saveUserSecurityQuestion" parameterType="com.model.UserSecurityQuestionVO">
+        INSERT INTO user_security_question
+        (user_id,question,answer)
+        VALUES
+        (#{userId},#{question},#{answer})
+    </insert>
+
+    <select id="getSecurityQuestionByUserId" parameterType="Long" resultType="int">
+        SELECT * FROM user_security_question WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateUserSecurityQuestion" parameterType="com.model.UserSecurityQuestionVO">
+        UPDATE user_security_question
+        SET
+        question = #{question},
+        answer = #{answer}
+        WHERE
+        user_security_question_id = #{userSecurityQuestionId}
+    </update>
+
+    <delete id="deleteUserSecurityQuestion" parameterType="Long">
+        DELETE FROM user_security_question WHERE user_security_question_id = #{securityQuestionId}
+    </delete>
+
+
+
+
+</mapper>
