@@ -9,7 +9,7 @@
         (#{userId},#{question},#{answer})
     </insert>
 
-    <select id="getSecurityQuestionByUserId" parameterType="Long" resultType="int">
+    <select id="getSecurityQuestionByUserId" parameterType="Long" resultType="com.model.UserSecurityQuestionVO">
         SELECT * FROM user_security_question WHERE user_id = #{userId}
     </select>
 
@@ -26,7 +26,16 @@
         DELETE FROM user_security_question WHERE user_security_question_id = #{securityQuestionId}
     </delete>
 
-
+    <select id="verifySecurityQuestionAnswer" parameterType="com.model.UserSecurityQuestionVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM user_security_question
+        WHERE
+        user_security_question_id = #{userSecurityQuestionId} AND LOWER(answer) = LOWER(#{answer}) LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
 
 
 </mapper>

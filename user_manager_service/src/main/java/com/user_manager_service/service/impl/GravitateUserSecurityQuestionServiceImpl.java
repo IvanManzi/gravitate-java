@@ -44,7 +44,7 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
     public ResponseEntity updateUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO) {
         int result = userSecurityQuestionDao.updateUserSecurityQuestion(userSecurityQuestionVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Security question successfully created.");
+            return APIResponse.resultSuccess("Security question successfully updated.");
         }else{
             return APIResponse.resultFail();
         }
@@ -57,6 +57,16 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
             return APIResponse.resultSuccess("Security question successfully deleted.");
         }else{
             return APIResponse.resultFail();
+        }
+    }
+
+    @Override
+    public ResponseEntity verifyUserSecurityQuestionAnswer(UserSecurityQuestionVO userSecurityQuestionVO) {
+        int check = userSecurityQuestionDao.verifySecurityQuestionAnswer(userSecurityQuestionVO);
+        if(check == 1){
+            return APIResponse.resultSuccess("Verification success.");
+        }else{
+            return APIResponse.resultFail("Verification failed.");
         }
     }
 }

@@ -9,10 +9,8 @@ import java.util.List;
 public interface UserSecurityQuestionDao {
 
     int saveUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO);
-
     List<UserSecurityQuestionVO> getSecurityQuestionByUserId(Long userId);
-
     int updateUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO);
-
     int deleteUserSecurityQuestion(Long securityQuestionId);
+    int verifySecurityQuestionAnswer(UserSecurityQuestionVO userSecurityQuestionVO);
 }

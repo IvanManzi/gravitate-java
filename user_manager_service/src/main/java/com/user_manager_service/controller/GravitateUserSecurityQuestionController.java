@@ -58,4 +58,14 @@ public class GravitateUserSecurityQuestionController {
         return gravitateUserSecurityQuestionService.deleteUserSecurityQuestion(questionId);
     }
 
+    @GetMapping(value = "/{questionId}/verify/")
+    public ResponseEntity verifyUserSecurityQuestion(@PathVariable("questionId")Long questionId,@RequestParam("answer") String answer){
+        UserSecurityQuestionVO userSecurityQuestionVO = new UserSecurityQuestionVO();
+        userSecurityQuestionVO.setUserSecurityQuestionId(questionId);
+        userSecurityQuestionVO.setAnswer(answer);
+        return gravitateUserSecurityQuestionService.verifyUserSecurityQuestionAnswer(userSecurityQuestionVO);
+    }
+
+
+
 }

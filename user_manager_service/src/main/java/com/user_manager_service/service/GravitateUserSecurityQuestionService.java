@@ -12,4 +12,6 @@ public interface GravitateUserSecurityQuestionService {
     ResponseEntity updateUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO);
 
     ResponseEntity deleteUserSecurityQuestion(Long securityQuestionId);
+
+    ResponseEntity verifyUserSecurityQuestionAnswer(UserSecurityQuestionVO userSecurityQuestionVO);
 }
