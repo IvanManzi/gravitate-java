@@ -108,7 +108,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     public ResponseEntity updateGravitateUserPassword(UserVO userVO) {
         int result = userDao.updateGravitateUserPassword(userVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Password successfully created. ");
+            return APIResponse.resultSuccess("Password successfully updated. ");
         }else{
             return APIResponse.resultFail();
         }
