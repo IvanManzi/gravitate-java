@@ -61,7 +61,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
           http.sessionManagement().sessionCreationPolicy(STATELESS);
           http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
-          http.authorizeRequests().antMatchers("/api/v1/user/profile").hasAnyAuthority("ROLE_NORMAL_USER","ROLE_ADMIN_USER");
+          http.authorizeRequests().antMatchers("/api/v1/user/profile","/api/v1/user/security-question").hasAnyAuthority("ROLE_NORMAL_USER","ROLE_ADMIN_USER");
           http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority("ROLE_ADMIN_USER");
           http.authorizeRequests().anyRequest().authenticated();
 
