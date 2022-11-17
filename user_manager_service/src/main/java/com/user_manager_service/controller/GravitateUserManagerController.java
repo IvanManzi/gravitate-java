@@ -3,6 +3,7 @@ package com.user_manager_service.controller;
 import com.model.UserManagerVO;
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
+import com.user_manager_service.form.UpdateGravitateUserPasswordRequest;
 import com.user_manager_service.service.GravitateUserManagerService;
 import com.util.APIResponse;
 import com.util.JwtUtils;
@@ -77,6 +78,17 @@ public class GravitateUserManagerController {
     @DeleteMapping(value = "/{userId}")
     public ResponseEntity deleteGravitateUser(Long userId){
         return gravitateUserManagerService.deleteGravitateUser(userId);
+    }
+
+    @PutMapping(value = "/password-reset")
+    public ResponseEntity updateGravitateUserPassword(@RequestBody UpdateGravitateUserPasswordRequest updateGravitateUserPasswordRequest,
+                                                        HttpServletRequest request) throws IOException {
+        UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        userVO.setUserId(Long.valueOf(userId));
+        userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
+        return gravitateUserManagerService.updateGravitateUserPassword(userVO);
     }
 
 

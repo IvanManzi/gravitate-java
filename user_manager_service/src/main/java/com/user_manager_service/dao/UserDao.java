@@ -8,9 +8,8 @@ public interface UserDao {
     int createGravitateUser(UserVO userVO);
     int checkIfUsernameExists(String username);
     UserVO getGravitateUserByUsername(String username);
-
     int deleteGravitateUser(Long userId);
-
+    int updateGravitateUserPassword(UserVO userVO);
 
 
 }
