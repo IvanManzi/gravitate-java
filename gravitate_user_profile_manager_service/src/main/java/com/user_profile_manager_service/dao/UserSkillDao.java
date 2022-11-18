@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface UserSkillDao {
 
-    int saveSkill(UserSkillVO userSkillVO);
+    int saveUserSkill(UserSkillVO userSkillVO);
 
     List<UserSkillVO> getAllUserSkills(Long userId);
 
