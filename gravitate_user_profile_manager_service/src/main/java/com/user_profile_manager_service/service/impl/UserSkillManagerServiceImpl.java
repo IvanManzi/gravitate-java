@@ -20,7 +20,7 @@ public class UserSkillManagerServiceImpl implements UserSkillManagerService {
 
     @Override
     public ResponseEntity createUserSkill(UserSkillVO userSkillVO) {
-        int result = userSkillDao.saveSkill(userSkillVO);
+        int result = userSkillDao.saveUserSkill(userSkillVO);
         if(result > 0){
             return APIResponse.resultSuccess("Skill successfully saved.");
         }else{
