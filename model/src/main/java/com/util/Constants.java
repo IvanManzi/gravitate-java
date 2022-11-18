@@ -19,7 +19,7 @@ public class Constants {
 
     //用户角色
     public static final String ADMIN_USER = "ROLE_ADMIN_USER";
-    public static final String NORMAL_USER = "ROLE_NORMAL_USER";
+    public static final String CLIENT_USER = "ROLE_CLIENT_USER";
 
     //jwt秘密
     public static final String jwtSecret = "LazEX6t1KGdhEIeD7qxUr/zOD5+yWcA+ZKb3icrvAaFCagZN1fjjZR/30AWq1/OGTn9/AlTi7wNgkLYmDpteZA==";

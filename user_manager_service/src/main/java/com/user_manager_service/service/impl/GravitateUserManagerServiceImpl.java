@@ -41,7 +41,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));*/
         switch (user.getIsAdmin()) {
             case 1 -> authorities.add(new SimpleGrantedAuthority(ADMIN_USER));
-            default -> authorities.add(new SimpleGrantedAuthority(NORMAL_USER));
+            default -> authorities.add(new SimpleGrantedAuthority(CLIENT_USER));
         }
         return UserDetailsService.build(user,authorities);
     }

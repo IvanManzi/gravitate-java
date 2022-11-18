@@ -4,6 +4,7 @@ package com.user_manager_service.security;
 import com.user_manager_service.security.filter.AuthEntryPointJwt;
 import com.user_manager_service.security.filter.CustomAuthorizationFilter;
 import com.user_manager_service.service.impl.GravitateUserManagerServiceImpl;
+import com.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.util.Constants.ADMIN_USER;
+import static com.util.Constants.CLIENT_USER;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -61,8 +64,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
           http.sessionManagement().sessionCreationPolicy(STATELESS);
           http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
-          http.authorizeRequests().antMatchers("/api/v1/user/profile","/api/v1/user/security-question").hasAnyAuthority("ROLE_NORMAL_USER","ROLE_ADMIN_USER");
-          http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority("ROLE_ADMIN_USER");
+          http.authorizeRequests().antMatchers("/api/v1/user/profile","/api/v1/user/security-question").hasAnyAuthority(ADMIN_USER,CLIENT_USER);
+          http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
           http.authorizeRequests().anyRequest().authenticated();
 
           http.authenticationProvider(authenticationProvider());

@@ -34,6 +34,15 @@ spring:
               args:
                 name: USER-MANAGER-SERVICE-APPLICATION
                 fallbackuri: forward:/fallback/
+        - id: USER-PROFILE-MANAGER-SERVICE
+          uri: lb://USER-PROFILE-MANAGER-SERVICE
+          predicates:
+            - Path=/api/v1/user-profile/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: USER-PROFILE-MANAGER-SERVICE
+                fallbackuri: forward:/fallback/
 
 eureka:
   client:

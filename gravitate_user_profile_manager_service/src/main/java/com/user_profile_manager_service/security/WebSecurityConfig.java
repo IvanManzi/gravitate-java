@@ -1,8 +1,7 @@
-package com.content_manager_service.security;
+package com.user_profile_manager_service.security;
 
 
-import com.content_manager_service.security.filter.CustomAuthorizationFilter;
-import com.util.Constants;
+import com.user_profile_manager_service.security.filter.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,7 +41,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
+        http.authorizeRequests().antMatchers("/api/v1/user-profile/**").hasAnyAuthority(CLIENT_USER,ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
