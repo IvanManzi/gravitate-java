@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper xmlns="http://mybatis.org/schema/mybatis-mapper" namespace="com.user_profile_manager_service.dao.UserSkillDao">
+<mapper namespace="com.user_profile_manager_service.dao.UserSkillDao">
     <insert id="saveUserSkill" parameterType="com.model.UserSkillVO">
         INSERT INTO user_skill
         (user_id,title,category,expertise,certificate_path)
         VALUES
-        (#{userId},#{title},#{category},#{certificate_path})
+        (#{userId},#{title},#{category},#{expertise},#{certificatePath})
     </insert>
 
     <select id="getAllUserSkills" parameterType="Long" resultType="com.model.UserSkillVO">
