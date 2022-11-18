@@ -16,13 +16,13 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping(value = "/api/v1/user-profile/")
+@RequestMapping(value = "/api/v1/user-profile/",produces = "application/json")
 @RequiredArgsConstructor
 public class UserSkillManagerController {
 
     private final UserSkillManagerService userSkillManagerService;
 
-    @PostMapping(value = "/skills/create")
+    @PostMapping(value = "/skills/add")
     public ResponseEntity createUserSkill(@Valid @RequestBody CreateUserSkillRequest createUserSkillRequest, HttpServletRequest request) throws IOException {
         UserSkillVO userSkillVO = new UserSkillVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
@@ -35,7 +35,7 @@ public class UserSkillManagerController {
         return userSkillManagerService.createUserSkill(userSkillVO);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "skills/all")
     public ResponseEntity getAllUserSkills(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
