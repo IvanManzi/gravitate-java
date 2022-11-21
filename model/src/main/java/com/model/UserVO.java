@@ -23,6 +23,8 @@ public class UserVO implements Serializable {
 
     private Integer isAdmin;
 
+    private Long managedBy;
+
     private String email;
 
     private String alternateEmail;

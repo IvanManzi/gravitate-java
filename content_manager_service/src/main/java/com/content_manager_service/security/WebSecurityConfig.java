@@ -2,6 +2,7 @@ package com.content_manager_service.security;
 
 
 import com.content_manager_service.security.filter.CustomAuthorizationFilter;
+import com.util.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.util.Constants.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -40,7 +42,11 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority("ROLE_ADMIN_USER");
+        http.authorizeRequests().antMatchers("/api/v1/content/topic/**",
+                                                        "/api/v1/content/wish/user",
+                                                        "/api/v1/content/wish/team",
+                                                        "/api/v1/content/wish/comment").hasAuthority(CLIENT_USER);
+        http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

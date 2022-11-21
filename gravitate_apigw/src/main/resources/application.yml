@@ -1,0 +1,52 @@
+server:
+  port: 9192
+
+spring:
+  application:
+    name: GRAVITATE-API-GATEWAY-SERVICE
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      routes:
+        - id: CONTENT-MANAGER-SERVICE-APPLICATION
+          uri: lb://CONTENT-MANAGER-SERVICE-APPLICATION
+          predicates:
+            - Path=/api/v1/content/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: CONTENT-MANAGER-SERVICE-APPLICATION
+                fallbackuri: forward:/fallback/
+
+        - id: USER-MANAGER-SERVICE-APPLICATION
+          uri: lb://USER-MANAGER-SERVICE-APPLICATION
+          predicates:
+            - Path=/api/v1/user/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: USER-MANAGER-SERVICE-APPLICATION
+                fallbackuri: forward:/fallback/
+        - id: USER-PROFILE-MANAGER-SERVICE
+          uri: lb://USER-PROFILE-MANAGER-SERVICE
+          predicates:
+            - Path=/api/v1/user-profile/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: USER-PROFILE-MANAGER-SERVICE
+                fallbackuri: forward:/fallback/
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka
+    fetch-registry: true
+    register-with-eureka: true

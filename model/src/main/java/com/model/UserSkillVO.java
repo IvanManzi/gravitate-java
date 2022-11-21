@@ -26,8 +26,6 @@ public class UserSkillVO implements Serializable {
 
     private String certificatePath;
 
-    private AdditionalPointVO additionalPoint;
-
     private Date createdAt;
 
     private Date updatedAt;

@@ -39,5 +39,6 @@ public record CreateGravitateUserForm(String userType,
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+                                      @NotNull
                                       Long managerId) {
 }

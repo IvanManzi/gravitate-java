@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.TopicDao" >
+
+    <insert id="createTopic" parameterType="com.model.TopicVO">
+        INSERT INTO topic
+        (user_id,title,tags,problem_description,topic_thumbnail)
+        VALUES
+        (#{userId},#{title},#{tags},#{problemDescription},#{topicThumbnail})
+    </insert>
+
+    <resultMap id="tResult" type="Map">
+        <collection property="comments" ofType="com.model.TopicReplyVO"  select="selectTopicReply" column="topic_id" />
+    </resultMap>
+
+    <select id="getAllTeamMembersTopics" resultMap="tResult">
+        SELECT T.topic_id,T.title,T.tags,T.problem_description,T.thumbnail,U.email,U.first_name,U.last_name,U.user_type FROM topic T
+        INNER JOIN app_user U
+        ON
+        T.user_id = U.user_id
+        WHERE
+        U.managed_by = #{managerId}
+        <if test="search != null">
+            AND T.title = #{search}
+        </if>
+    </select>
+
+    <select id="selectTopicReply" resultType="com.model.TopicReplyVO">
+        SELECT * FROM topic_reply WHERE topic_id = #{topicId}
+    </select>
+
+
+    <select id="getLatestWishByUserId" parameterType="Long" resultType="com.model.WishVO">
+        SELECT * FROM wish WHERE user_id = #{userId} AND created_at = CURRENT_DATE
+    </select>
+
+    <update id="updateTopic" parameterType="com.model.TopicVO">
+        UPDATE topic
+        SET
+        title = #{title},
+        tags = #{tags},
+        problem_description = #{problemDescription},
+        topic_thumbnail = #{topicThumbnail}
+        WHERE
+        topic_id = #{topicId} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteTopic" parameterType="Long">
+        DELETE FROM topic WHERE topic_id = #{topicId}
+    </delete>
+
+
+
+
+</mapper>

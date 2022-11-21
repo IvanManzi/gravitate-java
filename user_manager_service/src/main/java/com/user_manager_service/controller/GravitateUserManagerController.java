@@ -1,10 +1,9 @@
 package com.user_manager_service.controller;
 
-import com.model.UserManagerVO;
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
+import com.user_manager_service.form.UpdateGravitateUserPasswordRequest;
 import com.user_manager_service.service.GravitateUserManagerService;
-import com.util.APIResponse;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,6 @@ public class GravitateUserManagerController {
     @PostMapping(value = "/create")
     public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm){
         UserVO userVO = new UserVO();
-        UserManagerVO userManagerVO = new UserManagerVO();
         //create user obj
         userVO.setUserType(createGravitateUserForm.userType());
         userVO.setEmail(createGravitateUserForm.email());
@@ -48,12 +46,9 @@ public class GravitateUserManagerController {
         userVO.setAccountNumber(createGravitateUserForm.accountNumber());
         userVO.setBilling(createGravitateUserForm.billing());
         userVO.setIsAdmin(createGravitateUserForm.isAdmin());
-        if(userVO.getIsAdmin() != 1){
-            userVO.setRoleId(createGravitateUserForm.roleId());
-            userManagerVO.setAdminId(createGravitateUserForm.managerId());
-        }
-        //create user manager object
-        return gravitateUserManagerService.createGravitateUser(userVO,userManagerVO);
+        userVO.setRoleId(createGravitateUserForm.roleId());
+        userVO.setManagedBy(createGravitateUserForm.managerId());
+        return gravitateUserManagerService.createGravitateUser(userVO);
     }
     @GetMapping(value = "/all")
     public ResponseEntity getAllUsersByManagerId(HttpServletRequest request) throws IOException{
@@ -77,6 +72,17 @@ public class GravitateUserManagerController {
     @DeleteMapping(value = "/{userId}")
     public ResponseEntity deleteGravitateUser(Long userId){
         return gravitateUserManagerService.deleteGravitateUser(userId);
+    }
+
+    @PutMapping(value = "/password-reset")
+    public ResponseEntity updateGravitateUserPassword(@RequestBody UpdateGravitateUserPasswordRequest updateGravitateUserPasswordRequest,
+                                                        HttpServletRequest request) throws IOException {
+        UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        userVO.setUserId(Long.valueOf(userId));
+        userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
+        return gravitateUserManagerService.updateGravitateUserPassword(userVO);
     }
 
 

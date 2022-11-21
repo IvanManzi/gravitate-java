@@ -1,8 +1,10 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.CreateWishReplyRequest;
 import com.content_manager_service.form.CreateWishRequest;
 import com.content_manager_service.form.UpdateWishRequest;
-import com.content_manager_service.service.GravitateWallOfWishesService;
+import com.content_manager_service.service.GravitateWishesManagerService;
+import com.model.WishReplyVO;
 import com.model.WishVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,11 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping("api/v1/content/wish")
+@RequestMapping(value = "api/v1/content/wish",produces = "application/json")
 @RequiredArgsConstructor
 public class GravitateWallOfWishesController {
 
-    private final GravitateWallOfWishesService gravitateWallOfWishesService;
+    private final GravitateWishesManagerService gravitateWishesManagerService;
 
     @PostMapping(value = "/create")
     public ResponseEntity createWish(@Valid @RequestBody CreateWishRequest createWishRequest, HttpServletRequest request) throws IOException {
@@ -32,14 +34,37 @@ public class GravitateWallOfWishesController {
         wishVO.setWishType(createWishRequest.wishType());
         wishVO.setUserId(createWishRequest.userId());
         wishVO.setComment(createWishRequest.comment());
-        return gravitateWallOfWishesService.createWish(wishVO);
+        return gravitateWishesManagerService.createWish(wishVO);
+    }
+
+    @PostMapping(value = "/comment")
+    public ResponseEntity createWishReply(@Valid @RequestBody CreateWishReplyRequest createWishReplyRequest, HttpServletRequest request) throws IOException {
+        WishReplyVO wishReplyVO = new WishReplyVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        wishReplyVO.setUserId(Long.valueOf(userId));
+        wishReplyVO.setWishId(createWishReplyRequest.wishId());
+        wishReplyVO.setMessage(createWishReplyRequest.comment());
+        return gravitateWishesManagerService.createWishReply(wishReplyVO);
+    }
+
+    @GetMapping(value = "/user")
+    public ResponseEntity getWishesByUserId(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        return gravitateWishesManagerService.getWishesByUserId(Long.valueOf(userId));
+    }
+
+    @GetMapping(value = "/team")
+    public ResponseEntity getTeamLatestWishes(@RequestParam("managerId") Long managerId){
+        return gravitateWishesManagerService.getTeamLatestWishes(Long.valueOf(managerId));
     }
 
     @GetMapping(value = "/all")
     public ResponseEntity getAllWishes(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return gravitateWallOfWishesService.getAllWishes(Long.valueOf(userId));
+        return gravitateWishesManagerService.getAllWishes(Long.valueOf(userId));
     }
 
     @PutMapping(value = "/")
@@ -52,12 +77,12 @@ public class GravitateWallOfWishesController {
         wishVO.setUserId(updateWishRequest.userId());
         wishVO.setWishType(updateWishRequest.wishType());
         wishVO.setComment(updateWishRequest.comment());
-        return gravitateWallOfWishesService.updateWish(wishVO);
+        return gravitateWishesManagerService.updateWish(wishVO);
     }
 
     @DeleteMapping(value = "/{wishId}")
     public ResponseEntity deleteWish(@PathVariable("wishId") Long wishId){
-        return gravitateWallOfWishesService.deleteWish(wishId);
+        return gravitateWishesManagerService.deleteWish(wishId);
     }
 
 }

@@ -190,7 +190,11 @@ CREATE TABLE public.app_user (
     profile_picture_path character varying(255),
     responsibility character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+<<<<<<< HEAD
     role_id bigint DEFAULT NULL,
+=======
+    role_id bigint DEFAULT null,
+>>>>>>> ace6a1697c3d2513d96bf645701fecd69993af49
     billing character varying(255),
     is_admin integer DEFAULT 0
 );
@@ -448,7 +452,9 @@ CREATE TABLE public.project (
     phone_number character varying(255) NOT NULL,
     project_description character varying(255) NOT NULL,
     project_name character varying(255) NOT NULL,
-    admin_id bigint NOT NULL
+    admin_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -505,11 +511,33 @@ CREATE TABLE public.role (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     rolekra character varying(255) NOT NULL,
     role_name character varying(255) NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    admin_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.role OWNER TO postgres;
+
+--
+-- Name: role_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.role_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.role_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: role_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.role_admin_id_seq OWNED BY public.role.admin_id;
+
 
 --
 -- Name: role_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -991,7 +1019,7 @@ CREATE TABLE public.wish (
     comment character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    with_type character varying(255) NOT NULL,
+    wish_type character varying(255) NOT NULL,
     user_id bigint NOT NULL,
     admin_id bigint NOT NULL
 );
@@ -1186,6 +1214,13 @@ ALTER TABLE ONLY public.project ALTER COLUMN admin_id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.role ALTER COLUMN role_id SET DEFAULT nextval('public.role_role_id_seq'::regclass);
+
+
+--
+-- Name: role admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role ALTER COLUMN admin_id SET DEFAULT nextval('public.role_admin_id_seq'::regclass);
 
 
 --
@@ -1623,6 +1658,14 @@ ALTER TABLE ONLY public.policy
 
 ALTER TABLE ONLY public.project
     ADD CONSTRAINT project_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: role role_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role
+    ADD CONSTRAINT role_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --

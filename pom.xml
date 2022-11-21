@@ -13,6 +13,9 @@
         <module>user_manager_service</module>
         <module>project_manager_service</module>
         <module>content_manager_service</module>
+        <module>gravitate_apigw</module>
+        <module>gravitate_service_registry</module>
+        <module>gravitate_user_profile_manager_service</module>
     </modules>
 
     <properties>
