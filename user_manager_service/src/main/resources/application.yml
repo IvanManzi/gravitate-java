@@ -4,9 +4,9 @@ spring:
   application:
     name: USER-MANAGER-SERVICE-APPLICATION
   datasource:
-    password: password
     username: postgres
-    url: jdbc:postgresql://localhost:5433/gravitateDb
+    password: password
+    url: jdbc:postgresql://localhost:5433/gravitatedb
   jpa:
     hibernate:
       ddl-auto: create
@@ -27,6 +27,6 @@ mybatis:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8762/eureka
     fetch-registry: true
     register-with-eureka: true

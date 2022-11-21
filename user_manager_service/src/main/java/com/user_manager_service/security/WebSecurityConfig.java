@@ -64,7 +64,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
           http.sessionManagement().sessionCreationPolicy(STATELESS);
           http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
-          http.authorizeRequests().antMatchers("/api/v1/user/profile","/api/v1/user/security-question").hasAnyAuthority(ADMIN_USER,CLIENT_USER);
+          http.authorizeRequests().antMatchers("/api/v1/user/password-reset","/api/v1/user/profile","/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,CLIENT_USER);
           http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
           http.authorizeRequests().anyRequest().authenticated();
 

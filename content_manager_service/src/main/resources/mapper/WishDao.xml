@@ -18,12 +18,26 @@
         W.admin_id = #{adminId}
     </select>
 
+    <select id="getLatestWishByUserId" parameterType="Long" resultType="com.model.WishVO">
+        SELECT * FROM wish WHERE user_id = #{userId} AND DATE(created_at) = CURRENT_DATE
+    </select>
+
+    <select id="getTeamMembersLatestWishes" parameterType="Long" resultType="Map">
+        SELECT W.wish_id,W.wish_type,W.comment,U.user_id,U.first_name,U.last_name,U.email
+        FROM wish W
+        INNER JOIN
+        app_user U
+        ON
+        W.user_id = U.user_id
+        WHERE DATE(W.created_at) = CURRENT_DATE AND U.managed_by = #{managerId}
+    </select>
+
     <update id="updateWish" parameterType="com.model.WishVO">
         UPDATE wish
         SET
         wish_type = #{wishType},
         user_id = #{userId},
-        comment = ${comment}
+        comment = #{comment}
         WHERE
         wish_id = #{wishId} AND admin_id = #{adminId}
     </update>

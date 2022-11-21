@@ -7,8 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="model" />
         <module name="project_manager_service" />
+        <module name="gravitate_apigw" />
+        <module name="gravitate_service_registry" />
+        <module name="model" />
+        <module name="gravitate_user_profile_manager_service" />
         <module name="content_manager_service" />
         <module name="user_manager_service" />
       </profile>

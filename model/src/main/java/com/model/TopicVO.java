@@ -11,17 +11,19 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserTopicVO implements Serializable {
+public class TopicVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long userTopicId;
+    private Long topicId;
 
     private Long userId;
 
     private String title;
 
     private String tags;
+
+    private String topicThumbnail;
 
     private String problemDescription;
 
