@@ -36,8 +36,15 @@
         user_id = #{userId}
     </update>
 
-    <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="com.model.UserVO">
-        SELECT * FROM app_user WHERE user_type != 'Admin'
+    <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="Map">
+        SELECT A.first_name,A.last_name,A.email,A.profile_picture_path,R.role_name,R.rolekra
+        FROM
+        app_user A
+        INNER JOIN
+        role R
+        ON
+        A.role_id = R.role_id
+        WHERE user_type != 'Admin'
     </select>
 
 

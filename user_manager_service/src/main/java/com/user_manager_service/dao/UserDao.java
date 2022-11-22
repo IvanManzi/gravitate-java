@@ -4,6 +4,7 @@ import com.model.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserDao {
@@ -12,5 +13,5 @@ public interface UserDao {
     UserVO getGravitateUserByUsername(String username);
     int deleteGravitateUser(Long userId);
     int updateGravitateUserPassword(UserVO userVO);
-    List<UserVO> getGravitateUsersByManagerId(Long managerId);
+    List<Map> getGravitateUsersByManagerId();
 }
