@@ -5,8 +5,8 @@ spring:
     name: USER-PROFILE-MANAGER-SERVICE
   datasource:
     username: postgres
-    password: password
-    url: jdbc:postgresql://localhost:5433/gravitateDb
+    password: ?Mfptnj123@hview2022
+    url: jdbc:postgresql://localhost:5432/gravitateDb
   jpa:
     hibernate:
       ddl-auto: create
