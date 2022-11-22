@@ -21,152 +21,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: additional_point; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.additional_point (
-    additional_point_id bigint NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    points integer,
-    quarter character varying(255),
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL,
-    user_blog_id bigint NOT NULL,
-    user_skill_id bigint NOT NULL,
-    user_topic_id bigint NOT NULL,
-    admin_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.additional_point OWNER TO postgres;
-
---
--- Name: additional_point_additional_point_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_additional_point_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_additional_point_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_additional_point_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_additional_point_id_seq OWNED BY public.additional_point.additional_point_id;
-
-
---
--- Name: additional_point_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_admin_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_admin_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_admin_id_seq OWNED BY public.additional_point.admin_id;
-
-
---
--- Name: additional_point_user_blog_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_user_blog_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_user_blog_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_user_blog_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_user_blog_id_seq OWNED BY public.additional_point.user_blog_id;
-
-
---
--- Name: additional_point_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_user_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_user_id_seq OWNED BY public.additional_point.user_id;
-
-
---
--- Name: additional_point_user_skill_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_user_skill_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_user_skill_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_user_skill_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_user_skill_id_seq OWNED BY public.additional_point.user_skill_id;
-
-
---
--- Name: additional_point_user_topic_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.additional_point_user_topic_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.additional_point_user_topic_id_seq OWNER TO postgres;
-
---
--- Name: additional_point_user_topic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.additional_point_user_topic_id_seq OWNED BY public.additional_point.user_topic_id;
-
-
---
 -- Name: app_user; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -190,13 +44,11 @@ CREATE TABLE public.app_user (
     profile_picture_path character varying(255),
     responsibility character varying(255),
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-<<<<<<< HEAD
-    role_id bigint DEFAULT NULL,
-=======
-    role_id bigint DEFAULT null,
->>>>>>> ace6a1697c3d2513d96bf645701fecd69993af49
+    role_id bigint,
     billing character varying(255),
-    is_admin integer DEFAULT 0
+    is_admin integer DEFAULT 0,
+    status integer DEFAULT 1,
+    managed_by bigint
 );
 
 
@@ -245,25 +97,45 @@ ALTER SEQUENCE public.app_user_user_id_seq OWNED BY public.app_user.user_id;
 
 
 --
+-- Name: blog; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blog (
+    blog_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    problem_description character varying NOT NULL,
+    tags character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    user_id bigint NOT NULL,
+    topic_thumbnail character varying
+);
+
+
+ALTER TABLE public.blog OWNER TO postgres;
+
+--
 -- Name: blog_reply; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.blog_reply (
     blog_reply_id bigint NOT NULL,
+    comment character varying(255) NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    reply character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL
+    user_id bigint NOT NULL,
+    blog_id bigint NOT NULL,
+    parent bigint
 );
 
 
 ALTER TABLE public.blog_reply OWNER TO postgres;
 
 --
--- Name: blog_reply_blog_reply_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: blog_reply_parent_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.blog_reply_blog_reply_id_seq
+CREATE SEQUENCE public.blog_reply_parent_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -271,34 +143,13 @@ CREATE SEQUENCE public.blog_reply_blog_reply_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.blog_reply_blog_reply_id_seq OWNER TO postgres;
+ALTER TABLE public.blog_reply_parent_seq OWNER TO postgres;
 
 --
--- Name: blog_reply_blog_reply_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: blog_reply_parent_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.blog_reply_blog_reply_id_seq OWNED BY public.blog_reply.blog_reply_id;
-
-
---
--- Name: blog_reply_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.blog_reply_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.blog_reply_user_id_seq OWNER TO postgres;
-
---
--- Name: blog_reply_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.blog_reply_user_id_seq OWNED BY public.blog_reply.user_id;
+ALTER SEQUENCE public.blog_reply_parent_seq OWNED BY public.blog_reply.parent;
 
 
 --
@@ -453,6 +304,7 @@ CREATE TABLE public.project (
     project_description character varying(255) NOT NULL,
     project_name character varying(255) NOT NULL,
     admin_id bigint NOT NULL,
+    status INTEGER DEFAULT 0,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
@@ -561,20 +413,41 @@ ALTER SEQUENCE public.role_role_id_seq OWNED BY public.role.role_id;
 
 
 --
--- Name: topic_reply; Type: TABLE; Schema: public; Owner: postgres
+-- Name: security_question; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.topic_reply (
-    topic_reply_id bigint NOT NULL,
-    comment character varying(255) NOT NULL,
+CREATE TABLE public.security_question (
+    security_question_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    answer character varying(255) NOT NULL,
+    question character varying NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL,
-    user_topic_id bigint NOT NULL
+    user_id bigint NOT NULL
 );
 
 
-ALTER TABLE public.topic_reply OWNER TO postgres;
+ALTER TABLE public.security_question OWNER TO postgres;
+
+--
+-- Name: security_question_security_question_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.security_question_security_question_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.security_question_security_question_id_seq OWNER TO postgres;
+
+--
+-- Name: security_question_security_question_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.security_question_security_question_id_seq OWNED BY public.security_question.security_question_id;
+
 
 --
 -- Name: topic_reply_topic_reply_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -594,7 +467,7 @@ ALTER TABLE public.topic_reply_topic_reply_id_seq OWNER TO postgres;
 -- Name: topic_reply_topic_reply_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.topic_reply_topic_reply_id_seq OWNED BY public.topic_reply.topic_reply_id;
+ALTER SEQUENCE public.topic_reply_topic_reply_id_seq OWNED BY public.blog_reply.blog_reply_id;
 
 
 --
@@ -615,7 +488,7 @@ ALTER TABLE public.topic_reply_user_id_seq OWNER TO postgres;
 -- Name: topic_reply_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.topic_reply_user_id_seq OWNED BY public.topic_reply.user_id;
+ALTER SEQUENCE public.topic_reply_user_id_seq OWNED BY public.blog_reply.user_id;
 
 
 --
@@ -636,143 +509,7 @@ ALTER TABLE public.topic_reply_user_topic_id_seq OWNER TO postgres;
 -- Name: topic_reply_user_topic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.topic_reply_user_topic_id_seq OWNED BY public.topic_reply.user_topic_id;
-
-
---
--- Name: user_blog; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.user_blog (
-    user_blog_id bigint NOT NULL,
-    content character varying(255) NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    title character varying(255) NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.user_blog OWNER TO postgres;
-
---
--- Name: user_blog_user_blog_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.user_blog_user_blog_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_blog_user_blog_id_seq OWNER TO postgres;
-
---
--- Name: user_blog_user_blog_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.user_blog_user_blog_id_seq OWNED BY public.user_blog.user_blog_id;
-
-
---
--- Name: user_blog_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.user_blog_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_blog_user_id_seq OWNER TO postgres;
-
---
--- Name: user_blog_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.user_blog_user_id_seq OWNED BY public.user_blog.user_id;
-
-
---
--- Name: user_manager; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.user_manager (
-    user_manager_id bigint NOT NULL,
-    admin_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-
-ALTER TABLE public.user_manager OWNER TO postgres;
-
---
--- Name: user_manager_manager_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.user_manager_manager_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_manager_manager_id_seq OWNER TO postgres;
-
---
--- Name: user_manager_manager_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.user_manager_manager_id_seq OWNED BY public.user_manager.admin_id;
-
-
---
--- Name: user_manager_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.user_manager_user_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_manager_user_id_seq OWNER TO postgres;
-
---
--- Name: user_manager_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.user_manager_user_id_seq OWNED BY public.user_manager.user_id;
-
-
---
--- Name: user_manager_user_manager_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.user_manager_user_manager_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.user_manager_user_manager_id_seq OWNER TO postgres;
-
---
--- Name: user_manager_user_manager_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.user_manager_user_manager_id_seq OWNED BY public.user_manager.user_manager_id;
+ALTER SEQUENCE public.topic_reply_user_topic_id_seq OWNED BY public.blog_reply.blog_id;
 
 
 --
@@ -895,23 +632,6 @@ ALTER SEQUENCE public.user_suggestion_user_suggestion_id_seq OWNED BY public.use
 
 
 --
--- Name: user_topic; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.user_topic (
-    user_topic_id bigint NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    problem_description character varying(255) NOT NULL,
-    tags character varying(255) NOT NULL,
-    title character varying(255) NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.user_topic OWNER TO postgres;
-
---
 -- Name: user_topic_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -929,7 +649,7 @@ ALTER TABLE public.user_topic_user_id_seq OWNER TO postgres;
 -- Name: user_topic_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.user_topic_user_id_seq OWNED BY public.user_topic.user_id;
+ALTER SEQUENCE public.user_topic_user_id_seq OWNED BY public.blog.user_id;
 
 
 --
@@ -950,23 +670,24 @@ ALTER TABLE public.user_topic_user_topic_id_seq OWNER TO postgres;
 -- Name: user_topic_user_topic_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.user_topic_user_topic_id_seq OWNED BY public.user_topic.user_topic_id;
+ALTER SEQUENCE public.user_topic_user_topic_id_seq OWNED BY public.blog.blog_id;
 
 
 --
--- Name: user_wish; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wish_reply; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.user_wish (
-    user_wish_id bigint NOT NULL,
+CREATE TABLE public.wish_reply (
+    wish_reply_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     message character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    wish_id bigint NOT NULL
+    wish_id bigint NOT NULL,
+    user_id bigint NOT NULL
 );
 
 
-ALTER TABLE public.user_wish OWNER TO postgres;
+ALTER TABLE public.wish_reply OWNER TO postgres;
 
 --
 -- Name: user_wish_user_wish_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -986,7 +707,7 @@ ALTER TABLE public.user_wish_user_wish_id_seq OWNER TO postgres;
 -- Name: user_wish_user_wish_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.user_wish_user_wish_id_seq OWNED BY public.user_wish.user_wish_id;
+ALTER SEQUENCE public.user_wish_user_wish_id_seq OWNED BY public.wish_reply.wish_reply_id;
 
 
 --
@@ -1007,7 +728,7 @@ ALTER TABLE public.user_wish_wish_id_seq OWNER TO postgres;
 -- Name: user_wish_wish_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.user_wish_wish_id_seq OWNED BY public.user_wish.wish_id;
+ALTER SEQUENCE public.user_wish_wish_id_seq OWNED BY public.wish_reply.wish_id;
 
 
 --
@@ -1046,6 +767,27 @@ ALTER TABLE public.wish_admin_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.wish_admin_id_seq OWNED BY public.wish.admin_id;
+
+
+--
+-- Name: wish_reply_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.wish_reply_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.wish_reply_user_id_seq OWNER TO postgres;
+
+--
+-- Name: wish_reply_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.wish_reply_user_id_seq OWNED BY public.wish_reply.user_id;
 
 
 --
@@ -1091,48 +833,6 @@ ALTER SEQUENCE public.wish_wish_id_seq OWNED BY public.wish.wish_id;
 
 
 --
--- Name: additional_point additional_point_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN additional_point_id SET DEFAULT nextval('public.additional_point_additional_point_id_seq'::regclass);
-
-
---
--- Name: additional_point user_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN user_id SET DEFAULT nextval('public.additional_point_user_id_seq'::regclass);
-
-
---
--- Name: additional_point user_blog_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN user_blog_id SET DEFAULT nextval('public.additional_point_user_blog_id_seq'::regclass);
-
-
---
--- Name: additional_point user_skill_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN user_skill_id SET DEFAULT nextval('public.additional_point_user_skill_id_seq'::regclass);
-
-
---
--- Name: additional_point user_topic_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN user_topic_id SET DEFAULT nextval('public.additional_point_user_topic_id_seq'::regclass);
-
-
---
--- Name: additional_point admin_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point ALTER COLUMN admin_id SET DEFAULT nextval('public.additional_point_admin_id_seq'::regclass);
-
-
---
 -- Name: app_user user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1147,17 +847,45 @@ ALTER TABLE ONLY public.app_user ALTER COLUMN role_id SET DEFAULT nextval('publi
 
 
 --
+-- Name: blog blog_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog ALTER COLUMN blog_id SET DEFAULT nextval('public.user_topic_user_topic_id_seq'::regclass);
+
+
+--
+-- Name: blog user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog ALTER COLUMN user_id SET DEFAULT nextval('public.user_topic_user_id_seq'::regclass);
+
+
+--
 -- Name: blog_reply blog_reply_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.blog_reply ALTER COLUMN blog_reply_id SET DEFAULT nextval('public.blog_reply_blog_reply_id_seq'::regclass);
+ALTER TABLE ONLY public.blog_reply ALTER COLUMN blog_reply_id SET DEFAULT nextval('public.topic_reply_topic_reply_id_seq'::regclass);
 
 
 --
 -- Name: blog_reply user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.blog_reply ALTER COLUMN user_id SET DEFAULT nextval('public.blog_reply_user_id_seq'::regclass);
+ALTER TABLE ONLY public.blog_reply ALTER COLUMN user_id SET DEFAULT nextval('public.topic_reply_user_id_seq'::regclass);
+
+
+--
+-- Name: blog_reply blog_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog_reply ALTER COLUMN blog_id SET DEFAULT nextval('public.topic_reply_user_topic_id_seq'::regclass);
+
+
+--
+-- Name: blog_reply parent; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog_reply ALTER COLUMN parent SET DEFAULT nextval('public.blog_reply_parent_seq'::regclass);
 
 
 --
@@ -1224,59 +952,10 @@ ALTER TABLE ONLY public.role ALTER COLUMN admin_id SET DEFAULT nextval('public.r
 
 
 --
--- Name: topic_reply topic_reply_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: security_question security_question_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.topic_reply ALTER COLUMN topic_reply_id SET DEFAULT nextval('public.topic_reply_topic_reply_id_seq'::regclass);
-
-
---
--- Name: topic_reply user_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.topic_reply ALTER COLUMN user_id SET DEFAULT nextval('public.topic_reply_user_id_seq'::regclass);
-
-
---
--- Name: topic_reply user_topic_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.topic_reply ALTER COLUMN user_topic_id SET DEFAULT nextval('public.topic_reply_user_topic_id_seq'::regclass);
-
-
---
--- Name: user_blog user_blog_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_blog ALTER COLUMN user_blog_id SET DEFAULT nextval('public.user_blog_user_blog_id_seq'::regclass);
-
-
---
--- Name: user_blog user_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_blog ALTER COLUMN user_id SET DEFAULT nextval('public.user_blog_user_id_seq'::regclass);
-
-
---
--- Name: user_manager user_manager_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_manager ALTER COLUMN user_manager_id SET DEFAULT nextval('public.user_manager_user_manager_id_seq'::regclass);
-
-
---
--- Name: user_manager admin_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_manager ALTER COLUMN admin_id SET DEFAULT nextval('public.user_manager_manager_id_seq'::regclass);
-
-
---
--- Name: user_manager user_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_manager ALTER COLUMN user_id SET DEFAULT nextval('public.user_manager_user_id_seq'::regclass);
+ALTER TABLE ONLY public.security_question ALTER COLUMN security_question_id SET DEFAULT nextval('public.security_question_security_question_id_seq'::regclass);
 
 
 --
@@ -1308,34 +987,6 @@ ALTER TABLE ONLY public.user_suggestion ALTER COLUMN user_id SET DEFAULT nextval
 
 
 --
--- Name: user_topic user_topic_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_topic ALTER COLUMN user_topic_id SET DEFAULT nextval('public.user_topic_user_topic_id_seq'::regclass);
-
-
---
--- Name: user_topic user_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_topic ALTER COLUMN user_id SET DEFAULT nextval('public.user_topic_user_id_seq'::regclass);
-
-
---
--- Name: user_wish user_wish_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_wish ALTER COLUMN user_wish_id SET DEFAULT nextval('public.user_wish_user_wish_id_seq'::regclass);
-
-
---
--- Name: user_wish wish_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_wish ALTER COLUMN wish_id SET DEFAULT nextval('public.user_wish_wish_id_seq'::regclass);
-
-
---
 -- Name: wish wish_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1357,11 +1008,24 @@ ALTER TABLE ONLY public.wish ALTER COLUMN admin_id SET DEFAULT nextval('public.w
 
 
 --
--- Name: additional_point additional_point_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wish_reply wish_reply_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT additional_point_pkey PRIMARY KEY (additional_point_id);
+ALTER TABLE ONLY public.wish_reply ALTER COLUMN wish_reply_id SET DEFAULT nextval('public.user_wish_user_wish_id_seq'::regclass);
+
+
+--
+-- Name: wish_reply wish_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.wish_reply ALTER COLUMN wish_id SET DEFAULT nextval('public.user_wish_wish_id_seq'::regclass);
+
+
+--
+-- Name: wish_reply user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.wish_reply ALTER COLUMN user_id SET DEFAULT nextval('public.wish_reply_user_id_seq'::regclass);
 
 
 --
@@ -1386,6 +1050,14 @@ ALTER TABLE ONLY public.app_user
 
 ALTER TABLE ONLY public.app_user
     ADD CONSTRAINT app_user_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: blog blog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog
+    ADD CONSTRAINT blog_pkey PRIMARY KEY (blog_id);
 
 
 --
@@ -1429,27 +1101,11 @@ ALTER TABLE ONLY public.role
 
 
 --
--- Name: topic_reply topic_reply_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: security_question security_question_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.topic_reply
-    ADD CONSTRAINT topic_reply_pkey PRIMARY KEY (topic_reply_id);
-
-
---
--- Name: user_blog user_blog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_blog
-    ADD CONSTRAINT user_blog_pkey PRIMARY KEY (user_blog_id);
-
-
---
--- Name: user_manager user_manager_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_manager
-    ADD CONSTRAINT user_manager_pkey PRIMARY KEY (user_manager_id);
+ALTER TABLE ONLY public.security_question
+    ADD CONSTRAINT security_question_pkey PRIMARY KEY (security_question_id);
 
 
 --
@@ -1469,19 +1125,11 @@ ALTER TABLE ONLY public.user_suggestion
 
 
 --
--- Name: user_topic user_topic_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wish_reply user_wish_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_topic
-    ADD CONSTRAINT user_topic_pkey PRIMARY KEY (user_topic_id);
-
-
---
--- Name: user_wish user_wish_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_wish
-    ADD CONSTRAINT user_wish_pkey PRIMARY KEY (user_wish_id);
+ALTER TABLE ONLY public.wish_reply
+    ADD CONSTRAINT user_wish_pkey PRIMARY KEY (wish_reply_id);
 
 
 --
@@ -1493,27 +1141,27 @@ ALTER TABLE ONLY public.wish
 
 
 --
--- Name: additional_point additional_point_fk5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: app_user app_user_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT additional_point_fk5 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
-
-
---
--- Name: topic_reply fk1eans8ed7rjpavcwfoejqppv4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.topic_reply
-    ADD CONSTRAINT fk1eans8ed7rjpavcwfoejqppv4 FOREIGN KEY (topic_reply_id) REFERENCES public.topic_reply(topic_reply_id);
+ALTER TABLE ONLY public.app_user
+    ADD CONSTRAINT app_user_fk2 FOREIGN KEY (managed_by) REFERENCES public.app_user(user_id) ON DELETE SET NULL;
 
 
 --
--- Name: blog_reply fk1f8v4y5vo31t01gf3pgvbu7r9; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: blog_reply blog_reply_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.blog_reply
-    ADD CONSTRAINT fk1f8v4y5vo31t01gf3pgvbu7r9 FOREIGN KEY (blog_reply_id) REFERENCES public.blog_reply(blog_reply_id);
+    ADD CONSTRAINT blog_reply_fk2 FOREIGN KEY (parent) REFERENCES public.blog_reply(blog_reply_id) ON DELETE CASCADE;
+
+
+--
+-- Name: blog_reply fk1eans8ed7rjpavcwfoejqppv4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blog_reply
+    ADD CONSTRAINT fk1eans8ed7rjpavcwfoejqppv4 FOREIGN KEY (blog_reply_id) REFERENCES public.blog_reply(blog_reply_id);
 
 
 --
@@ -1525,10 +1173,10 @@ ALTER TABLE ONLY public.user_suggestion
 
 
 --
--- Name: user_topic fk435jqawocr69e749x6hux5exe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: blog fk435jqawocr69e749x6hux5exe; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_topic
+ALTER TABLE ONLY public.blog
     ADD CONSTRAINT fk435jqawocr69e749x6hux5exe FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
@@ -1549,19 +1197,11 @@ ALTER TABLE ONLY public.performance_evaluation
 
 
 --
--- Name: user_wish fk6jaq2u20edu7luol40791em16; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wish_reply fk6jaq2u20edu7luol40791em16; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_wish
+ALTER TABLE ONLY public.wish_reply
     ADD CONSTRAINT fk6jaq2u20edu7luol40791em16 FOREIGN KEY (wish_id) REFERENCES public.wish(wish_id) ON DELETE CASCADE;
-
-
---
--- Name: additional_point fk9bshydwwn2vy8ceai4qjgus1p; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fk9bshydwwn2vy8ceai4qjgus1p FOREIGN KEY (user_skill_id) REFERENCES public.user_skill(user_skill_id) ON DELETE CASCADE;
 
 
 --
@@ -1573,22 +1213,6 @@ ALTER TABLE ONLY public.user_skill
 
 
 --
--- Name: user_blog fkf9vrdukekl9prmxwy8clbhgil; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_blog
-    ADD CONSTRAINT fkf9vrdukekl9prmxwy8clbhgil FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
-
-
---
--- Name: additional_point fkfabxvm8xxvump3vkexjvggfjn; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkfabxvm8xxvump3vkexjvggfjn FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id) ON DELETE CASCADE;
-
-
---
 -- Name: wish fkfvn0c4y0fnsk1h6ll95s164om; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1597,42 +1221,18 @@ ALTER TABLE ONLY public.wish
 
 
 --
--- Name: additional_point fkhm9okps0el9o162wwljp2xapx; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkhm9okps0el9o162wwljp2xapx FOREIGN KEY (user_blog_id) REFERENCES public.user_blog(user_blog_id) ON DELETE CASCADE;
-
-
---
--- Name: blog_reply fkocw8sh8oe15m7ybic88plc2jc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: blog_reply fkp7eo1bgo0dugkh5cfs2gml8wi; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.blog_reply
-    ADD CONSTRAINT fkocw8sh8oe15m7ybic88plc2jc FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+    ADD CONSTRAINT fkp7eo1bgo0dugkh5cfs2gml8wi FOREIGN KEY (blog_id) REFERENCES public.blog(blog_id) ON DELETE CASCADE;
 
 
 --
--- Name: topic_reply fkp7eo1bgo0dugkh5cfs2gml8wi; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: blog_reply fktoi6eifjvf4ej2en5ttkeqjei; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.topic_reply
-    ADD CONSTRAINT fkp7eo1bgo0dugkh5cfs2gml8wi FOREIGN KEY (user_topic_id) REFERENCES public.user_topic(user_topic_id) ON DELETE CASCADE;
-
-
---
--- Name: additional_point fkrwbjh4p12ohkwwh5d5oqixwd1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.additional_point
-    ADD CONSTRAINT fkrwbjh4p12ohkwwh5d5oqixwd1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
-
-
---
--- Name: topic_reply fktoi6eifjvf4ej2en5ttkeqjei; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.topic_reply
+ALTER TABLE ONLY public.blog_reply
     ADD CONSTRAINT fktoi6eifjvf4ej2en5ttkeqjei FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
@@ -1669,19 +1269,11 @@ ALTER TABLE ONLY public.role
 
 
 --
--- Name: user_manager user_manager_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: security_question user_security_question_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_manager
-    ADD CONSTRAINT user_manager_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
-
-
---
--- Name: user_manager user_manager_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_manager
-    ADD CONSTRAINT user_manager_fk2 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.security_question
+    ADD CONSTRAINT user_security_question_fk1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
@@ -1690,6 +1282,14 @@ ALTER TABLE ONLY public.user_manager
 
 ALTER TABLE ONLY public.wish
     ADD CONSTRAINT wish_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: wish_reply wish_reply_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.wish_reply
+    ADD CONSTRAINT wish_reply_fk1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
