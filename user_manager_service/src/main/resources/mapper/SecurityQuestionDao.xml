@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.user_manager_service.dao.SecurityQuestionDao" >
+
+    <insert id="saveSecurityQuestion" parameterType="com.model.SecurityQuestionVO">
+        INSERT INTO security_question
+        (user_id,question,answer)
+        VALUES
+        (#{userId},#{question},#{answer})
+    </insert>
+
+    <select id="getSecurityQuestionByUserId" parameterType="Long" resultType="com.model.SecurityQuestionVO">
+        SELECT * FROM security_question WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateSecurityQuestion" parameterType="com.model.SecurityQuestionVO">
+        UPDATE security_question
+        SET
+        question = #{question},
+        answer = #{answer}
+        WHERE
+        security_question_id = #{securityQuestionId}
+    </update>
+
+    <delete id="deleteSecurityQuestion" parameterType="Long">
+        DELETE FROM security_question WHERE security_question_id = #{securityQuestionId}
+    </delete>
+
+    <select id="verifySecurityQuestionAnswer" parameterType="com.model.SecurityQuestionVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM security_question
+        WHERE
+        security_question_id = #{securityQuestionId} AND LOWER(answer) = LOWER(#{answer}) LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+
+</mapper>
