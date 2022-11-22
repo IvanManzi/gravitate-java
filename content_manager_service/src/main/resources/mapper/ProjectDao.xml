@@ -16,6 +16,7 @@
     <update id="updateProject" parameterType="com.model.ProjectVO">
         UPDATE project
         SET
+        status = #{status},
         client_email = #{clientEmail},
         client_name = #{clientName},
         phone_number = #{phoneNumber},

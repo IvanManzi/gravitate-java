@@ -49,6 +49,7 @@ public class ProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setProjectId(updateProjectRequest.projectId());
+        projectVO.setStatus(updateProjectRequest.status());
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectName(updateProjectRequest.projectName());
         projectVO.setClientName(updateProjectRequest.clientName());

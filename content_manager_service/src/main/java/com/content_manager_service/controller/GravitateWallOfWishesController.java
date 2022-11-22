@@ -56,8 +56,8 @@ public class GravitateWallOfWishesController {
     }
 
     @GetMapping(value = "/team")
-    public ResponseEntity getTeamLatestWishes(@RequestParam("managerId") Long managerId){
-        return gravitateWishesManagerService.getTeamLatestWishes(Long.valueOf(managerId));
+    public ResponseEntity getTeamLatestWishes(){
+        return gravitateWishesManagerService.getTeamLatestWishes();
     }
 
     @GetMapping(value = "/all")

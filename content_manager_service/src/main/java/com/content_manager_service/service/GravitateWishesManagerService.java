@@ -14,7 +14,7 @@ public interface GravitateWishesManagerService {
 
     ResponseEntity createWishReply(WishReplyVO wishReplyVO);
 
-    ResponseEntity getTeamLatestWishes(Long managerId);
+    ResponseEntity getTeamLatestWishes();
 
     ResponseEntity updateWish(WishVO wishVO);
 

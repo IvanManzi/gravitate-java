@@ -26,31 +26,31 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity createBlog(BlogVO blogVO) {
         int result = blogDao.createBlog(blogVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Blog successfully created.");
+            return APIResponse.resultSuccess("Topic successfully created. ");
         }else{
             return APIResponse.resultFail();
         }
     }
 
     @Override
-    public ResponseEntity getTeamMembersBlogs(Long managerId) {
-        List<Map> blogs = blogDao.getTeamMembersBlogs(managerId);
-        if(blogs.isEmpty()){
+    public ResponseEntity createBlogReply(BlogReplyVO blogReplyVO) {
+        int result = blogReplyDao.createBlogReply(blogReplyVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Topic reply successfully created. ");
+        }else{
+            return APIResponse.resultFail();
+        }
+    }
+
+    @Override
+    public ResponseEntity getAllTeamBlogs() {
+        List<Map> teamTopics = blogDao.getAllTeamMembersBlogs();
+        if(teamTopics.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
             Map<String,Object> data = new HashMap<>();
-            data.put("TEAM_BLOGS",blogs);
+            data.put("TEAM_TOPICS",teamTopics);
             return APIResponse.resultSuccess(data);
-        }
-    }
-
-    @Override
-    public ResponseEntity createBlogComment(BlogReplyVO blogReplyVO) {
-        int result = blogReplyDao.createBlogReply(blogReplyVO);
-        if(result > 0){
-            return APIResponse.resultSuccess("Blog comment successfully created.");
-        }else{
-            return APIResponse.resultFail();
         }
     }
 
@@ -58,17 +58,17 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity updateBlog(BlogVO blogVO) {
         int result = blogDao.updateBlog(blogVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Blog successfully updated. ");
+            return APIResponse.resultSuccess("Topic successfully updated. ");
         }else{
             return APIResponse.resultFail();
         }
     }
 
     @Override
-    public ResponseEntity deleteBlog(Long blogId) {
-        int result = blogDao.deleteBlog(blogId);
+    public ResponseEntity deleteBlog(Long topicId) {
+        int result  = blogDao.deleteBlog(topicId);
         if(result > 0){
-            return APIResponse.resultSuccess("Blog successfully deleted. ");
+            return APIResponse.resultSuccess("Topic successfully deleted.");
         }else{
             return APIResponse.resultFail();
         }

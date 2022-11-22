@@ -9,21 +9,24 @@ import java.util.Date;
 
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class BlogReplyVO implements Serializable {
 
-    private final static long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     private Long blogReplyId;
 
+    private Long blogId;
+
     private Long userId;
 
-    private String reply;
+    private String comment;
 
-    private Long parentBlogReplyId;
+    private Long parent;
 
     private Date createdAt;
 
     private Date updatedAt;
+
 }

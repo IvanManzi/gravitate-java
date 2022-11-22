@@ -10,7 +10,7 @@
     </insert>
 
     <select id="getAllPolicies" resultType="com.model.PolicyVO">
-        SELECT * FROM policy WHERE admin_id = #{adminId}
+        SELECT * FROM policy
     </select>
 
     <update id="updateGravitatePolicy" parameterType="com.model.PolicyVO">

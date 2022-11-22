@@ -38,10 +38,8 @@ public class GravitatePolicyController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllPolicies(HttpServletRequest request) throws IOException {
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return gravitatePolicyService.getGravitatePolicy(Long.valueOf(userId));
+    public ResponseEntity getAllPolicies() throws IOException {
+        return gravitatePolicyService.getGravitatePolicy();
     }
 
     @PutMapping(value = "/")

@@ -42,7 +42,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/content/topic/**",
+        http.authorizeRequests().antMatchers("/api/v1/content/blog/**",
+                                                        "/api/v1/content/policy/all",
                                                         "/api/v1/content/wish/user",
                                                         "/api/v1/content/wish/team",
                                                         "/api/v1/content/wish/comment").hasAuthority(CLIENT_USER);
