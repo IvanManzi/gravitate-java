@@ -37,7 +37,7 @@
     </update>
 
     <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="com.model.UserVO">
-        SELECT * FROM app_user WHERE managed_by = #{managerId}
+        SELECT * FROM app_user WHERE user_type != 'Admin'
     </select>
 
 
