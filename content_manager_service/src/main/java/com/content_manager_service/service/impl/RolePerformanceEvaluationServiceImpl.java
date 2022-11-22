@@ -32,8 +32,8 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
     }
 
     @Override
-    public ResponseEntity getAllRolePerformanceEvaluation(Long userId) {
-        List<Map> performanceEvaluations = rolePerformanceEvaluationDao.getRolePerformanceEvaluation(userId);
+    public ResponseEntity getAllRolePerformanceEvaluation() {
+        List<Map> performanceEvaluations = rolePerformanceEvaluationDao.getAllRolePerformanceEvaluation();
         if(performanceEvaluations.isEmpty()){
             return APIResponse.resultFail("No performance evaluations found.");
         }else{

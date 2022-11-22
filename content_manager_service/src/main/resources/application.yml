@@ -5,7 +5,7 @@ spring:
     name: CONTENT-MANAGER-SERVICE-APPLICATION
   datasource:
     username: postgres
-    password: ?Mfptnj123@hview2022
+    password: password
     url: jdbc:postgresql://localhost:5432/gravitatedb
   jpa:
     hibernate:

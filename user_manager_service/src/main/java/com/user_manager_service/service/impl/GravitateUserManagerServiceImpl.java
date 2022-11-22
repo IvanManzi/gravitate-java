@@ -58,8 +58,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getAllGravitateUsersByManagerId(Long managerId) {
-        List<UserVO> users = userDao.getGravitateUsersByManagerId(managerId);
+    public ResponseEntity getAllGravitateUsers() {
+        List<Map> users = userDao.getGravitateUsersByManagerId();
         if(users.isEmpty()){
             return  APIResponse.resultFail("No users found.");
         }else{
@@ -73,6 +73,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     public ResponseEntity updateGravitateUser(UserVO userVO) {
         return null;
     }
+
 
     @Override
     public ResponseEntity deleteGravitateUser(Long userId) {

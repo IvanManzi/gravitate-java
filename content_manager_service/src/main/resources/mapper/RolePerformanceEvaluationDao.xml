@@ -9,8 +9,8 @@
         (#{roleId},#{adminId},#{criteria},#{description})
     </insert>
 
-    <select id="getRolePerformanceEvaluation" resultType="com.model.RolePerformanceEvaluationVO">
-        SELECT * FROM performance_evaluation WHERE admin_id = #{adminId}
+    <select id="getAllRolePerformanceEvaluation" resultType="com.model.RolePerformanceEvaluationVO">
+        SELECT * FROM performance_evaluation
     </select>
 
     <update id="updateRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">

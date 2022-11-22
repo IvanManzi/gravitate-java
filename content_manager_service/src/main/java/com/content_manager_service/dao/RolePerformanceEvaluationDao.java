@@ -10,7 +10,7 @@ import java.util.Map;
 public interface RolePerformanceEvaluationDao {
 
     int createRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
-    List<Map> getRolePerformanceEvaluation(Long adminId);
+    List<Map> getAllRolePerformanceEvaluation();
     int updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
     int deleteRolePerformanceEvaluation(Long performanceEvaluationId);
 

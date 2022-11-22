@@ -8,7 +8,7 @@ public interface RolePerformanceEvaluationService {
 
     ResponseEntity createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
 
-    ResponseEntity getAllRolePerformanceEvaluation(Long userId);
+    ResponseEntity getAllRolePerformanceEvaluation();
 
     ResponseEntity updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
 
