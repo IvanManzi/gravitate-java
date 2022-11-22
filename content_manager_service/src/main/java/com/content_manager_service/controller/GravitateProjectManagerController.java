@@ -18,7 +18,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping("/api/v1/content/project")
 @RequiredArgsConstructor
-public class ProjectManagerController {
+public class GravitateProjectManagerController {
 
     private final ProjectManagerService projectManagerService;
 
