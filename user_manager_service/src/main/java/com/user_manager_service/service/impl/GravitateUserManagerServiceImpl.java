@@ -58,8 +58,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getAllGravitateUsers() {
-        List<Map> users = userDao.getGravitateUsersByManagerId();
+    public ResponseEntity getAllGravitateUsers(String search,Long roleId) {
+        List<Map> users = userDao.getAllGravitateUsers(search,roleId);
         if(users.isEmpty()){
             return  APIResponse.resultFail("No users found.");
         }else{

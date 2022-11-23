@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 public interface GravitateUserManagerService {
 
     ResponseEntity createGravitateUser(UserVO userVO);
-    ResponseEntity getAllGravitateUsers();
+    ResponseEntity getAllGravitateUsers(String search,Long roleId);
     ResponseEntity updateGravitateUser(UserVO userVO);
     ResponseEntity deleteGravitateUser(Long userId);
     ResponseEntity getGravitateUserByUsername(String username);
