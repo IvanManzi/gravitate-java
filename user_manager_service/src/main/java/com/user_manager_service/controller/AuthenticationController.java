@@ -54,14 +54,9 @@ public class AuthenticationController {
 
         Map<String,Object> data = new HashMap<>();
         data.put("USER",userDetails);
-        data.put("ROLES",roles);
+        //data.put("ROLES",roles);
         data.put("JWT_TOKEN",jwt);
 
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .status(HttpStatus.ACCEPTED)
-                        .data(data)
-                        .build()
-        );
+        return APIResponse.resultSuccess(data);
     }
 }
