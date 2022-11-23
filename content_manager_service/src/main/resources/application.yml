@@ -6,7 +6,7 @@ spring:
   datasource:
     username: postgres
     password: password
-    url: jdbc:postgresql://localhost:5432/gravitatedb
+    url: jdbc:postgresql://localhost:5433/gravitatedb
   jpa:
     hibernate:
       ddl-auto: create

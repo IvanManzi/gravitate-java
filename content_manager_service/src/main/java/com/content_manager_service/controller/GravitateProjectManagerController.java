@@ -28,6 +28,7 @@ public class GravitateProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setAdminId(Long.valueOf(userId));
+        projectVO.setJiraId(createProjectRequest.jiraId());
         projectVO.setProjectName(createProjectRequest.projectName());
         projectVO.setClientName(createProjectRequest.clientName());
         projectVO.setClientEmail(createProjectRequest.email());
@@ -49,6 +50,7 @@ public class GravitateProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setProjectId(updateProjectRequest.projectId());
+        projectVO.setJiraId(updateProjectRequest.jiraId());
         projectVO.setStatus(updateProjectRequest.status());
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectName(updateProjectRequest.projectName());

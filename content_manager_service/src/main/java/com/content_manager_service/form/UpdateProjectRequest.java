@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public record UpdateProjectRequest(@NotNull Long projectId,
-
+                                    @NotBlank String jiraId,
                                    @NotNull Integer status,
                                    @NotBlank String clientName,
                                    @NotBlank String projectName,
