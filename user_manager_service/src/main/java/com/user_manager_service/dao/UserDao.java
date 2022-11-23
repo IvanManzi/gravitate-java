@@ -2,6 +2,7 @@ package com.user_manager_service.dao;
 
 import com.model.UserVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -13,5 +14,5 @@ public interface UserDao {
     UserVO getGravitateUserByUsername(String username);
     int deleteGravitateUser(Long userId);
     int updateGravitateUserPassword(UserVO userVO);
-    List<Map> getGravitateUsersByManagerId();
+    List<Map> getAllGravitateUsers(@Param("search") String search, @Param("roleId") Long roleId );
 }
