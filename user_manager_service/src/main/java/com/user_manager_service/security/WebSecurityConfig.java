@@ -18,8 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.util.Constants.ADMIN_USER;
-import static com.util.Constants.CLIENT_USER;
+import static com.util.Constants.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -66,8 +65,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
           http.authorizeRequests().antMatchers("/api/v1/user/password-reset",
                                                           "/api/v1/user/profile",
-                                                          "/api/v1/user/all",
-                                                          "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,CLIENT_USER);
+                                                          "/api/v1/user/team/members",
+                                                          "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,DEVELOPER_USER,MANAGER_USER);
           http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
           http.authorizeRequests().anyRequest().authenticated();
 
