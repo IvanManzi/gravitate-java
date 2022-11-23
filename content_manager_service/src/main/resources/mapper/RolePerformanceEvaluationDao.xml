@@ -17,7 +17,7 @@
         UPDATE performance_evaluation
         SET
         role_id = #{roleId},
-        criteria = ${criteria},
+        criteria = #{criteria},
         description = #{description}
         WHERE
         role_performance_evaluation_id = #{rolePerformanceEvaluationId} AND admin_id = #{adminId}
