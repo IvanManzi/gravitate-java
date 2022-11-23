@@ -36,8 +36,8 @@
         user_id = #{userId}
     </update>
 
-    <select id="getGravitateUsersByManagerId" parameterType="Long" resultType="Map">
-        SELECT A.first_name,A.last_name,A.email,A.profile_picture_path,R.role_name,R.rolekra
+    <select id="getAllGravitateUsers" resultType="Map">
+        SELECT A.user_id,A.first_name,A.last_name,A.email,A.profile_picture_path,R.role_name,R.rolekra
         FROM
         app_user A
         INNER JOIN
@@ -45,6 +45,13 @@
         ON
         A.role_id = R.role_id
         WHERE user_type != 'Admin'
+        <if test="search != null">
+            <bind name="pattern" value="'%' + search + '%'"/>
+            AND A.first_name LIKE #{pattern}
+        </if>
+        <if test="roleId != null">
+            AND R.role_id = #{roleId}
+        </if>
     </select>
 
 
