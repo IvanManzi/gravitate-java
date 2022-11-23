@@ -47,7 +47,7 @@
         WHERE user_type != 'Admin'
         <if test="search != null">
             <bind name="pattern" value="'%' + search + '%'"/>
-            AND A.first_name LIKE #{pattern}
+            AND A.first_name LIKE #{pattern} AND A.last_name LIKE #{pattern}
         </if>
         <if test="roleId != null">
             AND R.role_id = #{roleId}
