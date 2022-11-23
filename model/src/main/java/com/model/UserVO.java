@@ -21,9 +21,14 @@ public class UserVO implements Serializable {
 
     private String userType;
 
-    private Integer isAdmin;
+    private boolean isAccountNonExpired;
 
-    private Integer status;
+    private boolean isAccountNonLocked;
+
+    private boolean status;
+
+    //1 for admin,2 for manager,3 for developer, 4 for client user
+    private Integer userLevel;
 
     private Long managedBy;
 
