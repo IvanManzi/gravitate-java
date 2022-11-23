@@ -6,8 +6,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public record CreateGravitateUserForm(@NotNull String userType,
-                                      @NotNull
-                                      Integer isAdmin,
+                                      @NotBlank
+                                      Integer userLevel,
                                       @NotBlank
                                       String firstName,
                                       @NotBlank
@@ -30,7 +30,6 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       String email,
                                       @NotBlank
                                       String alternativeEmail,
-                                      @NotNull
                                       Long roleId,
                                       @NotBlank
                                       String bankName,
