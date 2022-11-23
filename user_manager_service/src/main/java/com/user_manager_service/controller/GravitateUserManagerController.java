@@ -51,8 +51,8 @@ public class GravitateUserManagerController {
         return gravitateUserManagerService.createGravitateUser(userVO);
     }
     @GetMapping(value = "/all")
-    public ResponseEntity getAllUsersByManagerId() throws IOException{
-        return gravitateUserManagerService.getAllGravitateUsers();
+    public ResponseEntity getAllGravitateUsers(@RequestParam(value = "search",required = false) String search,@RequestParam(value = "roleId",required = false) Long roleId) throws IOException{
+        return gravitateUserManagerService.getAllGravitateUsers(search,roleId);
     }
 
     @GetMapping(value = "/profile")
