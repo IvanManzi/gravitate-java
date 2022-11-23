@@ -4,9 +4,9 @@
 
     <insert id="createGravitateUser" parameterType="com.model.UserVO" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO app_user
-        (user_type,managed_by,role_id,is_admin,email,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number)
+        (user_type,managed_by,role_id,user_level,email,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number)
         VALUES
-        (#{userType},#{managedBy},#{roleId},#{isAdmin},#{email},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber})
+        (#{userType},#{managedBy},#{roleId},#{userLevel},#{email},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber})
     </insert>
 
     <select id="checkIfUsernameExists" parameterType="String" resultType="int">
@@ -28,6 +28,32 @@
         DELETE FROM app_user WHERE user_id = #{userId}
     </delete>
 
+    <update id="updateGravitateUser" parameterType="com.model.UserVO">
+        UPDATE app_user
+        SET
+        user_type = #{userType},
+        managed_by = #{managedBy},
+        role_id = #{roleId},
+        user_level = #{userLevel},
+        email = #{email},
+        password = #{password},
+        alternate_email = #{alternateEmail},
+        first_name = #{firstName},
+        last_name = #{lastName},
+        country = #{country},
+        date_of_birth = #{dateOfBirth},
+        phone_number = #{phoneNumber},
+        profile_picture_path = #{profilePicturePath},
+        contract_path = #{contractPath},
+        employment_status = #{employmentStatus},
+        joining_date = #{joiningDate},
+        billing = #{billing},
+        bank_name = #{bankName},
+        account_number = #{accountNumber}
+        WHERE
+        user_id = #{userId}
+    </update>
+
     <update id="updateGravitateUserPassword" parameterType="com.model.UserVO">
         UPDATE app_user
         SET
@@ -36,7 +62,15 @@
         user_id = #{userId}
     </update>
 
-    <select id="getAllGravitateUsers" resultType="Map">
+    <select id="getAllGravitateUsers" parameterType="String" resultType="com.model.UserVO">
+        SELECT * FROM app_user WHERE user_type != 'Admin'
+        <if test="search != null">
+            <bind name="pattern" value="'%' + search + '%'"/>
+            AND first_name LIKE #{pattern} AND last_name LIKE #{pattern}
+        </if>
+    </select>
+
+    <select id="getGravitateUserTeamMembers" resultType="Map">
         SELECT A.user_id,A.first_name,A.last_name,A.email,A.profile_picture_path,R.role_name,R.rolekra
         FROM
         app_user A
@@ -44,15 +78,23 @@
         role R
         ON
         A.role_id = R.role_id
-        WHERE user_type != 'Admin'
+        WHERE A.user_level != 1 <!--Admin has user level 1-->
+    </select>
+
+    <select id="getGravitateManagerUsers" resultType="com.model.UserVO">
+        SELECT * FROM app_user WHERE user_level = 2 <!--Manager users have level 2 -->
         <if test="search != null">
             <bind name="pattern" value="'%' + search + '%'"/>
-            AND A.first_name LIKE #{pattern} AND A.last_name LIKE #{pattern}
-        </if>
-        <if test="roleId != null">
-            AND R.role_id = #{roleId}
+            AND first_name LIKE #{pattern} AND last_name LIKE #{pattern}
         </if>
     </select>
+
+    <update id="updateUserStatus" parameterType="Long">
+        UPDATE app_user
+        SET
+        status = false
+        WHERE user_id #{userId}
+    </update>
 
 
 
