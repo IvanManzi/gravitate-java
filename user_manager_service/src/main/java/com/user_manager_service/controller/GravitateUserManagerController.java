@@ -27,8 +27,9 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm){
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm,HttpServletRequest request){
         UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         //create user obj
         userVO.setUserType(createGravitateUserForm.userType());
         userVO.setEmail(createGravitateUserForm.email());
@@ -49,7 +50,7 @@ public class GravitateUserManagerController {
         userVO.setUserLevel(createGravitateUserForm.userLevel());
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setManagedBy(createGravitateUserForm.managerId());
-        return gravitateUserManagerService.createGravitateUser(userVO);
+        return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token);
     }
     @GetMapping(value = "/all")
     public ResponseEntity getAllGravitateUsers(@RequestParam(value = "search",required = false) String search,@RequestParam(value = "roleId",required = false) Long roleId) throws IOException{
