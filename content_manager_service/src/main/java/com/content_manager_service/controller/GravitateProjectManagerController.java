@@ -1,11 +1,13 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.AssignProjectsToUserRequest;
 import com.content_manager_service.form.CreateProjectRequest;
 import com.content_manager_service.form.UpdateProjectRequest;
 import com.content_manager_service.service.ProjectManagerService;
 import com.model.ProjectVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,11 @@ public class GravitateProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         return projectManagerService.getAllProjectsByAdminId(Long.valueOf(userId));
+    }
+
+    @PostMapping(value = "/assign")
+    public boolean assignProjectToGravitateUser(@RequestBody AssignProjectsToUserRequest assignProjectsToUserRequest){
+        return projectManagerService.assignUserToProject(assignProjectsToUserRequest.userId(), assignProjectsToUserRequest.projects());
     }
 
     @PutMapping(value = "/")
