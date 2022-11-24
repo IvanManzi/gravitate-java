@@ -1,12 +1,13 @@
 package com.user_manager_service.form;
 
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public record CreateGravitateUserForm(String userType,
-                                      @NotNull
-                                      Integer isAdmin,
+public record CreateGravitateUserForm(@NotNull String userType,
+                                      @NotBlank
+                                      Integer userLevel,
                                       @NotBlank
                                       String firstName,
                                       @NotBlank
@@ -29,7 +30,6 @@ public record CreateGravitateUserForm(String userType,
                                       String email,
                                       @NotBlank
                                       String alternativeEmail,
-                                      @NotNull
                                       Long roleId,
                                       @NotBlank
                                       String bankName,
@@ -39,6 +39,5 @@ public record CreateGravitateUserForm(String userType,
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
-                                      @NotNull
                                       Long managerId) {
 }

@@ -38,10 +38,8 @@ public class RolePerformanceEvaluationController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllPerformanceEvaluations(HttpServletRequest request) throws IOException {
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return rolePerformanceEvaluationService.getAllRolePerformanceEvaluation(Long.valueOf(userId));
+    public ResponseEntity<APIResponse> getAllPerformanceEvaluations() {
+        return rolePerformanceEvaluationService.getAllRolePerformanceEvaluation();
     }
 
     @PutMapping(value = "/")

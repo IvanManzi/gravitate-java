@@ -4,9 +4,9 @@
 
     <insert id="createProject" parameterType="com.model.ProjectVO">
         INSERT INTO project
-        (client_email, client_name, phone_number, project_description, project_name, admin_id)
+        (client_email, client_name, jira_id, phone_number, project_description, project_name, admin_id)
         VALUES
-        (#{clientEmail}, #{clientName}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId})
+        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId})
     </insert>
 
     <select id="getProjectByAdminId" resultType="com.model.ProjectVO">
@@ -16,9 +16,11 @@
     <update id="updateProject" parameterType="com.model.ProjectVO">
         UPDATE project
         SET
+        status = #{status},
         client_email = #{clientEmail},
         client_name = #{clientName},
         phone_number = #{phoneNumber},
+        jira_id = #{jiraId},
         project_description = #{projectDescription},
         project_name = #{projectName}
         WHERE

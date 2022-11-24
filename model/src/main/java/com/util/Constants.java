@@ -19,6 +19,10 @@ public class Constants {
 
     //用户角色
     public static final String ADMIN_USER = "ROLE_ADMIN_USER";
+    public static final String MANAGER_USER = "ROLE_MANAGER_USER";
+
+    public static final String DEVELOPER_USER = "ROLE_DEVELOPER_USER";
+
     public static final String CLIENT_USER = "ROLE_CLIENT_USER";
 
     //jwt秘密

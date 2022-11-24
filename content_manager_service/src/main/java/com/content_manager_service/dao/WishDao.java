@@ -11,7 +11,7 @@ public interface WishDao {
 
     int createWish(WishVO wishVO);
     WishVO getLatestWishByUserId(Long userId);
-    List<Map> getTeamMembersLatestWishes(Long managerId);
+    List<Map> getTeamMembersLatestWishes();
     List<Map> getAllWishes(Long adminId);
     int updateWish(WishVO wishVO);
     int deleteWish(Long wishId);

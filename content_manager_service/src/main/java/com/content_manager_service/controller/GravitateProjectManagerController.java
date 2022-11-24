@@ -18,7 +18,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping("/api/v1/content/project")
 @RequiredArgsConstructor
-public class ProjectManagerController {
+public class GravitateProjectManagerController {
 
     private final ProjectManagerService projectManagerService;
 
@@ -28,6 +28,7 @@ public class ProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setAdminId(Long.valueOf(userId));
+        projectVO.setJiraId(createProjectRequest.jiraId());
         projectVO.setProjectName(createProjectRequest.projectName());
         projectVO.setClientName(createProjectRequest.clientName());
         projectVO.setClientEmail(createProjectRequest.email());
@@ -49,6 +50,8 @@ public class ProjectManagerController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setProjectId(updateProjectRequest.projectId());
+        projectVO.setJiraId(updateProjectRequest.jiraId());
+        projectVO.setStatus(updateProjectRequest.status());
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectName(updateProjectRequest.projectName());
         projectVO.setClientName(updateProjectRequest.clientName());

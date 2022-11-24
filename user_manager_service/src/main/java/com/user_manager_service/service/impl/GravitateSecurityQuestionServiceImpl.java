@@ -1,8 +1,8 @@
 package com.user_manager_service.service.impl;
 
-import com.model.UserSecurityQuestionVO;
-import com.user_manager_service.dao.UserSecurityQuestionDao;
-import com.user_manager_service.service.GravitateUserSecurityQuestionService;
+import com.model.SecurityQuestionVO;
+import com.user_manager_service.dao.SecurityQuestionDao;
+import com.user_manager_service.service.GravitateSecurityQuestionService;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +14,13 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSecurityQuestionService {
+public class GravitateSecurityQuestionServiceImpl implements GravitateSecurityQuestionService {
 
-    private final UserSecurityQuestionDao userSecurityQuestionDao;
+    private final SecurityQuestionDao securityQuestionDao;
 
     @Override
-    public ResponseEntity createUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO) {
-        int result = userSecurityQuestionDao.saveUserSecurityQuestion(userSecurityQuestionVO);
+    public ResponseEntity createSecurityQuestion(SecurityQuestionVO securityQuestionVO) {
+        int result = securityQuestionDao.saveSecurityQuestion(securityQuestionVO);
         if(result > 0){
             return APIResponse.resultSuccess("Security question successfully created. ");
         }else{
@@ -30,7 +30,7 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
 
     @Override
     public ResponseEntity getUserSecurityQuestion(Long userId) {
-        List<UserSecurityQuestionVO> securityQuestions = userSecurityQuestionDao.getSecurityQuestionByUserId(userId);
+        List<SecurityQuestionVO> securityQuestions = securityQuestionDao.getSecurityQuestionByUserId(userId);
         if(securityQuestions.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
@@ -41,8 +41,8 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
     }
 
     @Override
-    public ResponseEntity updateUserSecurityQuestion(UserSecurityQuestionVO userSecurityQuestionVO) {
-        int result = userSecurityQuestionDao.updateUserSecurityQuestion(userSecurityQuestionVO);
+    public ResponseEntity updateSecurityQuestion(SecurityQuestionVO securityQuestionVO) {
+        int result = securityQuestionDao.updateSecurityQuestion(securityQuestionVO);
         if(result > 0){
             return APIResponse.resultSuccess("Security question successfully updated.");
         }else{
@@ -51,8 +51,8 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
     }
 
     @Override
-    public ResponseEntity deleteUserSecurityQuestion(Long securityQuestionId) {
-        int result = userSecurityQuestionDao.deleteUserSecurityQuestion(securityQuestionId);
+    public ResponseEntity deleteSecurityQuestion(Long securityQuestionId) {
+        int result = securityQuestionDao.deleteSecurityQuestion(securityQuestionId);
         if(result > 0){
             return APIResponse.resultSuccess("Security question successfully deleted.");
         }else{
@@ -61,8 +61,8 @@ public class GravitateUserSecurityQuestionServiceImpl implements GravitateUserSe
     }
 
     @Override
-    public ResponseEntity verifyUserSecurityQuestionAnswer(UserSecurityQuestionVO userSecurityQuestionVO) {
-        int check = userSecurityQuestionDao.verifySecurityQuestionAnswer(userSecurityQuestionVO);
+    public ResponseEntity verifySecurityQuestionAnswer(SecurityQuestionVO securityQuestionVO) {
+        int check = securityQuestionDao.verifySecurityQuestionAnswer(securityQuestionVO);
         if(check == 1){
             return APIResponse.resultSuccess("Verification success.");
         }else{

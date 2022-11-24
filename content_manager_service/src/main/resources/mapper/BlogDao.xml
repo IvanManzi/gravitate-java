@@ -4,44 +4,47 @@
 
     <insert id="createBlog" parameterType="com.model.BlogVO">
         INSERT INTO blog
-        (user_id,title,tags,content)
+        (user_id,title,tags,problem_description,topic_thumbnail)
         VALUES
-        (#{userId},#{title},#{tags},#{content})
+        (#{userId},#{title},#{tags},#{problemDescription},#{topicThumbnail})
     </insert>
 
     <resultMap id="tResult" type="Map">
-        <collection property="comments" ofType="com.model.TopicReplyVO"  select="selectTopicReply" column="topic_id" />
+        <collection property="comments" ofType="com.model.BlogReplyVO" select="selectBlogReply" column="blog_id" />
     </resultMap>
 
-    <select id="getTeamMembersBlogs" resultMap="tResult">
-        SELECT T.topic_id,T.title,T.tags,T.problem_description,U.email,U.first_name,U.last_name,U.user_type FROM topic T
+    <select id="getAllTeamMembersBlogs" resultMap="tResult">
+        SELECT T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,U.email,U.first_name,U.last_name,U.user_type FROM blog T
         INNER JOIN app_user U
         ON
         T.user_id = U.user_id
-        WHERE
-        U.managed_by = #{managerId}
-        <if test="search != null">
+        <!--<if test="search != null">
             AND T.title = #{search}
-        </if>
+        </if>-->
     </select>
 
-    <select id="selectTopicReply" resultType="com.model.TopicReplyVO">
-        SELECT * FROM topic_reply WHERE topic_id = #{topicId}
+    <resultMap id="BlogCommentsResult" type="Map">
+        <collection property="sub_comments" ofType="com.model.BlogReplyVO" select="getBlogCommentSubComments" column="blog_reply_id" />
+    </resultMap>
+
+    <select id="selectBlogReply" resultMap="BlogCommentsResult">
+        SELECT * FROM blog_reply WHERE blog_id = #{blogId} AND parent IS NULL
     </select>
 
-
-    <select id="getLatestWishByUserId" parameterType="Long" resultType="com.model.WishVO">
-        SELECT * FROM wish WHERE user_id = #{userId} AND created_at = CURRENT_DATE
+    <!--Get sub comments of a comment-->
+    <select id="getBlogCommentSubComments" resultType="com.model.BlogReplyVO">
+        SELECT * FROM blog_reply WHERE parent = #{blogReplyId}
     </select>
 
     <update id="updateBlog" parameterType="com.model.BlogVO">
-        UPDATE topic
+        UPDATE blog
         SET
         title = #{title},
         tags = #{tags},
-        problem_description = #{problemDescription}
+        problem_description = #{problemDescription},
+        topic_thumbnail = #{topicThumbnail}
         WHERE
-        topic_id = #{topicId} AND user_id = #{userId}
+        blog_id = #{blogId} AND user_id = #{userId}
     </update>
 
     <delete id="deleteBlog" parameterType="Long">

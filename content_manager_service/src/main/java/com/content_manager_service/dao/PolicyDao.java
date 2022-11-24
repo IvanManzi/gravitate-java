@@ -9,7 +9,7 @@ import java.util.List;
 public interface PolicyDao {
 
     int createGravitatePolicy(PolicyVO policyVO);
-    List<PolicyVO> getAllPolicies(Long adminId);
+    List<PolicyVO> getAllPolicies();
     int updateGravitatePolicy(PolicyVO policyVO);
     int deleteGravitatePolicy(Long policyId);
 }

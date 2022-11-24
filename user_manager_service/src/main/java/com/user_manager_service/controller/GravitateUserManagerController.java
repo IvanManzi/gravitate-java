@@ -2,6 +2,7 @@ package com.user_manager_service.controller;
 
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
+import com.user_manager_service.form.UpdateGravitateUserForm;
 import com.user_manager_service.form.UpdateGravitateUserPasswordRequest;
 import com.user_manager_service.service.GravitateUserManagerService;
 import com.util.JwtUtils;
@@ -45,16 +46,14 @@ public class GravitateUserManagerController {
         userVO.setBankName(createGravitateUserForm.bankName());
         userVO.setAccountNumber(createGravitateUserForm.accountNumber());
         userVO.setBilling(createGravitateUserForm.billing());
-        userVO.setIsAdmin(createGravitateUserForm.isAdmin());
+        userVO.setUserLevel(createGravitateUserForm.userLevel());
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setManagedBy(createGravitateUserForm.managerId());
         return gravitateUserManagerService.createGravitateUser(userVO);
     }
     @GetMapping(value = "/all")
-    public ResponseEntity getAllUsersByManagerId(HttpServletRequest request) throws IOException{
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return gravitateUserManagerService.getAllGravitateUsersByManagerId(Long.valueOf(userId));
+    public ResponseEntity getAllGravitateUsers(@RequestParam(value = "search",required = false) String search,@RequestParam(value = "roleId",required = false) Long roleId) throws IOException{
+        return gravitateUserManagerService.getAllGravitateUsers(search,roleId);
     }
 
     @GetMapping(value = "/profile")
@@ -65,8 +64,29 @@ public class GravitateUserManagerController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity updateGravitateUser(){
-        return null;
+    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm){
+        UserVO userVO = new UserVO();
+        userVO.setUserId(updateGravitateUserForm.userId());
+        userVO.setUserType(updateGravitateUserForm.userType());
+        userVO.setEmail(updateGravitateUserForm.email());
+        userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
+        userVO.setAlternateEmail(updateGravitateUserForm.alternativeEmail());
+        userVO.setFirstName(updateGravitateUserForm.firstName());
+        userVO.setLastName(updateGravitateUserForm.lastName());
+        userVO.setCountry(updateGravitateUserForm.country());
+        userVO.setDateOfBirth(updateGravitateUserForm.dob());
+        userVO.setJoiningDate(updateGravitateUserForm.joinedOn());
+        userVO.setPhoneNumber(updateGravitateUserForm.phoneNumber());
+        userVO.setProfilePicturePath(updateGravitateUserForm.profilePicture());
+        userVO.setContractPath(updateGravitateUserForm.contractPath());
+        userVO.setEmploymentStatus(updateGravitateUserForm.employmentStatus());
+        userVO.setBankName(updateGravitateUserForm.bankName());
+        userVO.setAccountNumber(updateGravitateUserForm.accountNumber());
+        userVO.setBilling(updateGravitateUserForm.billing());
+        userVO.setUserLevel(updateGravitateUserForm.userLevel());
+        userVO.setRoleId(updateGravitateUserForm.roleId());
+        userVO.setManagedBy(updateGravitateUserForm.managerId());
+        return gravitateUserManagerService.updateGravitateUser(userVO);
     }
 
     @DeleteMapping(value = "/{userId}")
@@ -84,6 +104,23 @@ public class GravitateUserManagerController {
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
         return gravitateUserManagerService.updateGravitateUserPassword(userVO);
     }
+
+    @GetMapping("/team/members")
+    public ResponseEntity getGravitateUserTeamMembers(){
+        return gravitateUserManagerService.getGravitateUserTeamMembers();
+    }
+
+    @GetMapping("/managers")
+    public ResponseEntity getGravitateManagers(@RequestParam(value = "search",required = false) String search){
+        return gravitateUserManagerService.getGravitateManagerUsers(search);
+    }
+
+    @PutMapping("/{userId}/status")
+    public ResponseEntity updateGravitateUserStatus(@PathVariable("userId") Long userId){
+        return gravitateUserManagerService.disableGravitateUserAccount(userId);
+    }
+
+
 
 
 }

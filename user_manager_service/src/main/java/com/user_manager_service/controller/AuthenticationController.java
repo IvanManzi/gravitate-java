@@ -48,20 +48,15 @@ public class AuthenticationController {
         String jwt = JwtUtils.generateJwtToken(authentication);
 
         UserDetailsService userDetails = (UserDetailsService) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
+        /*List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
 
         Map<String,Object> data = new HashMap<>();
         data.put("USER",userDetails);
-        data.put("ROLES",roles);
+        //data.put("ROLES",roles);
         data.put("JWT_TOKEN",jwt);
 
-        return ResponseEntity.ok(
-                APIResponse.builder()
-                        .status(HttpStatus.ACCEPTED)
-                        .data(data)
-                        .build()
-        );
+        return APIResponse.resultSuccess(data);
     }
 }

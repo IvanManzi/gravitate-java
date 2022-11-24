@@ -68,8 +68,8 @@ public class GravitateWishesManagerServiceImpl implements GravitateWishesManager
     }
 
     @Override
-    public ResponseEntity getTeamLatestWishes(Long managerId) {
-        List<Map> teamWishes = wishDao.getTeamMembersLatestWishes(managerId);
+    public ResponseEntity getTeamLatestWishes() {
+        List<Map> teamWishes = wishDao.getTeamMembersLatestWishes();
         if(teamWishes.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{

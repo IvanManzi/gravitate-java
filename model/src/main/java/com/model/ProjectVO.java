@@ -19,6 +19,10 @@ public class ProjectVO implements Serializable {
 
     private Long adminId;
 
+    private String jiraId;
+
+    private Integer status;
+
     private String projectName;
 
     private String clientName;

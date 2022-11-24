@@ -21,7 +21,11 @@ public class BlogVO implements Serializable {
 
     private String title;
 
-    private String content;
+    private String tags;
+
+    private String topicThumbnail;
+
+    private String problemDescription;
 
     private Date createdAt;
 

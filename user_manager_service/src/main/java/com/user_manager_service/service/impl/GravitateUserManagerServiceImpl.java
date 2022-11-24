@@ -34,8 +34,10 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         }
         /*Collection<RoleVO> roles = roleDao.getGravitateUserRole(user.getUserId());
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));*/
-        switch (user.getIsAdmin()) {
+        switch (user.getUserLevel()) {
             case 1 -> authorities.add(new SimpleGrantedAuthority(ADMIN_USER));
+            case 2 -> authorities.add(new SimpleGrantedAuthority(MANAGER_USER));
+            case 3 -> authorities.add(new SimpleGrantedAuthority(DEVELOPER_USER));
             default -> authorities.add(new SimpleGrantedAuthority(CLIENT_USER));
         }
         return UserDetailsService.build(user,authorities);
@@ -58,8 +60,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getAllGravitateUsersByManagerId(Long managerId) {
-        List<UserVO> users = userDao.getGravitateUsersByManagerId(managerId);
+    public ResponseEntity getAllGravitateUsers(String search,Long roleId) {
+        List<UserVO> users = userDao.getAllGravitateUsers(search,roleId);
         if(users.isEmpty()){
             return  APIResponse.resultFail("No users found.");
         }else{
@@ -71,8 +73,14 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
     @Override
     public ResponseEntity updateGravitateUser(UserVO userVO) {
-        return null;
+        int result = userDao.updateGravitateUser(userVO);
+        if(result > 0){
+            return APIResponse.resultSuccess();
+        }else{
+            return APIResponse.resultFail();
+        }
     }
+
 
     @Override
     public ResponseEntity deleteGravitateUser(Long userId) {
@@ -100,6 +108,40 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         int result = userDao.updateGravitateUserPassword(userVO);
         if(result > 0){
             return APIResponse.resultSuccess("Password successfully updated. ");
+        }else{
+            return APIResponse.resultFail();
+        }
+    }
+
+    @Override
+    public ResponseEntity getGravitateUserTeamMembers() {
+        List<Map> teamMembers = userDao.getGravitateUserTeamMembers();
+        if(teamMembers.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }else{
+            Map<String,Object> data = new HashMap<>();
+            data.put("TEAM_MEMBERS",teamMembers);
+            return APIResponse.resultSuccess(data);
+        }
+    }
+
+    @Override
+    public ResponseEntity getGravitateManagerUsers(String search) {
+        List<UserVO> managers = userDao.getGravitateManagerUsers(search);
+        if(managers.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }else{
+            Map<String,Object> data = new HashMap<>();
+            data.put("MANAGERS",managers);
+            return APIResponse.resultSuccess(data);
+        }
+    }
+
+    @Override
+    public ResponseEntity disableGravitateUserAccount(Long userId) {
+        int result = userDao.updateUserStatus(userId);
+        if(result > 0){
+            return APIResponse.resultSuccess();
         }else{
             return APIResponse.resultFail();
         }

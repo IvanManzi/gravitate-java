@@ -22,14 +22,14 @@
         SELECT * FROM wish WHERE user_id = #{userId} AND DATE(created_at) = CURRENT_DATE
     </select>
 
-    <select id="getTeamMembersLatestWishes" parameterType="Long" resultType="Map">
+    <select id="getTeamMembersLatestWishes" resultType="Map">
         SELECT W.wish_id,W.wish_type,W.comment,U.user_id,U.first_name,U.last_name,U.email
         FROM wish W
         INNER JOIN
         app_user U
         ON
         W.user_id = U.user_id
-        WHERE DATE(W.created_at) = CURRENT_DATE AND U.managed_by = #{managerId}
+        WHERE DATE(W.created_at) = CURRENT_DATE
     </select>
 
     <update id="updateWish" parameterType="com.model.WishVO">
