@@ -23,7 +23,6 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       Date joinedOn,
                                       @NotBlank
                                       String employmentStatus,
-                                      @NotBlank
                                       String billing,
                                       @NotBlank
                                       String phoneNumber,
