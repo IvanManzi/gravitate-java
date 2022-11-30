@@ -262,7 +262,7 @@ ALTER SEQUENCE public.performance_evaluation_role_performance_evaluation_id_seq 
 CREATE TABLE public.policy (
     policy_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    description character varying(255) NOT NULL,
+    description character varying NOT NULL,
     policy_file_path character varying(255) NOT NULL,
     policy_name character varying(255) NOT NULL,
     policy_type character varying(255) NOT NULL,
