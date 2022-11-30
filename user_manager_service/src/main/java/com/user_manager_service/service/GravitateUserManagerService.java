@@ -10,7 +10,8 @@ public interface GravitateUserManagerService {
 
     ResponseEntity createGravitateUser(UserVO userVO, List<Long> projects, String token);
     ResponseEntity getAllGravitateUsers(String search,Long roleId);
-    ResponseEntity updateGravitateUser(UserVO userVO);
+    ResponseEntity getGravitateUserById(Long userId);
+    ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token);
     ResponseEntity deleteGravitateUser(Long userId);
     ResponseEntity getGravitateUserByUsername(String username);
     ResponseEntity updateGravitateUserPassword(UserVO userVO);
