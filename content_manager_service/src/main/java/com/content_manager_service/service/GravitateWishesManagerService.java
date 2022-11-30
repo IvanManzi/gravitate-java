@@ -4,6 +4,8 @@ import com.model.WishReplyVO;
 import com.model.WishVO;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
+
 public interface GravitateWishesManagerService {
 
     ResponseEntity createWish(WishVO wishVO);
@@ -14,7 +16,7 @@ public interface GravitateWishesManagerService {
 
     ResponseEntity createWishReply(WishReplyVO wishReplyVO);
 
-    ResponseEntity getTeamLatestWishes();
+    ResponseEntity getTeamLatestWishes(String wishType, Date date);
 
     ResponseEntity updateWish(WishVO wishVO);
 
