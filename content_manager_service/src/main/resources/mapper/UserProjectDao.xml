@@ -29,6 +29,17 @@
         WHERE Q.project_id = #{projectId}
     </select>
 
+    <select id="checkIfUserIsAssignedToProject" parameterType="Long" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM user_project
+        WHERE
+        project_id = #{projectId} AND user_id = #{userId} LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
     <!--<update id="updateProject" parameterType="com.model.ProjectVO">
         UPDATE project
         SET

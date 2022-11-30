@@ -10,6 +10,6 @@ import java.util.Map;
 public interface UserProjectDao {
 
     int createUserProject(@Param("userId") Long userId,@Param("projects") List<Long> projectId);
-
     List<Map> getAllProjects();
+    int checkIfUserIsAssignedToProject(@Param("userId") Long userId,@Param("projectId") Long projectId);
 }

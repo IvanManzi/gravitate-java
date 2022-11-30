@@ -15,7 +15,7 @@ public interface ProjectManagerService {
     ResponseEntity<APIResponse> updateProject(ProjectVO projectVO);
 
     boolean assignUserToProject(Long userId, List<Long> projects);
-
     ResponseEntity getUsersAssignedToProjects();
+    ResponseEntity getGravitateUserProjects(Long userId);
     ResponseEntity<APIResponse> deleteProject(Long projectId);
 }
