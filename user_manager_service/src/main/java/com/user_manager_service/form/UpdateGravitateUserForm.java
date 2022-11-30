@@ -14,8 +14,6 @@ public record UpdateGravitateUserForm(@NotNull
                                       @NotBlank
                                       String lastName,
                                       @NotBlank
-                                      String password,
-                                      @NotBlank
                                       String country,
                                       @NotBlank
                                       Date dob,
