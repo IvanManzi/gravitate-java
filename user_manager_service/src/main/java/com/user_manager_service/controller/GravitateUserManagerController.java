@@ -57,6 +57,11 @@ public class GravitateUserManagerController {
         return gravitateUserManagerService.getAllGravitateUsers(search,roleId);
     }
 
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity getGravitateUserById(@PathVariable("userId") Long userId){
+        return gravitateUserManagerService.getGravitateUserById(userId);
+    }
+
     @GetMapping(value = "/profile")
     public ResponseEntity getGravitateUsernameProfile(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
@@ -65,12 +70,14 @@ public class GravitateUserManagerController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm){
+    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm,HttpServletRequest request){
         UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+
         userVO.setUserId(updateGravitateUserForm.userId());
         userVO.setUserType(updateGravitateUserForm.userType());
         userVO.setEmail(updateGravitateUserForm.email());
-        userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
+        //userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
         userVO.setAlternateEmail(updateGravitateUserForm.alternativeEmail());
         userVO.setFirstName(updateGravitateUserForm.firstName());
         userVO.setLastName(updateGravitateUserForm.lastName());
@@ -87,7 +94,7 @@ public class GravitateUserManagerController {
         userVO.setUserLevel(updateGravitateUserForm.userLevel());
         userVO.setRoleId(updateGravitateUserForm.roleId());
         userVO.setManagedBy(updateGravitateUserForm.managerId());
-        return gravitateUserManagerService.updateGravitateUser(userVO);
+        return gravitateUserManagerService.updateGravitateUser(userVO,updateGravitateUserForm.projects(),token);
     }
 
     @DeleteMapping(value = "/{userId}")
