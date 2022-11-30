@@ -10,7 +10,7 @@ public interface ProjectDao {
 
     int createProject(ProjectVO projectVO);
 
-    List<ProjectVO> getProjectByAdminId(Long adminId);
+    List<ProjectVO> getAllProjects();
 
     int updateProject(ProjectVO projectVO);
 
