@@ -29,7 +29,13 @@
         app_user U
         ON
         W.user_id = U.user_id
-        WHERE DATE(W.created_at) = CURRENT_DATE
+        <if test="date == null">
+            WHERE DATE(W.created_at) = CURRENT_DATE
+        </if>
+        <if test="wishType != null || date != null" >
+            WHERE W.wish_type = #{wishType} AND date = #{date}
+        </if>
+
     </select>
 
     <update id="updateWish" parameterType="com.model.WishVO">
