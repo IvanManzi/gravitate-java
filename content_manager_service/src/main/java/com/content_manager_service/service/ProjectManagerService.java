@@ -10,7 +10,7 @@ public interface ProjectManagerService {
 
     ResponseEntity<APIResponse> createProject(ProjectVO projectVO);
 
-    ResponseEntity<APIResponse> getAllProjectsByAdminId(Long adminId);
+    ResponseEntity<APIResponse> getAllProjects();
 
     ResponseEntity<APIResponse> updateProject(ProjectVO projectVO);
 

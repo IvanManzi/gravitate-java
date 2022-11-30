@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     }
 
     @Override
-    public ResponseEntity getAllProjectsByAdminId(Long adminId) {
-        List<ProjectVO> projects = projectDao.getProjectByAdminId(adminId);
+    public ResponseEntity getAllProjects() {
+        List<ProjectVO> projects = projectDao.getAllProjects();
         if(projects.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
@@ -56,21 +57,27 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
 
     @Override
     public boolean assignUserToProject(Long userId, List<Long> projects) {
-        if(projects.isEmpty()){
-            return false;
-        }else{
-            int result = userProjectDao.createUserProject(userId,projects);
-            if(result > 0) {
-                return true;
-            }else{
-                return false;
+        List<Long> userProjects = new ArrayList<>();
+        //check if user isn't already assigned to these projects
+        for(Long projectId : projects){
+            int status = userProjectDao.checkIfUserIsAssignedToProject(userId,projectId);
+            if(status != 1){
+                userProjects.add(projectId);
             }
         }
+        if(userProjects.isEmpty()){
+            return true;// User is already assigned to projects
+        }
+        int result = userProjectDao.createUserProject(userId,userProjects);
+        if(result > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public ResponseEntity getUsersAssignedToProjects() {
-        List<Map> projects = userProjectDao.getAllProjects();
+        List<Map> projects = userProjectDao.getAllGravitateUsersAssignedProjects();
         if(projects.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
@@ -78,6 +85,17 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
             data.put("PROJECTS",projects);
             return APIResponse.resultSuccess(data);
         }
+    }
+
+    @Override
+    public ResponseEntity getGravitateUserProjects(Long userId) {
+        List<ProjectVO> userProjects = userProjectDao.getGravitateUserProjects(userId);
+        if(userProjects.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("USER_PROJECTS",userProjects);
+        return APIResponse.resultSuccess(data);
     }
 
     @Override
