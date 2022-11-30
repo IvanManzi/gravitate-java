@@ -12,21 +12,21 @@
 
     </insert>
 
-    <resultMap id="projectResult" type="com.model.ProjectVO">
-        <collection property="assigned_users" ofType="Map" select="getUsersAssignedToProject" column="project_id" />
+    <resultMap id="projectResult" type="Map">
+        <collection property="assigned_users" ofType="com.model.UserVO" select="getUsersAssignedToProject" column="project_id" />
     </resultMap>
 
-    <select id="getAllProjects" resultMap="projectResult" resultType="com.model.ProjectVO">
+    <select id="getAllGravitateUsersAssignedProjects" resultMap="projectResult" resultType="Map">
         SELECT * FROM project
     </select>
 
-    <select id="getUsersAssignedToProject" resultType="Map">
-        SELECT Q.project_id,Q.user_id,A.user_id,A.first_name,A.last_name,A.email.A.profile_picture_path,A.user_level FROM user_project Q
+    <select id="getUsersAssignedToProject" resultType="com.model.UserVO">
+        SELECT * FROM app_user A
         INNER JOIN
-        app_user U
+        user_project U
         ON
-        U.user_id = Q.user_id
-        WHERE Q.project_id = #{projectId}
+        U.user_id = A.user_id
+        WHERE U.project_id = #{projectId}
     </select>
 
     <select id="checkIfUserIsAssignedToProject" parameterType="Long" resultType="int">
@@ -38,6 +38,15 @@
         )
         THEN 1 ELSE 0
         END
+    </select>
+
+    <select id="getGravitateUserProjects" resultType="com.model.ProjectVO" parameterType="Long">
+        SELECT * FROM project P
+        INNER JOIN
+        user_project U
+        ON
+        U.project_id = P.project_id
+        WHERE U.user_id = #{userId}
     </select>
 
     <!--<update id="updateProject" parameterType="com.model.ProjectVO">
