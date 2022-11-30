@@ -40,15 +40,23 @@ public class GravitateProjectManagerController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllProjects(HttpServletRequest request) throws IOException {
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return projectManagerService.getAllProjectsByAdminId(Long.valueOf(userId));
+    public ResponseEntity getAllProjects() throws IOException {
+        return projectManagerService.getAllProjects();
     }
 
     @PostMapping(value = "/assign")
     public boolean assignProjectToGravitateUser(@RequestBody AssignProjectsToUserRequest assignProjectsToUserRequest){
         return projectManagerService.assignUserToProject(assignProjectsToUserRequest.userId(), assignProjectsToUserRequest.projects());
+    }
+
+    @GetMapping(value = "/assigned")
+    public ResponseEntity getProjectsAssignedToGravitateUsers(){
+        return projectManagerService.getUsersAssignedToProjects();
+    }
+
+    @GetMapping(value = "/")
+    public ResponseEntity getGravitateUserProjects(@RequestParam("userId") Long userId){
+        return projectManagerService.getGravitateUserProjects(userId);
     }
 
     @PutMapping(value = "/")
