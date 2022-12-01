@@ -36,7 +36,6 @@
         role_id = #{roleId},
         user_level = #{userLevel},
         email = #{email},
-        password = #{password},
         alternate_email = #{alternateEmail},
         first_name = #{firstName},
         last_name = #{lastName},
@@ -62,12 +61,52 @@
         user_id = #{userId}
     </update>
 
-    <select id="getAllGravitateUsers" parameterType="String" resultType="com.model.UserVO">
-        SELECT * FROM app_user WHERE user_type != 'Admin'
+    <select id="getAllGravitateUsers" parameterType="String" resultType="Map">
+        SELECT
+        A.user_id,
+        A.user_type,
+        A.is_account_non_expired,
+        A.is_account_non_locked,
+        A.status,
+        A.user_level,
+        A.managed_by,
+        A.email,
+        A.alternate_email,
+        A.password,
+        A.first_name,
+        A.last_name,
+        A.country,
+        A.date_of_birth,
+        A.joining_date,
+        A.phone_number,
+        A.profile_picture_path,
+        A.contract_path,
+        A.role_id,
+        A.employment_status,
+        A.billing,
+        A.bank_name,
+        A.account_number,
+        AR.first_name AS managerFirstName,
+        AR.last_name AS managerLastName,
+        R.role_name
+        FROM app_user A
+        LEFT JOIN
+        app_user AR
+        ON
+        AR.user_id = A.managed_by
+        LEFT JOIN
+        role R
+        ON
+        R.role_id = A.role_id
+        WHERE A.user_type != 'Admin'
         <if test="search != null">
             <bind name="pattern" value="'%' + search + '%'"/>
             AND first_name LIKE #{pattern} AND last_name LIKE #{pattern}
         </if>
+    </select>
+
+    <select id="getGravitateUserById" parameterType="Long" resultType="com.model.UserVO">
+        SELECT * FROM app_user WHERE user_id = #{userId}
     </select>
 
     <select id="getGravitateUserTeamMembers" resultType="Map">

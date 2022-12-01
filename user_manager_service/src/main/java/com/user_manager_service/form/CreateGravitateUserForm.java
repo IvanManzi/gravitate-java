@@ -4,6 +4,7 @@ package com.user_manager_service.form;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 public record CreateGravitateUserForm(@NotNull String userType,
                                       @NotBlank
@@ -22,7 +23,6 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       Date joinedOn,
                                       @NotBlank
                                       String employmentStatus,
-                                      @NotBlank
                                       String billing,
                                       @NotBlank
                                       String phoneNumber,
@@ -39,5 +39,7 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+
+                                      List<Long> projects,
                                       Long managerId) {
 }

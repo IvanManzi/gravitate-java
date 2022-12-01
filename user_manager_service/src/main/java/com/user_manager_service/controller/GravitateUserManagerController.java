@@ -27,8 +27,9 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm){
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm,HttpServletRequest request){
         UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         //create user obj
         userVO.setUserType(createGravitateUserForm.userType());
         userVO.setEmail(createGravitateUserForm.email());
@@ -49,11 +50,16 @@ public class GravitateUserManagerController {
         userVO.setUserLevel(createGravitateUserForm.userLevel());
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setManagedBy(createGravitateUserForm.managerId());
-        return gravitateUserManagerService.createGravitateUser(userVO);
+        return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token);
     }
     @GetMapping(value = "/all")
     public ResponseEntity getAllGravitateUsers(@RequestParam(value = "search",required = false) String search,@RequestParam(value = "roleId",required = false) Long roleId) throws IOException{
         return gravitateUserManagerService.getAllGravitateUsers(search,roleId);
+    }
+
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity getGravitateUserById(@PathVariable("userId") Long userId){
+        return gravitateUserManagerService.getGravitateUserById(userId);
     }
 
     @GetMapping(value = "/profile")
@@ -64,12 +70,14 @@ public class GravitateUserManagerController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm){
+    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm,HttpServletRequest request){
         UserVO userVO = new UserVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+
         userVO.setUserId(updateGravitateUserForm.userId());
         userVO.setUserType(updateGravitateUserForm.userType());
         userVO.setEmail(updateGravitateUserForm.email());
-        userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
+        //userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
         userVO.setAlternateEmail(updateGravitateUserForm.alternativeEmail());
         userVO.setFirstName(updateGravitateUserForm.firstName());
         userVO.setLastName(updateGravitateUserForm.lastName());
@@ -86,7 +94,7 @@ public class GravitateUserManagerController {
         userVO.setUserLevel(updateGravitateUserForm.userLevel());
         userVO.setRoleId(updateGravitateUserForm.roleId());
         userVO.setManagedBy(updateGravitateUserForm.managerId());
-        return gravitateUserManagerService.updateGravitateUser(userVO);
+        return gravitateUserManagerService.updateGravitateUser(userVO,updateGravitateUserForm.projects(),token);
     }
 
     @DeleteMapping(value = "/{userId}")

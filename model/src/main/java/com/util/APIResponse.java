@@ -18,6 +18,8 @@ public class APIResponse<T> {
 
     private final HttpStatus status;
 
+    private final String error;
+
     private final Map<String, Object> headers;
 
     private final Map<String,Object> data;
@@ -29,7 +31,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(HttpStatus.NOT_FOUND.value())
                         .status(HttpStatus.NOT_FOUND)
-                        .message("No results found.")
+                        .error("No results found.")
                         .build()
         );
     }
@@ -72,8 +74,8 @@ public class APIResponse<T> {
         response.put(Constants.RETURN_DATA,data);
         return ResponseEntity.ok(
                 APIResponse.builder()
-                        .statusCode(HttpStatus.ACCEPTED.value())
-                        .status(HttpStatus.ACCEPTED)
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
                         .data(response)
                         .message("Operation success.")
                         .build()
@@ -83,8 +85,8 @@ public class APIResponse<T> {
     public static ResponseEntity resultSuccess(){
         return ResponseEntity.ok(
                 APIResponse.builder()
-                        .statusCode(HttpStatus.ACCEPTED.value())
-                        .status(HttpStatus.ACCEPTED)
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
                         .message("Operation success.")
                         .build()
         );
@@ -105,7 +107,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(statusCode.value())
                         .status(statusCode)
-                        .message(developerMessage)
+                        .error(developerMessage)
                         .build()
         );
     }
@@ -115,7 +117,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .status(HttpStatus.BAD_REQUEST)
-                        .message("Operation failed.")
+                        .error("Operation failed.")
                         .build()
         );
     }
@@ -125,7 +127,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .status(HttpStatus.BAD_REQUEST)
-                        .message(developerMessage)
+                        .error(developerMessage)
                         .build()
         );
     }

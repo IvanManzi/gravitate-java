@@ -9,8 +9,8 @@
         (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId})
     </insert>
 
-    <select id="getProjectByAdminId" resultType="com.model.ProjectVO">
-        SELECT * FROM project WHERE admin_id = #{adminId}
+    <select id="getAllProjects" resultType="com.model.ProjectVO">
+        SELECT * FROM project
     </select>
 
     <update id="updateProject" parameterType="com.model.ProjectVO">

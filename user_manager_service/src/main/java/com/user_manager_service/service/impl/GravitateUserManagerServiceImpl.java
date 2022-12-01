@@ -1,5 +1,6 @@
 package com.user_manager_service.service.impl;
 
+import com.user_manager_service.form.AssignProjectsToUserRequest;
 import com.util.APIResponse;
 import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
@@ -7,11 +8,15 @@ import com.user_manager_service.service.GravitateUserManagerService;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -23,6 +28,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
     private final UserDao userDao;
 
+    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -45,7 +51,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
 
     @Override
-    public ResponseEntity createGravitateUser(UserVO userVO) {
+    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token) {
         //check if email is unique
         int check = userDao.checkIfUsernameExists(userVO.getEmail());
         if(check == 1){
@@ -53,7 +59,26 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         }
         int result = userDao.createGravitateUser(userVO);
         if(result > 0){
-            return  APIResponse.resultSuccess("User successfully created.");
+            //check if user has assigned projects
+            if(ValidationUtil.isNullObject(projects)){
+                return  APIResponse.resultSuccess();
+            }else{
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.setBearerAuth(token);
+                AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),projects);
+                HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
+                //call content manager service to assign projects to user
+                boolean response = restTemplate.postForObject(
+                        "http://CONTENT-MANAGER-SERVICE/api/v1/content/project/assign",
+                        request,
+                        boolean.class
+                );
+                if(response)
+                    return APIResponse.resultSuccess();
+                else
+                    return APIResponse.resultFail("Failed to assign projects. ");
+            }
         }else{
             return  APIResponse.resultFail();
         }
@@ -61,7 +86,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
     @Override
     public ResponseEntity getAllGravitateUsers(String search,Long roleId) {
-        List<UserVO> users = userDao.getAllGravitateUsers(search,roleId);
+        List<Map> users = userDao.getAllGravitateUsers(search,roleId);
         if(users.isEmpty()){
             return  APIResponse.resultFail("No users found.");
         }else{
@@ -72,10 +97,38 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity updateGravitateUser(UserVO userVO) {
+    public ResponseEntity getGravitateUserById(Long userId) {
+        UserVO userVO = userDao.getGravitateUserById(userId);
+        if(ValidationUtil.isNullObject(userVO)){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("GRAVITATE_USER",userVO);
+        return APIResponse.resultSuccess(data);
+    }
+
+    @Override
+    public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) {
         int result = userDao.updateGravitateUser(userVO);
         if(result > 0){
-            return APIResponse.resultSuccess();
+            if(ValidationUtil.isNullObject(projects)){
+                return APIResponse.resultSuccess();
+            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(token);
+            AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),projects);
+            HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
+            //call content manager service to update changes
+            boolean response = restTemplate.postForObject(
+                    "http://CONTENT-MANAGER-SERVICE/api/v1/content/project/assign",
+                    request,
+                    boolean.class
+            );
+            if(response)
+                return APIResponse.resultSuccess();
+
+            return APIResponse.resultFail("Failed to assign projects. ");
         }else{
             return APIResponse.resultFail();
         }

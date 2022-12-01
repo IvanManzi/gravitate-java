@@ -1,4 +1,4 @@
-package com.user_profile_manager_service.dao;
+package com.user_manager_service.dao;
 
 import com.model.UserSkillVO;
 import org.apache.ibatis.annotations.Mapper;

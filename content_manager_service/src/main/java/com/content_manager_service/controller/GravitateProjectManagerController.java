@@ -1,11 +1,13 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.AssignProjectsToUserRequest;
 import com.content_manager_service.form.CreateProjectRequest;
 import com.content_manager_service.form.UpdateProjectRequest;
 import com.content_manager_service.service.ProjectManagerService;
 import com.model.ProjectVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +40,23 @@ public class GravitateProjectManagerController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllProjects(HttpServletRequest request) throws IOException {
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return projectManagerService.getAllProjectsByAdminId(Long.valueOf(userId));
+    public ResponseEntity getAllProjects() throws IOException {
+        return projectManagerService.getAllProjects();
+    }
+
+    @PostMapping(value = "/assign")
+    public boolean assignProjectToGravitateUser(@RequestBody AssignProjectsToUserRequest assignProjectsToUserRequest){
+        return projectManagerService.assignUserToProject(assignProjectsToUserRequest.userId(), assignProjectsToUserRequest.projects());
+    }
+
+    @GetMapping(value = "/assigned")
+    public ResponseEntity getProjectsAssignedToGravitateUsers(){
+        return projectManagerService.getUsersAssignedToProjects();
+    }
+
+    @GetMapping(value = "/")
+    public ResponseEntity getGravitateUserProjects(@RequestParam("userId") Long userId){
+        return projectManagerService.getGravitateUserProjects(userId);
     }
 
     @PutMapping(value = "/")

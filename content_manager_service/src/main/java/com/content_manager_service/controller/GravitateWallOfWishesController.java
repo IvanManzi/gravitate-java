@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -24,6 +25,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class GravitateWallOfWishesController {
 
     private final GravitateWishesManagerService gravitateWishesManagerService;
+    private String wishType;
+    private Date date;
 
     @PostMapping(value = "/create")
     public ResponseEntity createWish(@Valid @RequestBody CreateWishRequest createWishRequest, HttpServletRequest request) throws IOException {
@@ -56,8 +59,9 @@ public class GravitateWallOfWishesController {
     }
 
     @GetMapping(value = "/team")
-    public ResponseEntity getTeamLatestWishes(){
-        return gravitateWishesManagerService.getTeamLatestWishes();
+    public ResponseEntity getTeamLatestWishes(@RequestParam(value = "wishType",required = false) String wishType,
+                                              @RequestParam(value = "date",required = false)Date date){
+        return gravitateWishesManagerService.getTeamLatestWishes(wishType,date);
     }
 
     @GetMapping(value = "/all")

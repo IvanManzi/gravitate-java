@@ -1,4 +1,4 @@
-package com.user_profile_manager_service.request;
+package com.user_manager_service.form;
 
 public record CreateUserSkillRequest(String title, String category, String expertise, String certificateUrl) {
 }

@@ -1,4 +1,4 @@
-package com.user_profile_manager_service.service;
+package com.user_manager_service.service;
 
 import com.model.UserSkillVO;
 import org.springframework.http.ResponseEntity;

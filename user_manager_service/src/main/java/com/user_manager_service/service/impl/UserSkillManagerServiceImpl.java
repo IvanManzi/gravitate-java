@@ -1,8 +1,8 @@
-package com.user_profile_manager_service.service.impl;
+package com.user_manager_service.service.impl;
 
 import com.model.UserSkillVO;
-import com.user_profile_manager_service.dao.UserSkillDao;
-import com.user_profile_manager_service.service.UserSkillManagerService;
+import com.user_manager_service.dao.UserSkillDao;
+import com.user_manager_service.service.UserSkillManagerService;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

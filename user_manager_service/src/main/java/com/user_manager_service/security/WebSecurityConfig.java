@@ -66,6 +66,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
           http.authorizeRequests().antMatchers("/api/v1/user/password-reset",
                                                           "/api/v1/user/profile",
                                                           "/api/v1/user/team/members",
+                                                          "/api/v1/user/skills/**",
                                                           "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,DEVELOPER_USER,MANAGER_USER);
           http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
           http.authorizeRequests().anyRequest().authenticated();

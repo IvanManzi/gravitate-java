@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +69,8 @@ public class GravitateWishesManagerServiceImpl implements GravitateWishesManager
     }
 
     @Override
-    public ResponseEntity getTeamLatestWishes() {
-        List<Map> teamWishes = wishDao.getTeamMembersLatestWishes();
+    public ResponseEntity getTeamLatestWishes(String wishType, Date date) {
+        List<Map> teamWishes = wishDao.getTeamMembersLatestWishes(wishType,date);
         if(teamWishes.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{

@@ -3,6 +3,7 @@ package com.user_manager_service.form;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 public record UpdateGravitateUserForm(@NotNull
                                       Long userId,
@@ -13,8 +14,6 @@ public record UpdateGravitateUserForm(@NotNull
                                       String firstName,
                                       @NotBlank
                                       String lastName,
-                                      @NotBlank
-                                      String password,
                                       @NotBlank
                                       String country,
                                       @NotBlank
@@ -40,5 +39,6 @@ public record UpdateGravitateUserForm(@NotNull
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+                                      List<Long> projects,
                                       Long managerId) {
 }

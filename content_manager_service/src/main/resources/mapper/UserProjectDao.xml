@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.UserProjectDao" >
+
+    <insert id="createUserProject" parameterType="com.model.UserProjectVO">
+        INSERT INTO user_project
+        (user_id, project_id)
+        VALUES
+        <foreach collection="projects" item="projectId" index="index" open="(" separator="),("  close=")">
+            #{userId}, #{projectId}
+        </foreach>
+
+    </insert>
+
+    <resultMap id="projectResult" type="Map">
+        <collection property="assigned_users" ofType="com.model.UserVO" select="getUsersAssignedToProject" column="project_id" />
+    </resultMap>
+
+    <select id="getAllGravitateUsersAssignedProjects" resultMap="projectResult" resultType="Map">
+        SELECT * FROM project
+    </select>
+
+    <select id="getUsersAssignedToProject" resultType="com.model.UserVO">
+        SELECT * FROM app_user A
+        INNER JOIN
+        user_project U
+        ON
+        U.user_id = A.user_id
+        WHERE U.project_id = #{projectId}
+    </select>
+
+    <select id="checkIfUserIsAssignedToProject" parameterType="Long" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM user_project
+        WHERE
+        project_id = #{projectId} AND user_id = #{userId} LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+    <select id="getGravitateUserProjects" resultType="com.model.ProjectVO" parameterType="Long">
+        SELECT * FROM project P
+        INNER JOIN
+        user_project U
+        ON
+        U.project_id = P.project_id
+        WHERE U.user_id = #{userId}
+    </select>
+
+    <!--<update id="updateProject" parameterType="com.model.ProjectVO">
+        UPDATE project
+        SET
+        status = #{status},
+        client_email = #{clientEmail},
+        client_name = #{clientName},
+        phone_number = #{phoneNumber},
+        jira_id = #{jiraId},
+        project_description = #{projectDescription},
+        project_name = #{projectName}
+        WHERE
+        project_id = #{projectId}
+        AND
+        admin_id = #{adminId}
+    </update>
+
+    <delete id="deleteProject" parameterType="Long">
+        DELETE FROM project WHERE project_id = #{projectId}
+    </delete>-->
+
+
+
+
+</mapper>
