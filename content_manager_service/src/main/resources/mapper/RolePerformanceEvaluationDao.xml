@@ -9,8 +9,15 @@
         (#{roleId},#{adminId},#{criteria},#{description})
     </insert>
 
-    <select id="getAllRolePerformanceEvaluation" resultType="com.model.RolePerformanceEvaluationVO">
-        SELECT * FROM performance_evaluation
+    <select id="getAllRolePerformanceEvaluation" resultType="Map">
+        SELECT
+        R.role_id,P.role_performance_evaluation_id,R.role_name,P.criteria, P.description
+        FROM
+        performance_evaluation P
+        INNER JOIN
+        role R
+        ON
+        P.role_id = R.role_id
     </select>
 
     <update id="updateRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">
