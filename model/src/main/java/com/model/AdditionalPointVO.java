@@ -25,11 +25,9 @@ public class AdditionalPointVO implements Serializable {
 
     private Integer points;
 
-    private Long userSkillId;
+    private String category;
 
-    private Long userTopicId;
-
-    private Long userBlogId;
+    private String comment;
 
     private Date createdAt;
 
