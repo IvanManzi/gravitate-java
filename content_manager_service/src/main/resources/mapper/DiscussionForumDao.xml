@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.DiscussionForumDao" >
+
+    <insert id="createDiscussionForum" parameterType="com.model.DiscussionForumVO">
+        INSERT INTO discussion_forum
+        (user_id,tags, title ,description)
+        VALUES
+        (#{userId},#{tags}, #{title},#{description})
+    </insert>
+
+    <select id="getAllDiscussionForums" resultType="com.model.DiscussionForumVO">
+        SELECT * FROM discussion_forum ORDER BY created_at DESC
+    </select>
+
+    <update id="updateDiscussionForum" parameterType="com.model.DiscussionForumVO">
+        UPDATE discussion_forum
+        SET
+        tags = #{tags},
+        title = #{title},
+        description = #{description}
+        WHERE
+        discussion_forum_id = #{discussionForumId}
+        AND
+        user_id = #{userId}
+    </update>
+
+    <delete id="deleteDiscussionForum" parameterType="Long">
+        DELETE FROM discussion_forum WHERE discussion_forum_id = #{forumId}
+    </delete>
+
+
+
+
+</mapper>
