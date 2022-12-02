@@ -17,6 +17,7 @@ public class Response {
     private int statusCode;
     private String reason;
     private String message;
+    private String error;
     private String developerMessage;
     private Map<?,?> data;
 
