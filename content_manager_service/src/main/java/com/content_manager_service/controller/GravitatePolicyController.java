@@ -32,7 +32,6 @@ public class GravitatePolicyController {
         policyVO.setAdminId(Long.valueOf(userId));
         policyVO.setPolicyName(createPolicyRequest.policyName());
         policyVO.setPolicyType(createPolicyRequest.policyType());
-        policyVO.setDescription(createPolicyRequest.description());
         policyVO.setPolicyFilePath(createPolicyRequest.filePath());
         return gravitatePolicyService.createGravitatePolicy(policyVO);
     }
@@ -51,7 +50,6 @@ public class GravitatePolicyController {
         policyVO.setPolicyId(updatePolicyRequest.policyId());
         policyVO.setPolicyType(updatePolicyRequest.policyType());
         policyVO.setPolicyName(updatePolicyRequest.policyName());
-        policyVO.setDescription(updatePolicyRequest.description());
         policyVO.setPolicyFilePath(updatePolicyRequest.filePath());
         return gravitatePolicyService.updateGravitatePolicy(policyVO);
     }
