@@ -1,7 +1,5 @@
 package com.util;
 
-import org.springframework.http.HttpStatus;
-
 public class Constants {
     public static final String ENCODE = "UTF-8";
     /**
@@ -19,7 +17,7 @@ public class Constants {
 
     //用户角色
     public static final String ADMIN_USER = "ROLE_ADMIN_USER";
-    public static final String MANAGER_USER = "ROLE_MANAGER_USER";
+    public static final String PROJECT_LEAD = "ROLE_PROJECT_LEAD";
 
     public static final String DEVELOPER_USER = "ROLE_DEVELOPER_USER";
 
