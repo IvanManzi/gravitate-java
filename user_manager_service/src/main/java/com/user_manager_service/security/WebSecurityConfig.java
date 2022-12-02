@@ -4,7 +4,6 @@ package com.user_manager_service.security;
 import com.user_manager_service.security.filter.AuthEntryPointJwt;
 import com.user_manager_service.security.filter.CustomAuthorizationFilter;
 import com.user_manager_service.service.impl.GravitateUserManagerServiceImpl;
-import com.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,7 +66,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                                           "/api/v1/user/profile",
                                                           "/api/v1/user/team/members",
                                                           "/api/v1/user/skills/**",
-                                                          "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,DEVELOPER_USER,MANAGER_USER);
+                                                          "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER,DEVELOPER_USER, PROJECT_LEAD);
           http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
           http.authorizeRequests().anyRequest().authenticated();
 
