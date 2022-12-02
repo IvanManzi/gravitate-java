@@ -4,9 +4,9 @@
 
     <insert id="createGravitatePolicy" parameterType="com.model.PolicyVO">
         INSERT INTO policy
-        (admin_id,policy_type,policy_name,description,policy_file_path)
+        (admin_id,policy_type,policy_name,policy_file_path)
         VALUES
-        (#{adminId},#{policyType},#{policyName},#{description},#{policyFilePath})
+        (#{adminId},#{policyType},#{policyName},#{policyFilePath})
     </insert>
 
     <select id="getAllPolicies" resultType="com.model.PolicyVO">
