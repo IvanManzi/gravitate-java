@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.user_manager_service.dao.AdditionalPointDao" >
+
+    <insert id="createAdditionalPoint" parameterType="com.model.AdditionalPointVO">
+        INSERT INTO additional_point
+        (admin_id,user_id,quarter,points)
+        VALUES
+        (#{adminId},#{userId},#{quarter},#{points})
+    </insert>
+
+    <select id="getUserAdditionalPoints" resultType="com.model.AdditionalPointVO">
+        SELECT *
+        FROM additional_point
+        WHERE
+        user_id = #{userId}
+        <if test="quarter != null || date != null">
+            AND date = #{date} AND quarter = #{quarter}
+        </if>
+    </select>
+
+
+
+
+</mapper>
