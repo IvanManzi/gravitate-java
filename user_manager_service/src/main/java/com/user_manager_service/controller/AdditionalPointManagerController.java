@@ -28,7 +28,7 @@ public class AdditionalPointManagerController {
                                                 HttpServletRequest request) throws IOException {
         AdditionalPointVO additionalPointVO = new AdditionalPointVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String adminId = JwtUtils.getUserNameFromToken(token);
+        String adminId = JwtUtils.getUserIdFromJwtToken(token);
         additionalPointVO.setAdminId(Long.valueOf(adminId));
         additionalPointVO.setPoints(createAdditionalPointRequest.points());
         additionalPointVO.setQuarter(createAdditionalPointRequest.quarter());
@@ -39,11 +39,11 @@ public class AdditionalPointManagerController {
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity getGravitateUserAdditionalPoints(@RequestParam("quarter") String quarter,
-                                                           @RequestParam("date")Date date,
+    public ResponseEntity getGravitateUserAdditionalPoints(@RequestParam(value = "quarter",required = false) String quarter,
+                                                           @RequestParam(value = "date",required = false)Date date,
                                                            HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserNameFromToken(token);
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
         return additionalPointsManagerService.getUserAdditionalPoints(Long.valueOf(userId), quarter, date);
     }
 
