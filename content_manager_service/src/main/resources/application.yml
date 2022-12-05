@@ -2,7 +2,7 @@ server:
   port: 1072
 spring:
   application:
-    name: CONTENT-MANAGER-SERVICE-APPLICATION
+    name: CONTENT-MANAGER-SERVICE
   datasource:
     username: postgres
     password: password
