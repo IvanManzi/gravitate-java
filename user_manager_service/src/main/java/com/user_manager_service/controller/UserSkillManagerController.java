@@ -41,4 +41,10 @@ public class UserSkillManagerController {
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         return userSkillManagerService.getAllUserSkills(Long.valueOf(userId));
     }
+
+    @GetMapping(value = "/quarter")
+    public ResponseEntity getGravitateUserSkillsByQuarter(@RequestParam("userId") Long userId,
+                                                          @RequestParam("quarter") Integer quarter){
+        return userSkillManagerService.getUserSkillsByQuarter(userId,quarter);
+    }
 }

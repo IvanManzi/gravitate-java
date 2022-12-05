@@ -9,6 +9,8 @@ public interface UserSkillManagerService {
 
     ResponseEntity getAllUserSkills(Long userId);
 
+    ResponseEntity getUserSkillsByQuarter(Long userId,Integer quarter);
+
     ResponseEntity updateUserSkill(UserSkillVO userSkillVO);
 
     ResponseEntity deleteUserSkill(Long skillId);
