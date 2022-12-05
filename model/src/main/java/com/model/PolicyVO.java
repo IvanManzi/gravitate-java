@@ -23,8 +23,6 @@ public class PolicyVO implements Serializable {
 
     private String policyName;
 
-    private String description;
-
     private String policyFilePath;
 
     private Date createdAt;

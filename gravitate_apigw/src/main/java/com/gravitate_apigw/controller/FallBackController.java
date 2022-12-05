@@ -16,7 +16,7 @@ public class FallBackController {
         return ResponseEntity.ok(
                 Response.builder()
                         .statusCode(408)
-                        .message("Service taking too long to respond. ")
+                        .error("Service taking too long to respond. ")
                         .build()
         );
     }

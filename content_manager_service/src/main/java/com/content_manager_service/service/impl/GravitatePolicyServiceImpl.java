@@ -36,7 +36,7 @@ public class GravitatePolicyServiceImpl implements GravitatePolicyService {
     public ResponseEntity getGravitatePolicy() {
         List<PolicyVO> policies = policyDao.getAllPolicies();
         if(policies.isEmpty()){
-            return APIResponse.resultFail("No policies found.");
+            return APIResponse.resourceNotFound();
         }else{
             Map<String,Object> data = new HashMap<>();
             data.put("POLICIES",policies);

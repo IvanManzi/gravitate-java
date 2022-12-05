@@ -2,7 +2,6 @@ package com.content_manager_service.security;
 
 
 import com.content_manager_service.security.filter.CustomAuthorizationFilter;
-import com.util.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,10 +42,11 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/content/blog/**",
+                                                        "/api/v1/content/forum/**",
                                                         "/api/v1/content/policy/all",
                                                         "/api/v1/content/wish/user",
                                                         "/api/v1/content/wish/team",
-                                                        "/api/v1/content/wish/comment").hasAnyAuthority(CLIENT_USER,ADMIN_USER);
+                                                        "/api/v1/content/wish/comment").hasAnyAuthority(DEVELOPER_USER,ADMIN_USER,PROJECT_LEAD);
         http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 

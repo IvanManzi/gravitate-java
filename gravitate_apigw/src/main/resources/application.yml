@@ -15,33 +15,24 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
       routes:
-        - id: CONTENT-MANAGER-SERVICE-APPLICATION
-          uri: lb://CONTENT-MANAGER-SERVICE-APPLICATION
+        - id: CONTENT-MANAGER-SERVICE
+          uri: lb://CONTENT-MANAGER-SERVICE
           predicates:
             - Path=/api/v1/content/**
           filters:
             - name: CircuitBreaker
               args:
-                name: CONTENT-MANAGER-SERVICE-APPLICATION
+                name: CONTENT-MANAGER-SERVICE
                 fallbackuri: forward:/fallback/
 
-        - id: USER-MANAGER-SERVICE-APPLICATION
-          uri: lb://USER-MANAGER-SERVICE-APPLICATION
+        - id: USER-MANAGER-SERVICE
+          uri: lb://USER-MANAGER-SERVICE
           predicates:
             - Path=/api/v1/user/**
           filters:
             - name: CircuitBreaker
               args:
-                name: USER-MANAGER-SERVICE-APPLICATION
-                fallbackuri: forward:/fallback/
-        - id: USER-PROFILE-MANAGER-SERVICE
-          uri: lb://USER-PROFILE-MANAGER-SERVICE
-          predicates:
-            - Path=/api/v1/user-profile/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: USER-PROFILE-MANAGER-SERVICE
+                name: USER-MANAGER-SERVICE
                 fallbackuri: forward:/fallback/
 
 eureka:
