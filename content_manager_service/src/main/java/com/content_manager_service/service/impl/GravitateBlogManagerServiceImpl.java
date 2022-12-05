@@ -55,6 +55,17 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     }
 
     @Override
+    public ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter) {
+        List<BlogVO> userBlogs = blogDao.getUserBlogsByQuarter(userId,quarter);
+        if(userBlogs.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("USER_BLOGS",userBlogs);
+        return APIResponse.resultSuccess(data);
+    }
+
+    @Override
     public ResponseEntity updateBlog(BlogVO blogVO) {
         int result = blogDao.updateBlog(blogVO);
         if(result > 0){

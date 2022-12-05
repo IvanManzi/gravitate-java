@@ -13,6 +13,8 @@ public interface GravitateBlogManagerService {
 
     ResponseEntity getAllTeamBlogs();
 
+    ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter);
+
     ResponseEntity updateBlog(BlogVO blogVO);
 
     ResponseEntity deleteBlog(Long topicId);
