@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,17 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
         }
         Map<String,Object> data = new HashMap<>();
         data.put("DISCUSSION_FORUMS", discussionForums);
+        return APIResponse.resultSuccess(data);
+    }
+
+    @Override
+    public ResponseEntity getUserDiscussionForumsByQuarter(Long userId, Integer quarter) {
+        List<DiscussionForumVO> discussionForums = discussionForumDao.getUserDiscussionForumsByQuarter(userId,quarter);
+        if(discussionForums.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("DISCUSSION_FORUMS",discussionForums);
         return APIResponse.resultSuccess(data);
     }
 

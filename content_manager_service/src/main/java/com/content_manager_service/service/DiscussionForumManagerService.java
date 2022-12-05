@@ -9,6 +9,8 @@ public interface DiscussionForumManagerService {
 
     ResponseEntity getAllDiscussionForums();
 
+    ResponseEntity getUserDiscussionForumsByQuarter(Long userId,Integer quarter);
+
     ResponseEntity updateDiscussionForum(DiscussionForumVO discussionForumVO);
 
     ResponseEntity deleteDiscussionForum(Long forumId);
