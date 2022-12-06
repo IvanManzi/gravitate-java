@@ -21,6 +21,88 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: additional_point; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.additional_point (
+    additional_point_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    admin_id bigint NOT NULL,
+    comment character varying NOT NULL,
+    quarter character varying NOT NULL,
+    category character varying(255) NOT NULL,
+    points integer NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.additional_point OWNER TO postgres;
+
+--
+-- Name: additional_point_additional_point_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_additional_point_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_additional_point_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_additional_point_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_additional_point_id_seq OWNED BY public.additional_point.additional_point_id;
+
+
+--
+-- Name: additional_point_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_admin_id_seq OWNED BY public.additional_point.admin_id;
+
+
+--
+-- Name: additional_point_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_user_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_user_id_seq OWNED BY public.additional_point.user_id;
+
+
+--
 -- Name: app_user; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -176,6 +258,65 @@ ALTER SEQUENCE public.blog_reply_parent_seq OWNED BY public.blog_reply.parent;
 
 
 --
+-- Name: discussion_forum; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.discussion_forum (
+    discussion_forum_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    description character varying NOT NULL,
+    tags character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    user_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.discussion_forum OWNER TO postgres;
+
+--
+-- Name: discussion_forum_discussion_forum_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.discussion_forum_discussion_forum_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.discussion_forum_discussion_forum_id_seq OWNER TO postgres;
+
+--
+-- Name: discussion_forum_discussion_forum_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.discussion_forum_discussion_forum_id_seq OWNED BY public.discussion_forum.discussion_forum_id;
+
+
+--
+-- Name: discussion_forum_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.discussion_forum_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.discussion_forum_user_id_seq OWNER TO postgres;
+
+--
+-- Name: discussion_forum_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.discussion_forum_user_id_seq OWNED BY public.discussion_forum.user_id;
+
+
+--
 -- Name: performance_evaluation; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -262,7 +403,6 @@ ALTER SEQUENCE public.performance_evaluation_role_performance_evaluation_id_seq 
 CREATE TABLE public.policy (
     policy_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    description character varying NOT NULL,
     policy_file_path character varying(255) NOT NULL,
     policy_name character varying(255) NOT NULL,
     policy_type character varying(255) NOT NULL,
@@ -324,7 +464,7 @@ CREATE TABLE public.project (
     client_email character varying(255) NOT NULL,
     client_name character varying(255) NOT NULL,
     phone_number character varying(255) NOT NULL,
-    project_description character varying(255) NOT NULL,
+    project_description character varying NOT NULL,
     project_name character varying(255) NOT NULL,
     admin_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
@@ -385,7 +525,7 @@ ALTER SEQUENCE public.project_project_id_seq OWNED BY public.project.project_id;
 CREATE TABLE public.role (
     role_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    rolekra character varying(255) NOT NULL,
+    rolekra character varying NOT NULL,
     role_name character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     admin_id bigint NOT NULL
@@ -935,6 +1075,27 @@ ALTER SEQUENCE public.wish_wish_id_seq OWNED BY public.wish.wish_id;
 
 
 --
+-- Name: additional_point additional_point_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN additional_point_id SET DEFAULT nextval('public.additional_point_additional_point_id_seq'::regclass);
+
+
+--
+-- Name: additional_point user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN user_id SET DEFAULT nextval('public.additional_point_user_id_seq'::regclass);
+
+
+--
+-- Name: additional_point admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN admin_id SET DEFAULT nextval('public.additional_point_admin_id_seq'::regclass);
+
+
+--
 -- Name: app_user user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -988,6 +1149,20 @@ ALTER TABLE ONLY public.blog_reply ALTER COLUMN blog_id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.blog_reply ALTER COLUMN parent SET DEFAULT nextval('public.blog_reply_parent_seq'::regclass);
+
+
+--
+-- Name: discussion_forum discussion_forum_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.discussion_forum ALTER COLUMN discussion_forum_id SET DEFAULT nextval('public.discussion_forum_discussion_forum_id_seq'::regclass);
+
+
+--
+-- Name: discussion_forum user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.discussion_forum ALTER COLUMN user_id SET DEFAULT nextval('public.discussion_forum_user_id_seq'::regclass);
 
 
 --
@@ -1152,6 +1327,14 @@ ALTER TABLE ONLY public.wish_reply ALTER COLUMN user_id SET DEFAULT nextval('pub
 
 
 --
+-- Name: additional_point additional_point_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_pkey PRIMARY KEY (additional_point_id);
+
+
+--
 -- Name: app_user app_user_alternate_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1189,6 +1372,14 @@ ALTER TABLE ONLY public.blog
 
 ALTER TABLE ONLY public.blog_reply
     ADD CONSTRAINT blog_reply_pkey PRIMARY KEY (blog_reply_id);
+
+
+--
+-- Name: discussion_forum discussion_forum_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.discussion_forum
+    ADD CONSTRAINT discussion_forum_pkey PRIMARY KEY (discussion_forum_id);
 
 
 --
@@ -1272,6 +1463,22 @@ ALTER TABLE ONLY public.wish
 
 
 --
+-- Name: additional_point additional_point_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: additional_point additional_point_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
 -- Name: app_user app_user_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1333,6 +1540,14 @@ ALTER TABLE ONLY public.performance_evaluation
 
 ALTER TABLE ONLY public.wish_reply
     ADD CONSTRAINT fk6jaq2u20edu7luol40791em16 FOREIGN KEY (wish_id) REFERENCES public.wish(wish_id) ON DELETE CASCADE;
+
+
+--
+-- Name: discussion_forum fk_discussion_forum1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.discussion_forum
+    ADD CONSTRAINT fk_discussion_forum1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
