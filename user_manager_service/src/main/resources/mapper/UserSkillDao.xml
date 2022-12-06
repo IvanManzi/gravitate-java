@@ -9,7 +9,7 @@
     </insert>
 
     <select id="getAllUserSkills" parameterType="Long" resultType="com.model.UserSkillVO">
-        SELECT * FROM user_skill WHERE user_id = #{userId}
+        SELECT * FROM user_skill WHERE user_id = #{userId} ORDER BY created_at DESC
     </select>
 
     <update id="updateUserSkill" parameterType="com.model.UserSkillVO">
@@ -23,5 +23,9 @@
     <delete id="deleteUserSkill" parameterType="Long">
         DELETE FROM user_skill WHERE user_skill_id = #{skillId}
     </delete>
+
+    <select id="getSkillsByQuarter"  resultType="com.model.UserSkillVO">
+        SELECT * FROM user_skill WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
+    </select>
 
 </mapper>

@@ -14,6 +14,8 @@ public interface BlogDao {
 
     List<Map> getAllTeamMembersBlogs();
 
+    List<BlogVO> getUserBlogsByQuarter(@Param("userId") Long userId,@Param("quarter") Integer quarter);
+
     int updateBlog(BlogVO blogVO);
 
     int deleteBlog(Long topicId);

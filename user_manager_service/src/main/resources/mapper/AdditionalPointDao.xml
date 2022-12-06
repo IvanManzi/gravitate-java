@@ -4,9 +4,9 @@
 
     <insert id="createAdditionalPoint" parameterType="com.model.AdditionalPointVO">
         INSERT INTO additional_point
-        (admin_id,user_id,quarter,points)
+        (admin_id,user_id,quarter,points,category,comment)
         VALUES
-        (#{adminId},#{userId},#{quarter},#{points})
+        (#{adminId},#{userId},#{quarter},#{points},#{category},#{comment})
     </insert>
 
     <select id="getUserAdditionalPoints" resultType="com.model.AdditionalPointVO">

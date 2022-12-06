@@ -41,6 +41,11 @@ public class DiscussionForumManagerController {
         return discussionForumManagerService.getAllDiscussionForums();
     }
 
+    @GetMapping(value = "/quarter")
+    public ResponseEntity getUserDiscussionForumsByQuarter(@RequestParam("userId") Long userId,@RequestParam("quarter") Integer quarter){
+        return discussionForumManagerService.getUserDiscussionForumsByQuarter(userId,quarter);
+    }
+
     @PutMapping(value = "/")
     public ResponseEntity updateDiscussionForum(@Valid @RequestBody UpdateDiscussionForumRequest updateDiscussionForumRequest,
                                                 HttpServletRequest request) throws IOException {

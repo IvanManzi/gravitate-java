@@ -56,6 +56,12 @@ public class GravitateBlogController {
         return gravitateBlogManagerService.getAllTeamBlogs();
     }
 
+    @GetMapping(value = "/quarter")
+    public ResponseEntity getGravitateUserBlogsByQuarter(@RequestParam("userId") Long userId,
+                                                         @RequestParam("quarter") Integer quarter){
+        return gravitateBlogManagerService.getUserBlogsByQuarter(userId,quarter);
+    }
+
     @PutMapping(value = "/")
     public ResponseEntity updateBlog(@Valid @RequestBody UpdateBlogRequest updateBlogRequest, HttpServletRequest request) throws IOException {
         BlogVO blogVO = new BlogVO();
