@@ -35,6 +35,16 @@ spring:
                 name: USER-MANAGER-SERVICE
                 fallbackuri: forward:/fallback/
 
+        - id: PROJECT-MANAGER-SERVICE
+          uri: lb://PROJECT-MANAGER-SERVICE
+          predicates:
+            - Path=/api/v1/project/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROJECT-MANAGER-SERVICE
+                fallbackuri: forward:/fallback/
+
 eureka:
   client:
     service-url:
