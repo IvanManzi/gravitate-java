@@ -1,4 +1,4 @@
-package com.content_manager_service.service;
+package com.project_manager_service.service;
 
 import com.model.ProjectIncentiveVO;
 import com.util.APIResponse;

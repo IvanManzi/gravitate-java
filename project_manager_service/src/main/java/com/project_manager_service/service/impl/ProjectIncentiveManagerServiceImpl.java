@@ -1,8 +1,8 @@
-package com.content_manager_service.service.impl;
+package com.project_manager_service.service.impl;
 
-import com.content_manager_service.dao.ProjectIncentiveDao;
-import com.content_manager_service.service.ProjectIncentiveManagerService;
 import com.model.ProjectIncentiveVO;
+import com.project_manager_service.dao.ProjectIncentiveDao;
+import com.project_manager_service.service.ProjectIncentiveManagerService;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,9 @@
-package com.content_manager_service.controller;
+package com.project_manager_service.controller;
 
 
-import com.content_manager_service.form.CreateProjectIncentiveRequest;
-import com.content_manager_service.service.ProjectIncentiveManagerService;
 import com.model.ProjectIncentiveVO;
+import com.project_manager_service.form.CreateProjectIncentiveRequest;
+import com.project_manager_service.service.ProjectIncentiveManagerService;
 import com.util.APIResponse;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping(value = "api/v1/content/project-incentive",produces = "application/json")
+@RequestMapping(value = "api/v1/project/incentive",produces = "application/json")
 @RequiredArgsConstructor
 public class ProjectIncentiveManagerController {
 

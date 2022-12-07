@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.content_manager_service.dao.TaskReportDao" >
+<mapper namespace="com.project_manager_service.dao.TaskReportDao" >
 
     <insert id="createTaskReport" parameterType="com.model.TaskReportVO">
         INSERT INTO task_report
@@ -13,7 +13,7 @@
         <collection property="task_reports" ofType="com.model.TaskReportVO" select="getProjectTaskReports" column="projectId=project_id,userId=user_id" />
     </resultMap>
 
-    <select id="getAllUserProjects" resultType="tResult">
+    <select id="getAllUserProjects" resultMap="tResult">
         SELECT A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
         FROM app_user A
         INNER JOIN

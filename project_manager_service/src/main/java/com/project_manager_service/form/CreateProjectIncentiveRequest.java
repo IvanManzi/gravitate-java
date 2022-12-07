@@ -1,4 +1,4 @@
-package com.content_manager_service.form;
+package com.project_manager_service.form;
 
 import javax.validation.constraints.NotNull;
 

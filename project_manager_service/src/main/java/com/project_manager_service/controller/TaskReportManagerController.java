@@ -1,9 +1,9 @@
-package com.content_manager_service.controller;
+package com.project_manager_service.controller;
 
-import com.content_manager_service.form.CreateTaskReportRequest;
-import com.content_manager_service.form.UpdateTaskReportRequest;
-import com.content_manager_service.service.TaskReportManagerService;
 import com.model.TaskReportVO;
+import com.project_manager_service.form.CreateTaskReportRequest;
+import com.project_manager_service.form.UpdateTaskReportRequest;
+import com.project_manager_service.service.TaskReportManagerService;
 import com.util.APIResponse;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping(value = "api/v1/user/task",produces = "application/json")
+@RequestMapping(value = "api/v1/project",produces = "application/json")
 @RequiredArgsConstructor
 public class TaskReportManagerController {
 
@@ -40,8 +40,10 @@ public class TaskReportManagerController {
     }
 
     @GetMapping(value = "/user")
-    public ResponseEntity<APIResponse> getGravitateUserTaskReports(@PathVariable("userId") Long userId){
-        return taskReportManagerService.getUserTaskReports(userId);
+    public ResponseEntity<APIResponse> getGravitateUserTaskReports(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        return taskReportManagerService.getUserTaskReports(Long.valueOf(userId));
     }
 
     @GetMapping(value = "/all")

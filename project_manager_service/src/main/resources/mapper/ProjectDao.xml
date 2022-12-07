@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.content_manager_service.dao.ProjectDao" >
+<mapper namespace="com.project_manager_service.dao.ProjectDao" >
 
     <insert id="createProject" parameterType="com.model.ProjectVO">
         INSERT INTO project
-        (client_email, client_name, jira_id, phone_number, project_description, project_name, admin_id)
+        (client_email, client_name, jira_id, phone_number, project_description, project_name, admin_id, project_lead)
         VALUES
-        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId})
+        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId}, #{projectLead})
     </insert>
 
-    <select id="getAllProjects" resultType="com.model.ProjectVO">
+    <resultMap id="allProjectsResult" type="Map">
+        <collection property="project_lead" ofType="com.model.UserVO" select="getProjectLead" column="project_lead" />
+    </resultMap>
+
+    <select id="getAllProjects" resultMap="allProjectsResult">
         SELECT * FROM project
+    </select>
+
+    <select id="getProjectLead" resultType="com.model.UserVO">
+        SELECT * FROM app_user WHERE user_id = #{project_lead}
     </select>
 
     <select id="getProjectByJiraId" parameterType="String" resultType="com.model.ProjectVO">
@@ -20,6 +28,7 @@
     <update id="updateProject" parameterType="com.model.ProjectVO">
         UPDATE project
         SET
+        project_lead = #{projectLead},
         status = #{status},
         client_email = #{clientEmail},
         client_name = #{clientName},
