@@ -70,7 +70,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
                 HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
                 //call content manager service to assign projects to user
                 boolean response = restTemplate.postForObject(
-                        "http://CONTENT-MANAGER-SERVICE/api/v1/content/project/assign",
+                        "http://PROJECT-MANAGER-SERVICE/api/v1/project/assign",
                         request,
                         boolean.class
                 );
