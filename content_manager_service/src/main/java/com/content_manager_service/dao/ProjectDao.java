@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProjectDao {
 
     int createProject(ProjectVO projectVO);
-
+    ProjectVO getProjectByJiraId(String jiraId);
     List<ProjectVO> getAllProjects();
 
     int updateProject(ProjectVO projectVO);
