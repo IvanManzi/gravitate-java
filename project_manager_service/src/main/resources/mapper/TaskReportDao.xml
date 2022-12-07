@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project_manager_service.dao.TaskReportDao" >
+
+    <insert id="createTaskReport" parameterType="com.model.TaskReportVO">
+        INSERT INTO task_report
+        (project_id,user_id,jira_task_id,start_date,task_name,hours_spent)
+        VALUES
+        (#{projectId},#{userId},#{jiraTaskId},#{startDate},#{taskName},#{hoursSpent})
+    </insert>
+
+    <resultMap id="tResult" type="Map">
+        <collection property="task_reports" ofType="com.model.TaskReportVO" select="getProjectTaskReports" column="projectId=project_id,userId=user_id" />
+    </resultMap>
+
+    <select id="getAllUserProjects" resultMap="tResult">
+        SELECT A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
+        FROM app_user A
+        INNER JOIN
+        project P
+        ON
+        P.user_id = A.user_id
+    </select>
+
+    <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">
+        SELECT * FROM task_report WHERE project_id = #{projectId} AND user_id = #{userId}
+    </select>
+
+    <select id="getUserTaskReports" resultType="com.model.TaskReportVO">
+        SELECT * FROM task_report WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateTaskReport" parameterType="com.model.TaskReportVO">
+        UPDATE task_report
+        SET
+        jira_task_id = #{jiraTaskId},
+        jira_project_id = #{jiraProjectId}
+        WHERE
+        task_report_id = #{taskReportId}
+    </update>
+
+    <delete id="deleteTaskReport" parameterType="Long">
+        DELETE FROM task_report WHERE task_report_id = #{reportId}
+    </delete>
+
+
+
+
+</mapper>
