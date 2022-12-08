@@ -33,7 +33,7 @@ public class TaskReportManagerServiceImpl implements TaskReportManagerService {
         taskReportVO.setProjectId(project.getProjectId());
         int result = taskReportDao.createTaskReport(taskReportVO);
         if(result > 0){
-            return APIResponse.resultSuccess();
+            return APIResponse.resultSuccess("Task report successfully created. ");
         }
         return APIResponse.resultFail();
     }
