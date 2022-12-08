@@ -18,7 +18,7 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping(value = "api/v1/project",produces = "application/json")
+@RequestMapping(value = "api/v1/project/task",produces = "application/json")
 @RequiredArgsConstructor
 public class TaskReportManagerController {
 
