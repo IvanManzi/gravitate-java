@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public record CreateTaskReportRequest(@NotNull
+public record CreateTaskReportRequest(@NotBlank
                                       String projectId,
                                       @NotBlank
                                       String taskId,
@@ -12,6 +12,6 @@ public record CreateTaskReportRequest(@NotNull
                                       String name,
                                       @NotNull
                                       Double hours,
-                                      @NotBlank
+                                      @NotNull
                                       Date date) {
 }

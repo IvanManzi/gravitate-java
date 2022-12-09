@@ -24,7 +24,7 @@ public class TaskReportManagerController {
 
     private final TaskReportManagerService taskReportManagerService;
 
-    @GetMapping(value = "/create")
+    @PostMapping(value = "/create")
     public ResponseEntity<APIResponse> createTaskReport(@Valid @RequestBody CreateTaskReportRequest createTaskReportRequest,
                                                         HttpServletRequest request) throws IOException {
         TaskReportVO taskReportVO = new TaskReportVO();

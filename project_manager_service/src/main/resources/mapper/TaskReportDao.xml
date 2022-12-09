@@ -4,22 +4,26 @@
 
     <insert id="createTaskReport" parameterType="com.model.TaskReportVO">
         INSERT INTO task_report
-        (project_id,user_id,jira_task_id,start_date,task_name,hours_spent)
+        (project_id,user_id,jira_project_id,jira_task_id,start_date,task_name,hours_spent)
         VALUES
-        (#{projectId},#{userId},#{jiraTaskId},#{startDate},#{taskName},#{hoursSpent})
+        (#{projectId},#{userId},#{jiraProjectId},#{jiraTaskId},#{startDate},#{taskName},#{hoursSpent})
     </insert>
 
     <resultMap id="tResult" type="Map">
         <collection property="task_reports" ofType="com.model.TaskReportVO" select="getProjectTaskReports" column="projectId=project_id,userId=user_id" />
     </resultMap>
 
-    <select id="getAllUserProjects" resultMap="tResult">
-        SELECT A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
+    <select id="getAllUserTaskReports" resultMap="tResult">
+        SELECT A.user_id, A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
         FROM app_user A
         INNER JOIN
+        user_project U
+        ON
+        U.user_id = A.user_id
+        RIGHT JOIN
         project P
         ON
-        P.user_id = A.user_id
+        P.project_id = U.project_id
     </select>
 
     <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">
