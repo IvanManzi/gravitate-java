@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getAllUserTaskReports" resultMap="tResult">
-        SELECT A.user_id,count(T.hours_spent) A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
+        SELECT A.user_id, A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
         FROM app_user A
         INNER JOIN
         user_project U
@@ -24,10 +24,6 @@
         project P
         ON
         P.project_id = U.project_id
-        RIGHT JOIN
-        task_report T
-        ON
-        T.project_id = P.project_id
     </select>
 
     <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">
