@@ -1,5 +1,6 @@
 package com.user_manager_service.service.impl;
 
+import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
 import com.util.APIResponse;
 import com.model.UserVO;
@@ -8,12 +9,14 @@ import com.user_manager_service.service.GravitateUserManagerService;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +30,8 @@ import static com.util.Constants.*;
 public class GravitateUserManagerServiceImpl implements GravitateUserManagerService,org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserDao userDao;
-
     private final RestTemplate restTemplate;
+    private final SecurityQuestionDao securityQuestionDao;
 
     @Override
     @Transactional
@@ -46,7 +49,9 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
             case 3 -> authorities.add(new SimpleGrantedAuthority(DEVELOPER_USER));
             default -> authorities.add(new SimpleGrantedAuthority(CLIENT_USER));
         }
-        return UserDetailsService.build(user,authorities);
+        //check if user has security question
+        boolean hasSecurityQuestion = (securityQuestionDao.checkIfUserHasSecurityQuestion(user.getUserId()) == 1 ) ? true : false;
+        return UserDetailsService.build(user,hasSecurityQuestion,authorities);
     }
 
 
@@ -158,9 +163,10 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
     @Override
     public ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         //verify old password
         UserVO user = userDao.getGravitateUserById(userVO.getUserId());
-        if(user.getPassword().equals(oldPassword)){
+        if(bCryptPasswordEncoder.matches(oldPassword,user.getPassword())){
             userDao.updateGravitateUserPassword(userVO);
             return APIResponse.resultSuccess("Password successfully updated. ");
         }
@@ -193,8 +199,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity disableGravitateUserAccount(Long userId) {
-        int result = userDao.updateUserStatus(userId);
+    public ResponseEntity updateGravitateUserAccountStatus(Long userId, boolean status) {
+        int result = userDao.updateUserStatus(userId,status);
         if(result > 0){
             return APIResponse.resultSuccess();
         }else{

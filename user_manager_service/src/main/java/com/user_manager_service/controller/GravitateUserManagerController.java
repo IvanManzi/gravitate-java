@@ -110,7 +110,7 @@ public class GravitateUserManagerController {
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         userVO.setUserId(Long.valueOf(userId));
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
-        return gravitateUserManagerService.updateGravitateUserPassword(userVO,passwordEncoder.encode(updateGravitateUserPasswordRequest.oldPassword()));
+        return gravitateUserManagerService.updateGravitateUserPassword(userVO,updateGravitateUserPasswordRequest.oldPassword());
     }
 
     @GetMapping("/team/members")
@@ -123,9 +123,9 @@ public class GravitateUserManagerController {
         return gravitateUserManagerService.getGravitateManagerUsers(search);
     }
 
-    @PutMapping("/{userId}/status")
-    public ResponseEntity updateGravitateUserStatus(@PathVariable("userId") Long userId){
-        return gravitateUserManagerService.disableGravitateUserAccount(userId);
+    @PutMapping("/{userId}/status/{status}")
+    public ResponseEntity updateGravitateUserStatus(@PathVariable("userId") Long userId, @PathVariable("status") boolean status){
+        return gravitateUserManagerService.updateGravitateUserAccountStatus(userId,status);
     }
 
 

@@ -17,6 +17,6 @@ public interface GravitateUserManagerService {
     ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword);
     ResponseEntity getGravitateUserTeamMembers();
     ResponseEntity getGravitateManagerUsers(String search);
-    ResponseEntity disableGravitateUserAccount(Long userId);
+    ResponseEntity updateGravitateUserAccountStatus(Long userId, boolean status);
 
 }
