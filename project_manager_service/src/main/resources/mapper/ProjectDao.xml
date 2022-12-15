@@ -38,8 +38,6 @@
         project_name = #{projectName}
         WHERE
         project_id = #{projectId}
-        AND
-        admin_id = #{adminId}
     </update>
 
     <delete id="deleteProject" parameterType="Long">

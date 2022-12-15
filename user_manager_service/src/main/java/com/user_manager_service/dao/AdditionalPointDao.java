@@ -3,8 +3,6 @@ package com.user_manager_service.dao;
 import com.model.AdditionalPointVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +13,5 @@ public interface AdditionalPointDao {
 
     List<Map> getUserAdditionalPoints(@Param("userId") Long userId,
                                       @Param("quarter") String quarter,
-                                      @Param("date") Date date);
+                                      @Param("year") Integer year);
 }
