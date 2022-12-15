@@ -14,7 +14,16 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <jira-rest-java-client-core.version>4.0.0</jira-rest-java-client-core.version>
+        <atlassian.fugue.version>2.6.1</atlassian.fugue.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>atlassian-public</id>
+            <url>https://maven.atlassian.com/repository/public</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -44,6 +53,20 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
+        </dependency>
+
+        <!--Jira dependencies-->
+
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-rest-java-client-core</artifactId>
+            <version>${jira-rest-java-client-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
+            <version>${atlassian.fugue.version}</version>
         </dependency>
 
     </dependencies>
