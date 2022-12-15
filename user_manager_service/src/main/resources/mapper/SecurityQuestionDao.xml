@@ -9,6 +9,17 @@
         (#{userId},#{question},#{answer})
     </insert>
 
+    <select id="checkIfUserHasSecurityQuestion" parameterType="Long" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM security_question
+        WHERE
+        user_id = #{userId}  LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
     <select id="getSecurityQuestionByUserId" parameterType="Long" resultType="com.model.SecurityQuestionVO">
         SELECT * FROM security_question WHERE user_id = #{userId}
     </select>
