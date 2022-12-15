@@ -29,8 +29,8 @@ public class AdditionalPointsManagerServiceImpl implements AdditionalPointsManag
     }
 
     @Override
-    public ResponseEntity getUserAdditionalPoints(Long userId, String quarter, Integer year) {
-        List<Map> userAdditionalPoints = additionalPointDao.getUserAdditionalPoints(userId, quarter, year);
+    public ResponseEntity getUserAdditionalPoints(Long userId, String quarter, Date date) {
+        List<Map> userAdditionalPoints = additionalPointDao.getUserAdditionalPoints(userId, quarter, date);
         if(userAdditionalPoints.isEmpty()){
             return APIResponse.resourceNotFound();
         }
