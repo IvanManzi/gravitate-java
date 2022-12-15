@@ -14,10 +14,9 @@
         FROM additional_point
         WHERE
         user_id = #{userId}
-        AND date_part('year',created_at) = #{year} AND quarter = #{quarter}
-        <!--<if test="quarter != null || date != null">
+        <if test="quarter != null || date != null">
             AND date = #{date} AND quarter = #{quarter}
-        </if>-->
+        </if>
     </select>
 
 

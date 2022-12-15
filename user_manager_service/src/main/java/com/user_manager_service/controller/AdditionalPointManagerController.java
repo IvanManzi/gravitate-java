@@ -39,12 +39,12 @@ public class AdditionalPointManagerController {
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity getGravitateUserAdditionalPoints(@RequestParam(value = "quarter") String quarter,
-                                                           @RequestParam(value = "year")Integer year,
+    public ResponseEntity getGravitateUserAdditionalPoints(@RequestParam(value = "quarter",required = false) String quarter,
+                                                           @RequestParam(value = "date",required = false)Date date,
                                                            HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return additionalPointsManagerService.getUserAdditionalPoints(Long.valueOf(userId), quarter, year);
+        return additionalPointsManagerService.getUserAdditionalPoints(Long.valueOf(userId), quarter, date);
     }
 
 }

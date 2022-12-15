@@ -25,11 +25,7 @@
     </delete>
 
     <select id="getSkillsByQuarter"  resultType="com.model.UserSkillVO">
-        SELECT * FROM user_skill
-        WHERE
-        user_id = #{userId}
-        AND extract(quarter FROM created_at) = #{quarter}
-        AND date_part('year',created_at) = #{year}
+        SELECT * FROM user_skill WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
     </select>
 
 </mapper>

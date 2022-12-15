@@ -9,7 +9,7 @@ public interface UserSkillManagerService {
 
     ResponseEntity getAllUserSkills(Long userId);
 
-    ResponseEntity getUserSkillsByQuarter(Long userId,Integer year,Integer quarter);
+    ResponseEntity getUserSkillsByQuarter(Long userId,Integer quarter);
 
     ResponseEntity updateUserSkill(UserSkillVO userSkillVO);
 

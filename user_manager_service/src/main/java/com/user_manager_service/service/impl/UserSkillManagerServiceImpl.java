@@ -41,8 +41,8 @@ public class UserSkillManagerServiceImpl implements UserSkillManagerService {
     }
 
     @Override
-    public ResponseEntity getUserSkillsByQuarter(Long userId,Integer year, Integer quarter) {
-        List<UserSkillVO> userSkills = userSkillDao.getSkillsByQuarter(userId,year,quarter);
+    public ResponseEntity getUserSkillsByQuarter(Long userId, Integer quarter) {
+        List<UserSkillVO> userSkills = userSkillDao.getSkillsByQuarter(userId,quarter);
         if(userSkills.isEmpty()){
             return APIResponse.resourceNotFound();
         }
