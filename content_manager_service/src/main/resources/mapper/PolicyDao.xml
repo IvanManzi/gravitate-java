@@ -11,6 +11,9 @@
 
     <select id="getAllPolicies" resultType="com.model.PolicyVO">
         SELECT * FROM policy
+        <if test="policyType != null">
+            WHERE policy_type = #{policyType}
+        </if>
     </select>
 
     <update id="updateGravitatePolicy" parameterType="com.model.PolicyVO">

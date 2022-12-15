@@ -33,8 +33,8 @@ public class GravitatePolicyServiceImpl implements GravitatePolicyService {
     }
 
     @Override
-    public ResponseEntity getGravitatePolicy() {
-        List<PolicyVO> policies = policyDao.getAllPolicies();
+    public ResponseEntity getGravitatePolicy(String policyType) {
+        List<PolicyVO> policies = policyDao.getAllPolicies(policyType);
         if(policies.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
