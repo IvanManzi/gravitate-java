@@ -23,7 +23,7 @@
     </select>
 
     <select id="getTeamMembersLatestWishes" resultType="Map">
-        SELECT W.wish_id,W.wish_type,W.comment,U.user_id,U.first_name,U.last_name,U.email
+        SELECT W.wish_id,W.wish_type,W.comment,U.user_id,U.first_name,U.last_name,U.email,U.profile_picture_path
         FROM wish W
         INNER JOIN
         app_user U
@@ -33,7 +33,7 @@
             WHERE DATE(W.created_at) = CURRENT_DATE
         </if>
         <if test="wishType != null || date != null" >
-            WHERE W.wish_type = #{wishType} AND date = #{date}
+            WHERE W.wish_type = #{wishType} AND W.created_at = #{date}
         </if>
 
     </select>
