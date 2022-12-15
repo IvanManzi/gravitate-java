@@ -157,13 +157,15 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity updateGravitateUserPassword(UserVO userVO) {
-        int result = userDao.updateGravitateUserPassword(userVO);
-        if(result > 0){
+    public ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword) {
+        //verify old password
+        UserVO user = userDao.getGravitateUserById(userVO.getUserId());
+        if(user.getPassword().equals(oldPassword)){
+            userDao.updateGravitateUserPassword(userVO);
             return APIResponse.resultSuccess("Password successfully updated. ");
-        }else{
-            return APIResponse.resultFail();
         }
+        return APIResponse.resultFail("Invalid one time password. ");
+
     }
 
     @Override

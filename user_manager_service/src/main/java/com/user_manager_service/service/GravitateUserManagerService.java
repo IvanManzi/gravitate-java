@@ -14,7 +14,7 @@ public interface GravitateUserManagerService {
     ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token);
     ResponseEntity deleteGravitateUser(Long userId);
     ResponseEntity getGravitateUserByUsername(String username);
-    ResponseEntity updateGravitateUserPassword(UserVO userVO);
+    ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword);
     ResponseEntity getGravitateUserTeamMembers();
     ResponseEntity getGravitateManagerUsers(String search);
     ResponseEntity disableGravitateUserAccount(Long userId);

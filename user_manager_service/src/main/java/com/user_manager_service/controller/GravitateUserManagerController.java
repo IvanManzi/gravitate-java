@@ -110,7 +110,7 @@ public class GravitateUserManagerController {
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         userVO.setUserId(Long.valueOf(userId));
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
-        return gravitateUserManagerService.updateGravitateUserPassword(userVO);
+        return gravitateUserManagerService.updateGravitateUserPassword(userVO,passwordEncoder.encode(updateGravitateUserPasswordRequest.oldPassword()));
     }
 
     @GetMapping("/team/members")
