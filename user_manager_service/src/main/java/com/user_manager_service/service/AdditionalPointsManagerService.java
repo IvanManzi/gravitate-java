@@ -9,5 +9,5 @@ import java.util.Date;
 public interface AdditionalPointsManagerService {
     ResponseEntity createAdditionalPoint(AdditionalPointVO additionalPointVO);
 
-    ResponseEntity getUserAdditionalPoints(Long userId, String quarter, Date date);
+    ResponseEntity getUserAdditionalPoints(Long userId, String quarter, Integer year);
 }
