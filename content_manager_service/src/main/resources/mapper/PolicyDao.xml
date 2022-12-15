@@ -18,10 +18,9 @@
         SET
         policy_name = #{policyName},
         policy_type = #{policyType},
-        description = #{description},
         policy_file_path = #{policyFilePath}
         WHERE
-        policy_id = #{policyId} AND admin_id = #{adminId}
+        policy_id = #{policyId}
     </update>
 
     <delete id="deleteGravitatePolicy" parameterType="Long">
