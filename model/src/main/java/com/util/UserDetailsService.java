@@ -19,26 +19,34 @@ public class UserDetailsService implements UserDetails {
 
     private String username;
 
+    private boolean isAccountNonLocked;
+
+    private boolean hasSecurityQuestion;
+
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsService(Long userId, String userType, String username, String password,
+    public UserDetailsService(Long userId, String userType, String username, String password,  boolean isAccountNonLocked, boolean hasSecurityQuestion,
                               Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.userType = userType;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.hasSecurityQuestion = hasSecurityQuestion;
     }
 
-    public static UserDetailsService build(UserVO user, Collection<? extends SimpleGrantedAuthority> authorities) {
+    public static UserDetailsService build(UserVO user,boolean hasSecurityQuestion, Collection<? extends SimpleGrantedAuthority> authorities) {
         return new UserDetailsService(
             user.getUserId(),
             user.getUserType(),
             user.getEmail(),
             user.getPassword(),
+            user.isAccountNonLocked(),
+            hasSecurityQuestion,
             authorities);
     }
 
@@ -49,6 +57,18 @@ public class UserDetailsService implements UserDetails {
 
     public Long getUserId() {
       return userId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public boolean getAccountStatus(){
+        return isAccountNonLocked;
+    }
+
+    public boolean isHasSecurityQuestion(){
+        return hasSecurityQuestion;
     }
 
     @Override
@@ -68,7 +88,7 @@ public class UserDetailsService implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-      return true;
+      return getAccountStatus();
     }
 
     @Override
