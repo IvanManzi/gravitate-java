@@ -1,7 +1,9 @@
 package com.user_manager_service.service;
 
 
+import com.model.SecurityQuestionVO;
 import com.model.UserVO;
+import com.util.APIResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public interface GravitateUserManagerService {
     ResponseEntity deleteGravitateUser(Long userId);
     ResponseEntity getGravitateUserByUsername(String username);
     ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword);
+    ResponseEntity<APIResponse> updateGravitateUserPassword(UserVO userVO);
     ResponseEntity getGravitateUserTeamMembers();
     ResponseEntity getGravitateManagerUsers(String search);
     ResponseEntity updateGravitateUserAccountStatus(Long userId, boolean status);

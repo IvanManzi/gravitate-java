@@ -1,5 +1,6 @@
 package com.user_manager_service.service.impl;
 
+import com.model.SecurityQuestionVO;
 import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
 import com.util.APIResponse;
@@ -172,6 +173,20 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         }
         return APIResponse.resultFail("Invalid one time password. ");
 
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> updateGravitateUserPassword(UserVO userVO) {
+        UserVO user = userDao.getGravitateUserByUsername(userVO.getEmail());
+        if(ValidationUtil.isNullObject(user)){
+            return APIResponse.resultFail("Invalid email. ");
+        }
+        userVO.setUserId(user.getUserId());
+        int result = userDao.updateGravitateUserPassword(userVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("password successfully updated. ");
+        }
+        return APIResponse.resultFail();
     }
 
     @Override
