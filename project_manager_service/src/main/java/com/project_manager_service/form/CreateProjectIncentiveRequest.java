@@ -7,9 +7,9 @@ public record CreateProjectIncentiveRequest(@NotNull
                                             @NotNull
                                             Long userId,
                                             @NotNull
-                                            Integer totalHours,
-                                            @NotNull
                                             Double performanceBonus,
+                                            @NotNull
+                                            Double totalAmount,
                                             @NotNull
                                             Double employeeReferral,
                                             @NotNull

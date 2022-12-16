@@ -12,7 +12,7 @@ import java.util.Map;
 public interface WishDao {
 
     int createWish(WishVO wishVO);
-    WishVO getLatestWishByUserId(Long userId);
+    List<WishVO> getLatestWishByUserId(Long userId);
     List<Map> getTeamMembersLatestWishes(@Param("wishType") String wishType,@Param("date") Date date);
     List<Map> getAllWishes(Long adminId);
     int updateWish(WishVO wishVO);

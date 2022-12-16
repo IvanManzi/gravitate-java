@@ -27,7 +27,7 @@
     </select>
 
     <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">
-        SELECT task_report_id,project_id,user_id,jira_project_id,jira_task_id,start_date,task_name,COUNT(hours_spent) as total_hours, created_at, updated_at
+        SELECT task_report_id,project_id,user_id,jira_project_id,jira_task_id,start_date,task_name,COUNT(hours_spent) as hoursSpent, created_at, updated_at
         FROM task_report A
         WHERE
         project_id = #{projectId}
@@ -36,7 +36,7 @@
     </select>
 
     <select id="getUserTaskReports" resultType="com.model.TaskReportVO">
-        SELECT * FROM task_report WHERE user_id = #{userId}
+        SELECT * FROM task_report WHERE user_id = #{userId} AND project_id = #{projectId}
     </select>
 
     <update id="updateTaskReport" parameterType="com.model.TaskReportVO">

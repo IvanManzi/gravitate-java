@@ -12,8 +12,6 @@ public interface ProjectDao {
     int createProject(ProjectVO projectVO);
     ProjectVO getProjectByJiraId(String jiraId);
     List<Map> getAllProjects();
-
     int updateProject(ProjectVO projectVO);
-
     int deleteProject(Long projectId);
 }

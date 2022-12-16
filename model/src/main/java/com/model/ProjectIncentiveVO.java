@@ -18,7 +18,6 @@ public class ProjectIncentiveVO implements Serializable {
     private Long projectId;
     private Long userId;
     private Long adminId;
-    private Integer totalHours;
     private boolean status;
     private Double performanceBonus;
     private Double clientReferral;

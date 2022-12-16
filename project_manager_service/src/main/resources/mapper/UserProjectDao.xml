@@ -16,10 +16,6 @@
         <collection property="assigned_users" ofType="com.model.UserVO" select="getUsersAssignedToProject" column="project_id" />
     </resultMap>
 
-    <select id="getAllGravitateUsersAssignedProjects" resultMap="projectResult" resultType="Map">
-        SELECT * FROM project
-    </select>
-
     <select id="getUsersAssignedToProject" resultType="com.model.UserVO">
         SELECT * FROM app_user A
         INNER JOIN
@@ -27,6 +23,33 @@
         ON
         U.user_id = A.user_id
         WHERE U.project_id = #{projectId}
+    </select>
+
+    <select id="getAllProjectsAndAssignedUsers" resultType="Map">
+        SELECT A.user_id,A.user_type,A.first_name,A.last_name,A.email,A.country,A.profile_picture_path,P.project_id,P.project_name FROM app_user A
+        INNER JOIN
+        user_project U
+        ON
+        U.user_id = A.user_id
+        INNER JOIN
+        project P
+        ON
+        p.project_id = U.project_id
+    </select>
+
+    <select id="getUserBillingInformation" resultType="Map">
+        SELECT  DISTINCT P.project_id,A.user_id,A.billing,P.total_amount,EXTRACT(QUARTER FROM P.created_at) AS Month, SUM(T.hours_spent) As total_hours,P.status,
+        COALESCE(P.performance_bonus,0) + COALESCE(P.employee_referral,0) AS incentives FROM project_incentive P
+        INNER JOIN
+        app_user A
+        ON
+        A.user_id = P.user_id
+        LEFT JOIN
+        task_report T
+        ON
+        T.project_id = P.project_id
+        WHERE P.created_at BETWEEN #{from}::date AND #{to}::date AND A.user_id = #{userId}
+        GROUP BY P.project_id,A.user_id,A.billing,P.total_amount,T.hours_spent,P.performance_bonus,P.employee_referral,P.status,P.created_at
     </select>
 
     <select id="checkIfUserIsAssignedToProject" parameterType="Long" resultType="int">

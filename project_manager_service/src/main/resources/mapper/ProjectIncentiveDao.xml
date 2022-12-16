@@ -4,12 +4,12 @@
 
     <insert id="createProjectIncentive" parameterType="com.model.ProjectIncentiveVO">
         INSERT INTO project_incentive
-        (project_id,user_id,admin_id,total_hours,performance_bonus,client_referral,employee_referral,hot_opportunity,total_amount)
+        (project_id,user_id,admin_id,performance_bonus,client_referral,employee_referral,hot_opportunity,total_amount)
         VALUES
-        (#{projectId},#{userId},#{admin_id},#{total_hours},#{performanceBonus},#{clientReferral},#{employeeReferral},#{hotOpportunity},#{totalAmount})
+        (#{projectId},#{userId},#{adminId},#{performanceBonus},#{clientReferral},#{employeeReferral},#{hotOpportunity},#{totalAmount})
     </insert>
 
-    <select id="getUserProjectIncentives" resultType="com.model.TaskReportVO">
+    <select id="getUserProjectIncentives" resultType="com.model.ProjectIncentiveVO">
         SELECT * FROM project_incentive WHERE project_id = #{projectId} AND user_id = #{userId}
     </select>
 
