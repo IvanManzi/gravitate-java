@@ -61,7 +61,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.cors();
         http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/user/login").permitAll();
+        http.authorizeRequests().antMatchers("/api/v1/user/login","/api/v1/user/forget/password-reset").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/user/password-reset",
                 "/api/v1/user/profile",
                 "/api/v1/user/team/members",

@@ -1,6 +1,7 @@
 package com.user_manager_service.service;
 
 import com.model.SecurityQuestionVO;
+import com.model.UserVO;
 import org.springframework.http.ResponseEntity;
 
 public interface GravitateSecurityQuestionService {
@@ -14,4 +15,6 @@ public interface GravitateSecurityQuestionService {
     ResponseEntity deleteSecurityQuestion(Long securityQuestionId);
 
     ResponseEntity verifySecurityQuestionAnswer(SecurityQuestionVO securityQuestionVO);
+
+    ResponseEntity verifySecurityQuestionAnswer(UserVO userVO, SecurityQuestionVO securityQuestionVO);
 }
