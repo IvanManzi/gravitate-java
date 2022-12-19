@@ -8,6 +8,7 @@ import com.model.WishReplyVO;
 import com.model.WishVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +61,7 @@ public class GravitateWallOfWishesController {
 
     @GetMapping(value = "/team")
     public ResponseEntity getTeamLatestWishes(@RequestParam(value = "wishType",required = false) String wishType,
-                                              @RequestParam(value = "date",required = false)Date date){
+                                              @RequestParam(value = "date",required = false)@DateTimeFormat(pattern="yyyy-MM-dd") Date date){
         return gravitateWishesManagerService.getTeamLatestWishes(wishType,date);
     }
 

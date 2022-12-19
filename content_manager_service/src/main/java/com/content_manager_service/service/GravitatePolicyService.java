@@ -8,7 +8,7 @@ public interface GravitatePolicyService {
 
     ResponseEntity createGravitatePolicy(PolicyVO policyVO);
 
-    ResponseEntity getGravitatePolicy();
+    ResponseEntity getGravitatePolicy(String policyType);
 
     ResponseEntity updateGravitatePolicy(PolicyVO policyVO);
 

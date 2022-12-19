@@ -43,16 +43,11 @@ public class MyJiraClient {
         myJiraClient.updateIssueDescription(issueKey, "This is description from my Jira Client");
         Issue issue = myJiraClient.getIssue(issueKey);
         System.out.println(issue.getDescription());
-
         myJiraClient.voteForAnIssue(issue);
-
         System.out.println(myJiraClient.getTotalVotesCount(issueKey));
-
         myJiraClient.addComment(issue, "This is comment from my Jira Client");
-
         List<Comment> comments = myJiraClient.getAllComments(issueKey);
         comments.forEach(c -> System.out.println(c.getBody()));
-
         myJiraClient.deleteIssue(issueKey, true);*/
 
         myJiraClient.restClient.close();

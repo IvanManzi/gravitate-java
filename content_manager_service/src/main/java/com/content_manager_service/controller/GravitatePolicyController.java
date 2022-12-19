@@ -37,8 +37,8 @@ public class GravitatePolicyController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllPolicies() throws IOException {
-        return gravitatePolicyService.getGravitatePolicy();
+    public ResponseEntity getAllPolicies(@RequestParam(value = "type",required = false) String type) throws IOException {
+        return gravitatePolicyService.getGravitatePolicy(type);
     }
 
     @PutMapping(value = "/")

@@ -1,9 +1,12 @@
 package com.user_manager_service.service.impl;
 
 import com.model.SecurityQuestionVO;
+import com.model.UserVO;
 import com.user_manager_service.dao.SecurityQuestionDao;
+import com.user_manager_service.dao.UserDao;
 import com.user_manager_service.service.GravitateSecurityQuestionService;
 import com.util.APIResponse;
+import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,15 @@ import java.util.Map;
 public class GravitateSecurityQuestionServiceImpl implements GravitateSecurityQuestionService {
 
     private final SecurityQuestionDao securityQuestionDao;
+    private final UserDao userDao;
 
     @Override
     public ResponseEntity createSecurityQuestion(SecurityQuestionVO securityQuestionVO) {
+        //check if user already has a security question
+        int check = securityQuestionDao.checkIfUserHasSecurityQuestion(securityQuestionVO.getUserId());
+        if(check == 1){
+            return APIResponse.resultFail("User already has security question. ");
+        }
         int result = securityQuestionDao.saveSecurityQuestion(securityQuestionVO);
         if(result > 0){
             return APIResponse.resultSuccess("Security question successfully created. ");
@@ -30,12 +39,12 @@ public class GravitateSecurityQuestionServiceImpl implements GravitateSecurityQu
 
     @Override
     public ResponseEntity getUserSecurityQuestion(Long userId) {
-        List<SecurityQuestionVO> securityQuestions = securityQuestionDao.getSecurityQuestionByUserId(userId);
-        if(securityQuestions.isEmpty()){
+        SecurityQuestionVO securityQuestion = securityQuestionDao.getSecurityQuestionByUserId(userId);
+        if(ValidationUtil.isNullObject(securityQuestion)) {
             return APIResponse.resourceNotFound();
         }else{
             Map<String,Object> data = new HashMap<>();
-            data.put("SECURITY_QUESTION",securityQuestions);
+            data.put("SECURITY_QUESTION",securityQuestion);
             return APIResponse.resultSuccess(data);
         }
     }
@@ -68,5 +77,22 @@ public class GravitateSecurityQuestionServiceImpl implements GravitateSecurityQu
         }else{
             return APIResponse.resultFail("Verification failed.");
         }
+    }
+
+    @Override
+    public ResponseEntity verifySecurityQuestionAnswer(UserVO userVO, SecurityQuestionVO securityQuestionVO) {
+        UserVO user = userDao.getGravitateUserByUsername(userVO.getEmail());
+        if(ValidationUtil.isNullObject(user)){
+            return APIResponse.resultFail("Invalid Email ID.");
+        }
+        SecurityQuestionVO securityQuestion = securityQuestionDao.getSecurityQuestionByUserId(user.getUserId());
+        if(ValidationUtil.isNullObject(securityQuestion)){
+            return APIResponse.resultFail("User doesn't have security question. ");
+        }
+        //check if answers match
+        if(securityQuestion.getAnswer().equals(securityQuestionVO.getAnswer())){
+            return APIResponse.resultSuccess("Security question successfully verified. ");
+        }
+        return APIResponse.resultFail("Invalid security question answer. ");
     }
 }

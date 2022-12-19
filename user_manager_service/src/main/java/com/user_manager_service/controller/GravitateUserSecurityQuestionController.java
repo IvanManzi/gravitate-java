@@ -1,6 +1,7 @@
 package com.user_manager_service.controller;
 
 import com.model.SecurityQuestionVO;
+import com.model.UserVO;
 import com.user_manager_service.form.CreateUserSecurityQuestionRequest;
 import com.user_manager_service.form.UpdateUserSecurityQuestionRequest;
 import com.user_manager_service.service.GravitateSecurityQuestionService;
@@ -64,6 +65,20 @@ public class GravitateUserSecurityQuestionController {
         securityQuestionVO.setSecurityQuestionId(questionId);
         securityQuestionVO.setAnswer(answer);
         return gravitateSecurityQuestionService.verifySecurityQuestionAnswer(securityQuestionVO);
+    }
+
+    @GetMapping(value = "/verify")
+    public ResponseEntity verifySecurityQuestion(@RequestParam(value = "question",required = true) String question,
+                                                 @RequestParam(value = "answer",required = true) String answer,
+                                                 @RequestParam(value = "email",required = true) String email){
+        SecurityQuestionVO securityQuestionVO = new SecurityQuestionVO();
+        UserVO userVO = new UserVO();
+
+        securityQuestionVO.setQuestion(question);
+        securityQuestionVO.setAnswer(answer);
+
+        userVO.setEmail(email);
+        return gravitateSecurityQuestionService.verifySecurityQuestionAnswer(userVO,securityQuestionVO);
     }
 
 

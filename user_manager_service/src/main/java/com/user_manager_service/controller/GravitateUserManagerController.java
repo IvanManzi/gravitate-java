@@ -2,6 +2,7 @@ package com.user_manager_service.controller;
 
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
+import com.user_manager_service.form.ForgetPasswordRequest;
 import com.user_manager_service.form.UpdateGravitateUserForm;
 import com.user_manager_service.form.UpdateGravitateUserPasswordRequest;
 import com.user_manager_service.service.GravitateUserManagerService;
@@ -110,6 +111,14 @@ public class GravitateUserManagerController {
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         userVO.setUserId(Long.valueOf(userId));
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserPasswordRequest.password()));
+        return gravitateUserManagerService.updateGravitateUserPassword(userVO,updateGravitateUserPasswordRequest.oldPassword());
+    }
+
+    @PutMapping(value = "/forget/password-reset")
+    public ResponseEntity forgetPassword(@RequestBody ForgetPasswordRequest forgetPasswordRequest){
+        UserVO userVO = new UserVO();
+        userVO.setEmail(forgetPasswordRequest.email());
+        userVO.setPassword(passwordEncoder.encode(forgetPasswordRequest.password()));
         return gravitateUserManagerService.updateGravitateUserPassword(userVO);
     }
 
@@ -123,9 +132,9 @@ public class GravitateUserManagerController {
         return gravitateUserManagerService.getGravitateManagerUsers(search);
     }
 
-    @PutMapping("/{userId}/status")
-    public ResponseEntity updateGravitateUserStatus(@PathVariable("userId") Long userId){
-        return gravitateUserManagerService.disableGravitateUserAccount(userId);
+    @PutMapping("/{userId}/status/{status}")
+    public ResponseEntity updateGravitateUserStatus(@PathVariable("userId") Long userId, @PathVariable("status") boolean status){
+        return gravitateUserManagerService.updateGravitateUserAccountStatus(userId,status);
     }
 
 

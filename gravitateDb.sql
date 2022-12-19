@@ -470,7 +470,8 @@ CREATE TABLE public.project (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     jira_id character varying NOT NULL,
-    status integer DEFAULT 1
+    status integer DEFAULT 1,
+    project_lead bigint NOT NULL
 );
 
 
@@ -498,6 +499,113 @@ ALTER SEQUENCE public.project_admin_id_seq OWNED BY public.project.admin_id;
 
 
 --
+-- Name: project_incentive; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.project_incentive (
+    project_incentive_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    admin_id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    total_hours integer NOT NULL,
+    status boolean DEFAULT false NOT NULL,
+    performance_bonus numeric DEFAULT 0.0 NOT NULL,
+    client_referral numeric DEFAULT 0.0 NOT NULL,
+    employee_referral numeric DEFAULT 0.0 NOT NULL,
+    hot_opportunity numeric DEFAULT 0.0 NOT NULL,
+    total_amount numeric DEFAULT 0.0 NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.project_incentive OWNER TO postgres;
+
+--
+-- Name: project_incentive_admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_incentive_admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_incentive_admin_id_seq OWNER TO postgres;
+
+--
+-- Name: project_incentive_admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_incentive_admin_id_seq OWNED BY public.project_incentive.admin_id;
+
+
+--
+-- Name: project_incentive_project_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_incentive_project_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_incentive_project_id_seq OWNER TO postgres;
+
+--
+-- Name: project_incentive_project_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_incentive_project_id_seq OWNED BY public.project_incentive.project_id;
+
+
+--
+-- Name: project_incentive_project_incentive_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_incentive_project_incentive_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_incentive_project_incentive_id_seq OWNER TO postgres;
+
+--
+-- Name: project_incentive_project_incentive_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_incentive_project_incentive_id_seq OWNED BY public.project_incentive.project_incentive_id;
+
+
+--
+-- Name: project_incentive_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_incentive_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_incentive_user_id_seq OWNER TO postgres;
+
+--
+-- Name: project_incentive_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_incentive_user_id_seq OWNED BY public.project_incentive.user_id;
+
+
+--
 -- Name: project_project_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -516,6 +624,27 @@ ALTER TABLE public.project_project_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.project_project_id_seq OWNED BY public.project.project_id;
+
+
+--
+-- Name: project_project_lead_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.project_project_lead_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.project_project_lead_seq OWNER TO postgres;
+
+--
+-- Name: project_project_lead_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.project_project_lead_seq OWNED BY public.project.project_lead;
 
 
 --
@@ -611,6 +740,89 @@ ALTER TABLE public.security_question_security_question_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.security_question_security_question_id_seq OWNED BY public.security_question.security_question_id;
+
+
+--
+-- Name: task_report; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.task_report (
+    task_report_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    jira_project_id character varying NOT NULL,
+    jira_task_id character varying NOT NULL,
+    task_name character varying NOT NULL,
+    hours_spent integer NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    start_date timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.task_report OWNER TO postgres;
+
+--
+-- Name: task_report_project_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.task_report_project_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.task_report_project_id_seq OWNER TO postgres;
+
+--
+-- Name: task_report_project_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.task_report_project_id_seq OWNED BY public.task_report.project_id;
+
+
+--
+-- Name: task_report_task_report_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.task_report_task_report_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.task_report_task_report_seq OWNER TO postgres;
+
+--
+-- Name: task_report_task_report_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.task_report_task_report_seq OWNED BY public.task_report.task_report_id;
+
+
+--
+-- Name: task_report_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.task_report_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.task_report_user_id_seq OWNER TO postgres;
+
+--
+-- Name: task_report_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.task_report_user_id_seq OWNED BY public.task_report.user_id;
 
 
 --
@@ -1215,6 +1427,41 @@ ALTER TABLE ONLY public.project ALTER COLUMN admin_id SET DEFAULT nextval('publi
 
 
 --
+-- Name: project project_lead; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project ALTER COLUMN project_lead SET DEFAULT nextval('public.project_project_lead_seq'::regclass);
+
+
+--
+-- Name: project_incentive project_incentive_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive ALTER COLUMN project_incentive_id SET DEFAULT nextval('public.project_incentive_project_incentive_id_seq'::regclass);
+
+
+--
+-- Name: project_incentive user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive ALTER COLUMN user_id SET DEFAULT nextval('public.project_incentive_user_id_seq'::regclass);
+
+
+--
+-- Name: project_incentive admin_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive ALTER COLUMN admin_id SET DEFAULT nextval('public.project_incentive_admin_id_seq'::regclass);
+
+
+--
+-- Name: project_incentive project_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive ALTER COLUMN project_id SET DEFAULT nextval('public.project_incentive_project_id_seq'::regclass);
+
+
+--
 -- Name: role role_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1233,6 +1480,27 @@ ALTER TABLE ONLY public.role ALTER COLUMN admin_id SET DEFAULT nextval('public.r
 --
 
 ALTER TABLE ONLY public.security_question ALTER COLUMN security_question_id SET DEFAULT nextval('public.security_question_security_question_id_seq'::regclass);
+
+
+--
+-- Name: task_report task_report_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report ALTER COLUMN task_report_id SET DEFAULT nextval('public.task_report_task_report_seq'::regclass);
+
+
+--
+-- Name: task_report user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report ALTER COLUMN user_id SET DEFAULT nextval('public.task_report_user_id_seq'::regclass);
+
+
+--
+-- Name: task_report project_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report ALTER COLUMN project_id SET DEFAULT nextval('public.task_report_project_id_seq'::regclass);
 
 
 --
@@ -1399,6 +1667,14 @@ ALTER TABLE ONLY public.policy
 
 
 --
+-- Name: project_incentive project_incentive_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive
+    ADD CONSTRAINT project_incentive_pkey PRIMARY KEY (project_incentive_id);
+
+
+--
 -- Name: project project_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1420,6 +1696,14 @@ ALTER TABLE ONLY public.role
 
 ALTER TABLE ONLY public.security_question
     ADD CONSTRAINT security_question_pkey PRIMARY KEY (security_question_id);
+
+
+--
+-- Name: task_report task_report_id_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report
+    ADD CONSTRAINT task_report_id_pkey PRIMARY KEY (task_report_id);
 
 
 --
@@ -1607,11 +1891,59 @@ ALTER TABLE ONLY public.project
 
 
 --
+-- Name: project project_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project
+    ADD CONSTRAINT project_fk2 FOREIGN KEY (project_lead) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: project_incentive project_incentivefk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive
+    ADD CONSTRAINT project_incentivefk1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: project_incentive project_incentivefk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive
+    ADD CONSTRAINT project_incentivefk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: project_incentive project_incentivefk3; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.project_incentive
+    ADD CONSTRAINT project_incentivefk3 FOREIGN KEY (project_id) REFERENCES public.project(project_id) ON DELETE CASCADE;
+
+
+--
 -- Name: role role_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.role
     ADD CONSTRAINT role_fk1 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: task_report task_reportfk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report
+    ADD CONSTRAINT task_reportfk1 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: task_report task_reportfk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task_report
+    ADD CONSTRAINT task_reportfk2 FOREIGN KEY (project_id) REFERENCES public.project(project_id) ON DELETE CASCADE;
 
 
 --

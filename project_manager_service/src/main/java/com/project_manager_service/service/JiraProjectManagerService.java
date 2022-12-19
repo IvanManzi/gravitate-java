@@ -8,7 +8,4 @@ public interface JiraProjectManagerService {
     ResponseEntity<APIResponse> getAllProjects();
 
     ResponseEntity<APIResponse> getSingleProject(String url);
-
-
-
 }

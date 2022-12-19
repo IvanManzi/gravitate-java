@@ -25,7 +25,6 @@
         </repository>
     </repositories>
 
-
     <dependencies>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -56,12 +55,13 @@
             <version>0.9.1</version>
         </dependency>
 
+        <!--Jira dependencies-->
+
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-rest-java-client-core</artifactId>
             <version>${jira-rest-java-client-core.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.atlassian.fugue</groupId>

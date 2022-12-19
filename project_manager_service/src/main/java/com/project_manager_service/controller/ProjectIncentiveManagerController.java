@@ -35,11 +35,11 @@ public class ProjectIncentiveManagerController {
         projectIncentiveVO.setAdminId(Long.valueOf(adminId));
         projectIncentiveVO.setUserId(createProjectIncentiveRequest.userId());
         projectIncentiveVO.setProjectId(createProjectIncentiveRequest.projectId());
-        projectIncentiveVO.setTotalHours(createProjectIncentiveRequest.totalHours());
         projectIncentiveVO.setPerformanceBonus(createProjectIncentiveRequest.performanceBonus());
         projectIncentiveVO.setEmployeeReferral(createProjectIncentiveRequest.employeeReferral());
         projectIncentiveVO.setClientReferral(createProjectIncentiveRequest.clientReferral());
         projectIncentiveVO.setHotOpportunity(createProjectIncentiveRequest.hotOpportunity());
+        projectIncentiveVO.setTotalAmount(createProjectIncentiveRequest.totalAmount());
         return projectIncentiveManagerService.createProjectIncentive(projectIncentiveVO);
     }
 

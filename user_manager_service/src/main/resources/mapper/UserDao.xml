@@ -128,10 +128,10 @@
         </if>
     </select>
 
-    <update id="updateUserStatus" parameterType="Long">
+    <update id="updateUserStatus">
         UPDATE app_user
         SET
-        status = false
+        is_account_non_locked = #{status}
         WHERE user_id = #{userId}
     </update>
 

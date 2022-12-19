@@ -58,8 +58,8 @@ public class GravitateWishesManagerServiceImpl implements GravitateWishesManager
 
     @Override
     public ResponseEntity getWishesByUserId(Long userId) {
-        WishVO wish = wishDao.getLatestWishByUserId(userId);
-        if(ValidationUtil.isNullObject(wish)){
+        List<WishVO> wish = wishDao.getLatestWishByUserId(userId);
+        if(wish.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
             Map<String,Object> data = new HashMap<>();

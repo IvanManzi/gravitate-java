@@ -19,5 +19,5 @@ public interface UserDao {
     UserVO getGravitateUserById(Long userId);
     List<Map> getGravitateUserTeamMembers();
     List<UserVO> getGravitateManagerUsers(String search);
-    int updateUserStatus(Long userId);
+    int updateUserStatus(@Param("userId") Long userId,@Param("status") boolean status);
 }
