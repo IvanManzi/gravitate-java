@@ -13,8 +13,8 @@
         <collection property="comments" ofType="com.model.BlogReplyVO" select="selectBlogReply" column="blog_id" />
     </resultMap>
 
-    <select id="getAllTeamMembersBlogs" resultMap="tResult">
-        SELECT T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,U.email,U.first_name,U.last_name,U.user_type FROM blog T
+    <select id="getAllBlogs" resultMap="tResult">
+        SELECT T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type FROM blog T
         INNER JOIN app_user U
         ON
         T.user_id = U.user_id

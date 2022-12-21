@@ -11,7 +11,7 @@ public interface GravitateBlogManagerService {
 
     ResponseEntity createBlogReply(BlogReplyVO blogReplyVO);
 
-    ResponseEntity getAllTeamBlogs();
+    ResponseEntity getAllBlogs();
 
     ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter);
 

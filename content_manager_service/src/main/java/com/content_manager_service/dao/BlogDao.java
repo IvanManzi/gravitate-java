@@ -12,7 +12,7 @@ public interface BlogDao {
 
     int createBlog(BlogVO blogVO);
 
-    List<Map> getAllTeamMembersBlogs();
+    List<Map> getAllBlogs();
 
     List<BlogVO> getUserBlogsByQuarter(@Param("userId") Long userId,@Param("quarter") Integer quarter);
 

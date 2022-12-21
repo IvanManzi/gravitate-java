@@ -43,8 +43,8 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     }
 
     @Override
-    public ResponseEntity getAllTeamBlogs() {
-        List<Map> teamTopics = blogDao.getAllTeamMembersBlogs();
+    public ResponseEntity getAllBlogs() {
+        List<Map> teamTopics = blogDao.getAllBlogs();
         if(teamTopics.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{

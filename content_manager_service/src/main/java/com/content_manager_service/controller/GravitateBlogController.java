@@ -51,9 +51,9 @@ public class GravitateBlogController {
         return gravitateBlogManagerService.createBlogReply(blogReplyVO);
     }
 
-    @GetMapping(value = "/team/")
+    @GetMapping(value = "/all")
     public ResponseEntity getAllBlogs(){
-        return gravitateBlogManagerService.getAllTeamBlogs();
+        return gravitateBlogManagerService.getAllBlogs();
     }
 
     @GetMapping(value = "/quarter")
