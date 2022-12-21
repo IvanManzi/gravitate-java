@@ -68,15 +68,11 @@ public class GravitateUserSecurityQuestionController {
     }
 
     @GetMapping(value = "/verify")
-    public ResponseEntity verifySecurityQuestion(@RequestParam(value = "question",required = true) String question,
-                                                 @RequestParam(value = "answer",required = true) String answer,
+    public ResponseEntity verifySecurityQuestion(@RequestParam(value = "answer",required = true) String answer,
                                                  @RequestParam(value = "email",required = true) String email){
         SecurityQuestionVO securityQuestionVO = new SecurityQuestionVO();
         UserVO userVO = new UserVO();
-
-        securityQuestionVO.setQuestion(question);
         securityQuestionVO.setAnswer(answer);
-
         userVO.setEmail(email);
         return gravitateSecurityQuestionService.verifySecurityQuestionAnswer(userVO,securityQuestionVO);
     }
