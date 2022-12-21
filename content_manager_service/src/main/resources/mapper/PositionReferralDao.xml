@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.PositionReferralDao" >
+
+    <insert id="savePositionReferral" parameterType="com.model.PositionReferralVO">
+        INSERT INTO position_referral
+        (position_id,referred_by,first_name,last_name,phone_number,country,email_id,key_skills,cv_path)
+        VALUES
+        (#{positionId},#{referredBy},#{firstName},#{lastName},#{phoneNumber},#{country},#{emailId},#{keySkills},#{cvPath})
+    </insert>
+
+    <resultMap id="referredPositionsResult" type="Map">
+        <collection property="referrer" ofType="com.model.UserVO" select="selectUserById" column="referred_by" />
+    </resultMap>
+
+    <select id="getAllReferredPositions" resultMap="referredPositionsResult">
+        SELECT * FROM position_referral WHERE referral_status = false
+        <if test="userLevel != '${Constants.ADMIN_USER}' ">
+            AND referred_by = #{userId}
+        </if>
+    </select>
+
+    <select id="selectUserById" resultType="com.model.UserVO" parameterType="Long">
+        SELECT * FROM app_user WHERE user_id = #{referredBy}
+    </select>
+
+    <update id="updateReferredPosition" parameterType="com.model.PositionReferralVO">
+        UPDATE position_referral
+        SET
+        referral_status = #{referralStatus}
+        WHERE
+        position_referral_id = #{positionReferralId}
+    </update>
+
+    <delete id="deletePosition" parameterType="Long">
+        DELETE FROM position WHERE position_id = #{positionId}
+    </delete>
+
+
+
+
+</mapper>

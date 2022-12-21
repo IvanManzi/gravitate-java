@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.PositionDao" >
+
+    <insert id="savePosition" parameterType="com.model.PositionVO">
+        INSERT INTO position
+        (project_id,admin_id,job_id,role_id,experience,key_skills,referral_amount,position_type,opportunity_type,kra,incentive_amount,points,start_date,end_date)
+        VALUES
+        (#{projectId},#{adminId},#{jobId},#{roleId},#{experience},#{keySkills},#{referralAmount},#{positionType},#{opportunityType},#{kra},#{incentiveAmount},#{points},#{startDate},#{endDate})
+    </insert>
+
+    <select id="getAllPositions" resultType="com.model.PositionVO">
+        SELECT * FROM position WHERE is_position_open = true
+        <if test="positionType != null">
+            AND opportunity_type = #{positionType}
+        </if>
+    </select>
+
+    <update id="updatePosition" parameterType="com.model.PositionVO">
+        UPDATE position
+        SET
+        job_id = #{jobId},
+        role_id = #{roleId},
+        experience = #{experience},
+        key_skills = #{keySkills},
+        referral_amount = #{referralAmount},
+        type = #{type},
+        kra = #{kra}
+        WHERE
+        position_id = #{positionId}
+    </update>
+
+    <delete id="deletePosition" parameterType="Long">
+        DELETE FROM position WHERE position_id = #{positionId}
+    </delete>
+
+
+
+
+</mapper>
