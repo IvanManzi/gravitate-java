@@ -43,6 +43,10 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/content/blog/**",
                                                         "/api/v1/content/task/**",
+                                                        "/api/v1/content/position/all",
+                                                        "/api/v1/content/position/referral/create",
+                                                        "/api/v1/content/position/referral/all",
+                                                        "/api/v1/content/client-referral/create",
                                                         "/api/v1/content/project/",
                                                         "/api/v1/content/forum/**",
                                                         "/api/v1/content/policy/all",
