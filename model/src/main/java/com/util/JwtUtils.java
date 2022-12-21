@@ -3,6 +3,7 @@ package com.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -63,6 +65,22 @@ public class JwtUtils {
     }
 
     /**
+     * Get role from JWT token time 2022-04-14 14:20:11
+     *
+     * @Param token
+     * @return String
+     */
+
+    public static String getUserRoleFromJwtToken(String token) throws IOException {
+        Algorithm algorithm = Algorithm.HMAC256(Constants.jwtSecret.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        Claim claim = decodedJWT.getClaim("roles");
+        List roles = claim.as(List.class);
+        return roles.get(0).toString(); //to be changed when system can support multiple authorities
+    }
+
+    /**
      * Verify JWT token time 2022-04-14 14:20:11
      *
      * @return String
@@ -75,5 +93,7 @@ public class JwtUtils {
         DecodedJWT decodedJWT = verifier.verify(token);
         return decodedJWT;
     }
+
+
 
 }
