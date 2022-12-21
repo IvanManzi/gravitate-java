@@ -62,7 +62,7 @@ public class APIResponse<T> {
     public static ResponseEntity resultSuccess(String developerMessage){
         return ResponseEntity.ok(
                 APIResponse.builder()
-                        .statusCode(HttpStatus.ACCEPTED.value())
+                        .statusCode(HttpStatus.OK.value())
                         .status(HttpStatus.ACCEPTED)
                         .message(developerMessage)
                         .build()
