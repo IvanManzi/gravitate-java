@@ -6,6 +6,7 @@ import com.project_manager_service.form.UpdateProjectRequest;
 import com.project_manager_service.service.ProjectCRUDService;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class ProjectCRUDController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllProjects() throws IOException {
+    public ResponseEntity getAllProjects() {
         return projectCRUDService.getAllProjects();
     }
 

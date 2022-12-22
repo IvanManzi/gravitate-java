@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getAllProjects" resultMap="allProjectsResult">
-        SELECT * FROM project
+        SELECT * FROM project P
     </select>
 
     <select id="getProjectLead" resultType="com.model.UserVO">
