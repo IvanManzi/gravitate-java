@@ -3,8 +3,10 @@ package com.content_manager_service.service.impl;
 
 import com.content_manager_service.dao.PositionDao;
 import com.content_manager_service.dao.PositionReferralDao;
+import com.content_manager_service.dao.PositionSelfReferralDao;
 import com.content_manager_service.service.PositionManagerService;
 import com.model.PositionReferralVO;
+import com.model.PositionSelfReferralVO;
 import com.model.PositionVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class PositionManagerServiceImpl implements PositionManagerService {
     private final PositionReferralDao positionReferralDao;
 
     private final PositionDao positionDao;
+
+    private final PositionSelfReferralDao positionSelfReferralDao;
 
 
     @Override
@@ -72,6 +76,35 @@ public class PositionManagerServiceImpl implements PositionManagerService {
         Map<String, Object> data = new HashMap<>();
         data.put("REFERRED_POSITIONS", referredPositions);
         return APIResponse.resultSuccess(data);
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> createSelfReferral(PositionSelfReferralVO positionSelfReferralVO) {
+        int result = positionSelfReferralDao.saveSelfReferral(positionSelfReferralVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Position self referral created.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> getSelfReferredPositions(Long userId, String userLevel) {
+        List<Map> selfReferredPositions = positionSelfReferralDao.getSelfReferredPositions(userId,userLevel);
+        if(selfReferredPositions.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("SELF_REFERRED_POSITIONS",selfReferredPositions);
+        return APIResponse.resultSuccess(data);
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> updateSelfReferredPositionStatus(PositionSelfReferralVO positionSelfReferralVO) {
+        int result = positionSelfReferralDao.updateSelfReferredPositionStatus(positionSelfReferralVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Status successfully updated. ");
+        }
+        return APIResponse.resultFail();
     }
 
     @Override

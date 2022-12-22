@@ -20,8 +20,8 @@ public class PositionReferralVO implements Serializable {
 
     private Long positionId;
 
-
-    private boolean referralStatus;
+    //66 for accepted, 77 for rejected, 88 for failed
+    private Integer referralStatus;
 
 
     private Long referredBy;

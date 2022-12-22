@@ -16,7 +16,7 @@
         P.position_type ,P.opportunity_type ,P.kra, P.incentive_amount , P.points,P.start_date , P.end_date ,
         R.role_name , PR.project_name
         FROM position P
-        INNER JOIN
+        LEFT JOIN
         Project PR
         ON
         PR.project_id = P.project_id

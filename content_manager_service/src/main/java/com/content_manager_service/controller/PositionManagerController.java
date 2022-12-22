@@ -3,9 +3,11 @@ package com.content_manager_service.controller;
 
 import com.content_manager_service.form.CreatePositionReferralRequest;
 import com.content_manager_service.form.CreatePositionRequest;
+import com.content_manager_service.form.CreatePositionSelfReferralRequest;
 import com.content_manager_service.form.UpdatePositionRequest;
 import com.content_manager_service.service.PositionManagerService;
 import com.model.PositionReferralVO;
+import com.model.PositionSelfReferralVO;
 import com.model.PositionVO;
 import com.util.APIResponse;
 import com.util.JwtUtils;
@@ -45,6 +47,7 @@ public class PositionManagerController {
         positionVO.setOpportunityType(createPositionRequest.opportunityType());
         positionVO.setReferralAmount(createPositionRequest.referralAmount());
         positionVO.setStartDate(createPositionRequest.beginDate());
+        positionVO.setPoints(createPositionRequest.points());
         positionVO.setEndDate(createPositionRequest.endDate());
         positionVO.setIncentiveAmount(createPositionRequest.incentiveAmount());
         positionVO.setProjectId(createPositionRequest.projectId());
@@ -111,6 +114,38 @@ public class PositionManagerController {
 
     }
 
+    @PostMapping(value = "/self/referral/create")
+    public ResponseEntity<APIResponse> createPositionSelfReferral(@Valid @RequestBody CreatePositionSelfReferralRequest createPositionSelfReferralRequest, HttpServletRequest request) throws IOException {
+        PositionSelfReferralVO positionSelfReferralVO = new PositionSelfReferralVO();
+
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+
+        positionSelfReferralVO.setUserId(Long.valueOf(userId));
+        positionSelfReferralVO.setPositionId(createPositionSelfReferralRequest.positionId());
+
+        return positionManagerService.createSelfReferral(positionSelfReferralVO);
+    }
+
+
+    @GetMapping(value = "/self/referral/all")
+    public ResponseEntity<APIResponse> getAllSelfReferredPositions(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        String role = JwtUtils.getUserRoleFromJwtToken(token);
+        return positionManagerService.getSelfReferredPositions(Long.valueOf(userId),role);
+
+    }
+
+    @PutMapping(value = "/self/referral/{referralId}/status/{status}")
+    public ResponseEntity<APIResponse> updateSelfReferredPositionStatus(@PathVariable("referralId")Long referralId,
+                                                                    @PathVariable("status") Integer status){
+        PositionSelfReferralVO positionSelfReferralVO = new PositionSelfReferralVO();
+        positionSelfReferralVO.setPositionSelfReferralId(referralId);
+        positionSelfReferralVO.setReferralStatus(status);
+        return positionManagerService.updateSelfReferredPositionStatus(positionSelfReferralVO);
+    }
+
 
     @DeleteMapping(value = "/{positionId}")
     public ResponseEntity<APIResponse> deletePosition(@PathVariable("positionId") Long positionId){
@@ -121,7 +156,7 @@ public class PositionManagerController {
 
     @PutMapping(value = "/referral/{referralId}/status/{status}")
     public ResponseEntity<APIResponse> updatePositionReferralStatus(@PathVariable("referralId")Long referralId,
-                                                                    @PathVariable("status") boolean status){
+                                                                    @PathVariable("status") Integer status){
         PositionReferralVO positionReferralVO = new PositionReferralVO();
         positionReferralVO.setPositionReferralId(referralId);
         positionReferralVO.setReferralStatus(status);

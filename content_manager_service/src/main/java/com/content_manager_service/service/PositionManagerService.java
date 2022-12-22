@@ -1,6 +1,7 @@
 package com.content_manager_service.service;
 
 import com.model.PositionReferralVO;
+import com.model.PositionSelfReferralVO;
 import com.model.PositionVO;
 import com.util.APIResponse;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,15 @@ public interface PositionManagerService {
 
 
     ResponseEntity<APIResponse> getReferredPositions(Long userId, String userLevel);
+
+
+    ResponseEntity<APIResponse> createSelfReferral(PositionSelfReferralVO positionSelfReferralVO);
+
+
+    ResponseEntity<APIResponse> getSelfReferredPositions(Long userId, String userLevel);
+
+
+    ResponseEntity<APIResponse> updateSelfReferredPositionStatus(PositionSelfReferralVO positionSelfReferralVO);
 
 
     ResponseEntity<APIResponse> deletePosition(Long positionId);
