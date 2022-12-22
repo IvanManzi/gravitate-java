@@ -36,7 +36,7 @@ public class PositionManagerServiceImpl implements PositionManagerService {
 
     @Override
     public ResponseEntity<APIResponse> getAllPositions(String opportunityType) {
-        List<PositionVO> positions = positionDao.getAllPositions(opportunityType);
+        List<Map> positions = positionDao.getAllPositions(opportunityType);
         if(positions.isEmpty()){
             return APIResponse.resourceNotFound();
         }

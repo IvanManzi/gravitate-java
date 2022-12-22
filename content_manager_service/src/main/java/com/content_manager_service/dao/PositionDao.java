@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface PositionDao {
@@ -13,7 +14,7 @@ public interface PositionDao {
     int savePosition(PositionVO positionVO);
 
 
-    List<PositionVO> getAllPositions(String opportunityType);
+    List<Map> getAllPositions(String opportunityType);
 
 
     int updatePosition(PositionVO positionVO);
