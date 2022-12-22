@@ -67,7 +67,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                 "/api/v1/user/team/members",
                 "/api/v1/user/skills/**",
                 "/api/v1/user/additional-point/",
-                "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER, DEVELOPER_USER, PROJECT_LEAD);
+                "/api/v1/user/security-question/**").hasAnyAuthority(ADMIN_USER, NON_ADMIN, PROJECT_MANAGER);
 
         http.authorizeRequests().antMatchers("/api/v1/user/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
