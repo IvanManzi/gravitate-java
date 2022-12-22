@@ -49,10 +49,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                                         "/api/v1/content/client-referral/create",
                                                         "/api/v1/content/project/",
                                                         "/api/v1/content/forum/**",
-                                                        "/api/v1/content/policy/all",
-                                                        "/api/v1/content/wish/user",
-                                                        "/api/v1/content/wish/team",
-                                                        "/api/v1/content/wish/comment").hasAnyAuthority(DEVELOPER_USER,ADMIN_USER,PROJECT_LEAD);
+                                                        "/api/v1/content/wish/all",
+                                                        "/api/v1/content/wish/comment").hasAnyAuthority(NON_ADMIN,ADMIN_USER, PROJECT_MANAGER);
         http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 
