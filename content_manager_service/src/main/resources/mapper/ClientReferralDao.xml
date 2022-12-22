@@ -4,19 +4,19 @@
 
     <insert id="saveClientReferral" parameterType="com.model.ClientReferralVO">
         INSERT INTO client_referral
-        (referred_by,organisation_name,client_name,email,client_description,project_details)
+        (referred_by,is_referencable,organisation_name,client_name,client_email,client_description,project_details)
         VALUES
-        (#{referredBy},#{organisationName},#{clientName},#{clientEmail},#{clientDescription},#{projectDetails})
+        (#{referredBy},#{isReferencable},#{organisationName},#{clientName},#{clientEmail},#{clientDescription},#{projectDetails})
     </insert>
 
     <select id="getAllClientReferrals" resultType="com.model.ClientReferralVO">
-        SELECT * FROM client_referral
+        SELECT * FROM client_referral WHERE referral_status = 77
     </select>
 
     <update id="updateClientReferralStatus" parameterType="com.model.ClientReferralVO">
         UPDATE client_referral
         SET
-        is_interested = #{isInterested}
+        referral_status = #{referralStatus}
         WHERE
         client_referral_id = #{clientReferralId}
     </update>

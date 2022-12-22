@@ -32,8 +32,8 @@ public class ClientReferralManagerServiceImpl implements ClientReferralManagerSe
     }
 
     @Override
-    public ResponseEntity<APIResponse> getAllClientReferrals() {
-        List<Map> clientReferrals = clientReferralDao.getAllClientReferrals();
+    public ResponseEntity<APIResponse> getAllClientReferrals(Long userId, String role) {
+        List<Map> clientReferrals = clientReferralDao.getAllClientReferrals(userId,role);
         if(clientReferrals.isEmpty()){
             return APIResponse.resourceNotFound();
         }

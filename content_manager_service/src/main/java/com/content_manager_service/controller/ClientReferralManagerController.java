@@ -33,6 +33,7 @@ public class ClientReferralManagerController {
         String userId = JwtUtils.getUserIdFromJwtToken(token);
 
         clientReferralVO.setReferredBy(Long.valueOf(userId));
+        clientReferralVO.setIsReferencable(createClientReferralRequest.referencable());
         clientReferralVO.setClientEmail(createClientReferralRequest.email());
         clientReferralVO.setClientName(createClientReferralRequest.clientName());
         clientReferralVO.setClientDescription(createClientReferralRequest.clientDescription());
@@ -43,17 +44,20 @@ public class ClientReferralManagerController {
 
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllClientReferrals(){
-        return clientReferralManagerService.getAllClientReferrals();
+    public ResponseEntity<APIResponse> getAllClientReferrals(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        String role = JwtUtils.getUserRoleFromJwtToken(token);
+        return clientReferralManagerService.getAllClientReferrals(Long.valueOf(userId),role);
     }
 
 
     @PutMapping(value = "/{clientReferralId}/status/{status}")
     public ResponseEntity<APIResponse> updateClientReferralStatus(@PathVariable("referralId")Long referralId,
-                                                                  @PathVariable("status") boolean status){
+                                                                  @PathVariable("status") Integer status){
         ClientReferralVO clientReferralVO = new ClientReferralVO();
         clientReferralVO.setClientReferralId(referralId);
-        clientReferralVO.setInterested(status);
+        clientReferralVO.setReferralStatus(status);
         return clientReferralManagerService.updateClientReferralStatus(clientReferralVO);
     }
 

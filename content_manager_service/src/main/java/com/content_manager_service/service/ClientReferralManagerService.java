@@ -10,7 +10,7 @@ public interface ClientReferralManagerService {
     ResponseEntity<APIResponse> createClientReferral(ClientReferralVO clientReferralVO);
 
 
-    ResponseEntity<APIResponse> getAllClientReferrals();
+    ResponseEntity<APIResponse> getAllClientReferrals(Long userId,String role);
 
 
     ResponseEntity<APIResponse> updateClientReferralStatus(ClientReferralVO clientReferralVO);
