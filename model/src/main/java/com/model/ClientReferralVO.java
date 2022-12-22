@@ -17,11 +17,14 @@ public class ClientReferralVO implements Serializable {
 
     private Long clientReferralId;
 
+    //66 for accepted, 77 for pending, 88 for failed
+    private Integer referralStatus;
+
+
+    private String isReferencable;
+
 
     private Long referredBy;
-
-
-    private boolean isInterested;
 
 
     private String  organisationName;
