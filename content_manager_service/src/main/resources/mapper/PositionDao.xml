@@ -9,24 +9,25 @@
         (#{projectId},#{adminId},#{jobId},#{roleId},#{experience},#{keySkills},#{referralAmount},#{positionType},#{opportunityType},#{kra},#{incentiveAmount},#{points},#{startDate},#{endDate})
     </insert>
 
-    <resultMap id="allPositionsResult" type="Map">
-        <collection property="role" ofType="com.model.RoleVO" select="selectRole" column="role_id" />
-        <collection property="project" ofType="com.model.ProjectVO" select="selectProject" column="project_id" />
-    </resultMap>
 
-    <select id="getAllPositions" resultMap="allPositionsResult">
-        SELECT * FROM position WHERE is_position_open = true
+    <select id="getAllPositions" resultType="Map">
+        SELECT P.position_id ,P.admin_id ,P.project_id ,P.is_position_open,
+        P.job_id ,P.role_id ,P.experience, P.key_skills , P.referral_amount ,P.referral_amount ,
+        P.position_type ,P.opportunity_type ,P.kra, P.incentive_amount , P.points,P.start_date , P.end_date ,
+        R.role_name , PR.project_name
+        FROM position P
+        INNER JOIN
+        Project PR
+        ON
+        PR.project_id = P.project_id
+        INNER JOIN
+        role R
+        ON
+        R.role_id = P.role_id
+        WHERE P.is_position_open = true
         <if test="positionType != null">
-            AND opportunity_type = #{positionType}
+            AND P.opportunity_type = #{positionType}
         </if>
-    </select>
-
-    <select id="selectRole" resultType="com.model.RoleVO" parameterType="Long">
-        SELECT * FROM role WHERE role_id = #{roleId}
-    </select>
-
-    <select id="selectProject" resultType="com.model.ProjectVO" parameterType="Long">
-        SELECT * FROM project WHERE project_id = #{projectId}
     </select>
 
     <update id="updatePosition" parameterType="com.model.PositionVO">
