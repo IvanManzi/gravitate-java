@@ -1,6 +1,5 @@
 package com.user_manager_service.service.impl;
 
-import com.model.SecurityQuestionVO;
 import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
 import com.util.APIResponse;
@@ -10,7 +9,6 @@ import com.user_manager_service.service.GravitateUserManagerService;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -46,8 +44,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));*/
         switch (user.getUserLevel()) {
             case 1 -> authorities.add(new SimpleGrantedAuthority(ADMIN_USER));
-            case 2 -> authorities.add(new SimpleGrantedAuthority(PROJECT_LEAD));
-            case 3 -> authorities.add(new SimpleGrantedAuthority(DEVELOPER_USER));
+            case 2 -> authorities.add(new SimpleGrantedAuthority(PROJECT_MANAGER));
+            case 3 -> authorities.add(new SimpleGrantedAuthority(NON_ADMIN));
             default -> authorities.add(new SimpleGrantedAuthority(CLIENT_USER));
         }
         //check if user has security question
