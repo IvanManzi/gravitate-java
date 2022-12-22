@@ -35,8 +35,8 @@ public class GravitateWishesManagerServiceImpl implements GravitateWishesManager
     }
 
     @Override
-    public ResponseEntity getAllWishes(Long adminId) {
-        List<Map> wishes = wishDao.getAllWishes(adminId);
+    public ResponseEntity getAllWishes() {
+        List<Map> wishes = wishDao.getAllWishes();
         if(wishes.isEmpty()){
             return APIResponse.resultFail("No wishes found. ");
         }else{

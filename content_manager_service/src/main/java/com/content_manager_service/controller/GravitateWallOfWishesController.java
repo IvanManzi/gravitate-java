@@ -6,7 +6,10 @@ import com.content_manager_service.form.UpdateWishRequest;
 import com.content_manager_service.service.GravitateWishesManagerService;
 import com.model.WishReplyVO;
 import com.model.WishVO;
+import com.util.APIResponse;
+import com.util.Constants;
 import com.util.JwtUtils;
+import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -66,10 +69,24 @@ public class GravitateWallOfWishesController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllWishes(HttpServletRequest request) throws IOException {
+    public ResponseEntity getAllWishes(HttpServletRequest request,
+                                       @RequestParam(value = "wishType",required = false) String wishType,
+                                       @RequestParam(value = "date",required = false)@DateTimeFormat(pattern="yyyy-MM-dd") Date date) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return gravitateWishesManagerService.getAllWishes(Long.valueOf(userId));
+        String role = JwtUtils.getUserRoleFromJwtToken(token);
+        if(!ValidationUtil.isNullObject(wishType) && !ValidationUtil.isNullObject(date)){
+            return gravitateWishesManagerService.getTeamLatestWishes(wishType,date);
+        }
+        if(role.equals(Constants.ADMIN_USER)){
+            return gravitateWishesManagerService.getAllWishes();
+        }
+        if(role.equals(Constants.NON_ADMIN) || role.equals(Constants.PROJECT_MANAGER)){
+            return gravitateWishesManagerService.getWishesByUserId(Long.valueOf(userId));
+        }
+
+        return APIResponse.resultFail();
+
     }
 
     @PutMapping(value = "/")

@@ -14,7 +14,7 @@ public interface WishDao {
     int createWish(WishVO wishVO);
     List<WishVO> getLatestWishByUserId(Long userId);
     List<Map> getTeamMembersLatestWishes(@Param("wishType") String wishType,@Param("date") Date date);
-    List<Map> getAllWishes(Long adminId);
+    List<Map> getAllWishes();
     int updateWish(WishVO wishVO);
     int deleteWish(Long wishId);
 

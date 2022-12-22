@@ -10,7 +10,7 @@ public interface GravitateWishesManagerService {
 
     ResponseEntity createWish(WishVO wishVO);
 
-    ResponseEntity getAllWishes(Long adminId);
+    ResponseEntity getAllWishes();
 
     ResponseEntity getWishesByUserId(Long userId);
 

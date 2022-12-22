@@ -14,8 +14,6 @@
         INNER JOIN
         app_user A
         ON W.user_id = A.user_id
-        WHERE
-        W.admin_id = #{adminId}
     </select>
 
     <select id="getLatestWishByUserId" parameterType="Long" resultType="com.model.WishVO">
