@@ -17,9 +17,9 @@ public class Constants {
 
     //用户角色
     public static final String ADMIN_USER = "ROLE_ADMIN_USER";
-    public static final String PROJECT_LEAD = "ROLE_PROJECT_MANAGER";
+    public static final String PROJECT_MANAGER = "ROLE_PROJECT_MANAGER";
 
-    public static final String DEVELOPER_USER = "ROLE_NON_ADMIN_USER";
+    public static final String NON_ADMIN = "ROLE_NON_ADMIN_USER";
 
     public static final String CLIENT_USER = "ROLE_CLIENT_USER";
 
