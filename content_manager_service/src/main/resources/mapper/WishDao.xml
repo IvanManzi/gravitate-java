@@ -9,15 +9,33 @@
         (#{userId},#{adminId},#{wishType},#{comment})
     </insert>
 
-    <select id="getAllWishes" resultType="Map">
-        SELECT W.wish_id,W.admin_id,W.wish_type,W.comment,A.user_id,A.email,A.country,A.first_name,A.last_name,A.phone_number FROM wish W
+    <resultMap id="wishesResult" type="Map">
+        <collection property="comments" ofType="com.model.WishReplyVO" select="getWishReply" column="__id" />
+    </resultMap>
+
+    <select id="getAllWishes" resultMap="wishesResult">
+        SELECT W.wish_id AS __id, W.wish_id ,W.admin_id,W.wish_type,W.comment,A.user_id,A.email,A.country,A.first_name,A.last_name,A.phone_number,A.profile_picture_path
+        FROM app_user A
         INNER JOIN
-        app_user A
+        wish W
         ON W.user_id = A.user_id
+        <if test="wishType != null and date != null">
+            WHERE W.wish_type = #{wishType} AND W.created_at::date = #{date}
+        </if>
+        <if test="search != null and not (wishType or date)">
+            WHERE LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
+        </if>
+
+        <if test="userLevel != 'ROLE_ADMIN_USER' and not(wishType or date or search) ">
+            WHERE A.user_id = #{userId}
+        </if>
     </select>
 
-    <select id="getLatestWishByUserId" parameterType="Long" resultType="com.model.WishVO">
-        SELECT * FROM wish WHERE user_id = #{userId} AND DATE(created_at) = CURRENT_DATE
+
+
+
+    <select id="getWishReply" parameterType="Long" resultType="com.model.WishReplyVO">
+        SELECT * FROM wish_reply WHERE wish_id = #{wishId}
     </select>
 
     <select id="getTeamMembersLatestWishes" resultType="Map">
@@ -31,7 +49,7 @@
             WHERE DATE(W.created_at) = CURRENT_DATE
         </if>
         <if test="wishType != null || date != null" >
-            WHERE W.wish_type = #{wishType} AND W.created_at = #{date}
+            WHERE W.wish_type = #{wishType} AND W.created_at::date = #{date}
         </if>
 
     </select>

@@ -11,6 +11,7 @@ import com.util.Constants;
 import com.util.JwtUtils;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping(value = "api/v1/content/wish",produces = "application/json")
 @RequiredArgsConstructor
+@Slf4j
 public class GravitateWallOfWishesController {
 
     private final GravitateWishesManagerService gravitateWishesManagerService;
@@ -71,21 +73,12 @@ public class GravitateWallOfWishesController {
     @GetMapping(value = "/all")
     public ResponseEntity getAllWishes(HttpServletRequest request,
                                        @RequestParam(value = "wishType",required = false) String wishType,
+                                       @RequestParam(value = "search",required = false) String search,
                                        @RequestParam(value = "date",required = false)@DateTimeFormat(pattern="yyyy-MM-dd") Date date) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         String role = JwtUtils.getUserRoleFromJwtToken(token);
-        if(!ValidationUtil.isNullObject(wishType) && !ValidationUtil.isNullObject(date)){
-            return gravitateWishesManagerService.getTeamLatestWishes(wishType,date);
-        }
-        if(role.equals(Constants.ADMIN_USER)){
-            return gravitateWishesManagerService.getAllWishes();
-        }
-        if(role.equals(Constants.NON_ADMIN) || role.equals(Constants.PROJECT_MANAGER)){
-            return gravitateWishesManagerService.getWishesByUserId(Long.valueOf(userId));
-        }
-
-        return APIResponse.resultFail();
+        return gravitateWishesManagerService.getAllWishes(wishType,date,search,role,Long.valueOf(userId));
 
     }
 

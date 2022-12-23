@@ -35,8 +35,8 @@ public class GravitateWishesManagerServiceImpl implements GravitateWishesManager
     }
 
     @Override
-    public ResponseEntity getAllWishes() {
-        List<Map> wishes = wishDao.getAllWishes();
+    public ResponseEntity getAllWishes(String wishType,Date date, String search,String userLevel, Long userId) {
+        List<Map> wishes = wishDao.getAllWishes(wishType,date,search,userLevel,userId);
         if(wishes.isEmpty()){
             return APIResponse.resultFail("No wishes found. ");
         }else{
