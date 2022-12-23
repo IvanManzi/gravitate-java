@@ -46,10 +46,13 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                                         "/api/v1/content/position/all",
                                                         "/api/v1/content/position/referral/create",
                                                         "/api/v1/content/position/referral/all",
+                                                        "/api/v1/content/position/self/referral/create",
+                                                        "/api/v1/content/position/self/referral/all",
                                                         "/api/v1/content/client-referral/create",
                                                         "/api/v1/content/project/",
                                                         "/api/v1/content/forum/**",
                                                         "/api/v1/content/wish/all",
+                                                        "/api/v1/content/policy/all",
                                                         "/api/v1/content/wish/comment").hasAnyAuthority(NON_ADMIN,ADMIN_USER, PROJECT_MANAGER);
         http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
