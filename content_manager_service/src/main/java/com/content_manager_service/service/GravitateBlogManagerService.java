@@ -11,11 +11,11 @@ public interface GravitateBlogManagerService {
 
     ResponseEntity createBlogReply(BlogReplyVO blogReplyVO);
 
-    ResponseEntity getAllBlogs();
+    ResponseEntity getAllBlogs(String search, String topic);
 
     ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter);
 
     ResponseEntity updateBlog(BlogVO blogVO);
 
-    ResponseEntity deleteBlog(Long topicId);
+    ResponseEntity deleteBlog(Long blogId);
 }

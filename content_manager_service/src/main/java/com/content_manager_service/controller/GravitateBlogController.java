@@ -45,15 +45,16 @@ public class GravitateBlogController {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         blogReplyVO.setUserId(Long.valueOf(userId));
-        blogReplyVO.setBlogId(createBlogCommentRequest.topicId());
+        blogReplyVO.setBlogId(createBlogCommentRequest.blogId());
         blogReplyVO.setComment(createBlogCommentRequest.comment());
         blogReplyVO.setParent(createBlogCommentRequest.parentBlogReplyId());
         return gravitateBlogManagerService.createBlogReply(blogReplyVO);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllBlogs(){
-        return gravitateBlogManagerService.getAllBlogs();
+    public ResponseEntity getAllBlogs(@RequestParam(value = "search",required = false) String search,
+                                      @RequestParam(value = "topic",required = false)String topic){
+        return gravitateBlogManagerService.getAllBlogs(search,topic);
     }
 
     @GetMapping(value = "/quarter")

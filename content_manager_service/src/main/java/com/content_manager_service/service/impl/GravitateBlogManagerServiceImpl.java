@@ -5,6 +5,7 @@ import com.content_manager_service.dao.BlogReplyDao;
 import com.content_manager_service.service.GravitateBlogManagerService;
 import com.model.BlogReplyVO;
 import com.model.BlogVO;
+import com.model.UserVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity createBlog(BlogVO blogVO) {
         int result = blogDao.createBlog(blogVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Topic successfully created. ");
+            return APIResponse.resultSuccess("Blog successfully created. ");
         }else{
             return APIResponse.resultFail();
         }
@@ -36,20 +37,20 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity createBlogReply(BlogReplyVO blogReplyVO) {
         int result = blogReplyDao.createBlogReply(blogReplyVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Topic reply successfully created. ");
+            return APIResponse.resultSuccess("Blog reply successfully created. ");
         }else{
             return APIResponse.resultFail();
         }
     }
 
     @Override
-    public ResponseEntity getAllBlogs() {
-        List<Map> teamTopics = blogDao.getAllBlogs();
-        if(teamTopics.isEmpty()){
+    public ResponseEntity getAllBlogs(String search, String topic) {
+        List<Map> teamBlogs = blogDao.getAllBlogs(search,topic);
+        if(teamBlogs.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
             Map<String,Object> data = new HashMap<>();
-            data.put("TEAM_TOPICS",teamTopics);
+            data.put("ALL_BLOGS",teamBlogs);
             return APIResponse.resultSuccess(data);
         }
     }
@@ -69,7 +70,7 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity updateBlog(BlogVO blogVO) {
         int result = blogDao.updateBlog(blogVO);
         if(result > 0){
-            return APIResponse.resultSuccess("Topic successfully updated. ");
+            return APIResponse.resultSuccess("Blog successfully updated. ");
         }else{
             return APIResponse.resultFail();
         }
@@ -79,7 +80,7 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     public ResponseEntity deleteBlog(Long topicId) {
         int result  = blogDao.deleteBlog(topicId);
         if(result > 0){
-            return APIResponse.resultSuccess("Topic successfully deleted.");
+            return APIResponse.resultSuccess("Blog successfully deleted.");
         }else{
             return APIResponse.resultFail();
         }
