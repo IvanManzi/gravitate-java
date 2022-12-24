@@ -17,14 +17,18 @@
         SELECT P.position_id ,P.admin_id ,P.project_id ,P.is_position_open,
         P.job_id ,P.role_id ,P.experience, P.key_skills , P.referral_amount ,P.referral_amount ,
         P.position_type ,P.opportunity_type ,P.kra, P.incentive_amount , P.points,P.start_date , P.end_date,
-        R.user_id,R.referral_status,R.position_self_referral_id
+        S.user_id,S.referral_status,S.position_self_referral_id,R.role_name
         FROM position P
         INNER JOIN
-        position_self_referral R
+        position_self_referral S
         ON
-        R.position_id = P.position_id
+        S.position_id = P.position_id
+        INNER JOIN
+        role R
+        ON
+        R.role_id = P.role_id
         <if test="userLevel != 'ROLE_ADMIN_USER' ">
-            WHERE R.user_id = #{userId}
+            WHERE S.user_id = #{userId}
         </if>
     </select>
 
