@@ -17,7 +17,7 @@
         SELECT P.position_id ,P.admin_id ,P.project_id ,P.is_position_open,
         P.job_id ,P.role_id ,P.experience, P.key_skills , P.referral_amount ,P.referral_amount ,
         P.position_type ,P.opportunity_type ,P.kra, P.incentive_amount , P.points,P.start_date , P.end_date,
-        S.user_id,S.referral_status,S.position_self_referral_id,R.role_name
+        S.user_id,S.referral_status,S.position_self_referral_id,R.role_name,Q.project_name
         FROM position P
         INNER JOIN
         position_self_referral S
@@ -27,6 +27,10 @@
         role R
         ON
         R.role_id = P.role_id
+        INNER JOIN
+        project Q
+        ON
+        Q.project_id = P.project_id
         <if test="userLevel != 'ROLE_ADMIN_USER' ">
             WHERE S.user_id = #{userId}
         </if>

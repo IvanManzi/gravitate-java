@@ -17,7 +17,7 @@
         SELECT P.position_id ,P.admin_id ,P.project_id ,P.is_position_open,
         P.job_id ,P.role_id ,P.experience, P.key_skills , P.referral_amount ,P.referral_amount ,
         P.position_type ,P.opportunity_type ,P.kra, P.incentive_amount , P.points,P.start_date , P.end_date,
-        R.position_referral_id,R.referred_by,R.first_name, R.last_name,R.phone_number,R.country,R.email_id,R.key_skills,R.cv_path,Q.role_name
+        R.position_referral_id,R.referred_by,R.first_name, R.last_name, R.referral_status,R.phone_number,R.country,R.email_id,R.key_skills,R.cv_path,Q.role_name
         FROM position P
         INNER JOIN
         position_referral R
