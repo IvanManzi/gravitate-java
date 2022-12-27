@@ -23,18 +23,18 @@
         </if>
     </select>
 
-    <resultMap id="BlogCommentsResult" type="Map">
+    <!--<resultMap id="BlogCommentsResult" type="Map">
         <collection property="sub_comments" ofType="com.model.BlogReplyVO" select="getBlogCommentSubComments" column="blog_reply_id" />
-    </resultMap>
+    </resultMap>-->
 
-    <select id="selectBlogReply" resultMap="BlogCommentsResult">
-        SELECT * FROM blog_reply WHERE blog_id = #{blogId} AND parent IS NULL
+    <select id="selectBlogReply" resultType="com.model.BlogReplyVO">
+        SELECT * FROM blog_reply WHERE blog_id = #{__id}
     </select>
 
-    <!--Get sub comments of a comment-->
-    <select id="getBlogCommentSubComments" resultType="com.model.BlogReplyVO">
+
+    <!--<select id="getBlogCommentSubComments" resultType="com.model.BlogReplyVO">
         SELECT * FROM blog_reply WHERE parent = #{blogReplyId}
-    </select>
+    </select>-->
 
     <select id="getUserBlogsByQuarter" resultType="com.model.BlogVO">
         SELECT * FROM blog WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
