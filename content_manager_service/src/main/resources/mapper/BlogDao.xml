@@ -10,11 +10,11 @@
     </insert>
 
     <resultMap id="tResult" type="Map">
-        <collection property="comments" ofType="com.model.BlogReplyVO" select="selectBlogReply" column="__id" />
+        <collection property="comments" ofType="Map" select="selectBlogReply" column="__id" />
     </resultMap>
 
     <select id="getAllBlogs" resultMap="tResult">
-        SELECT T.blog_id AS __id,T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type FROM blog T
+        SELECT T.blog_id AS __id,T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type,U.profile_picture_path FROM blog T
         INNER JOIN app_user U
         ON
         T.user_id = U.user_id
@@ -27,8 +27,15 @@
         <collection property="sub_comments" ofType="com.model.BlogReplyVO" select="getBlogCommentSubComments" column="blog_reply_id" />
     </resultMap>-->
 
-    <select id="selectBlogReply" resultType="com.model.BlogReplyVO">
-        SELECT * FROM blog_reply WHERE blog_id = #{__id}
+    <select id="selectBlogReply" resultType="Map">
+        SELECT R.blog_reply_id,R.blog_id,R.user_id,R.comment,R.parent,R.created_at,R.updated_at,A.first_name,A.last_name,A.email,
+        A.profile_picture_path
+        FROM blog_reply R
+        INNER JOIN
+        app_user A
+        ON
+        A.user_id = R.user_id
+        WHERE R.blog_id = #{__id}
     </select>
 
 
