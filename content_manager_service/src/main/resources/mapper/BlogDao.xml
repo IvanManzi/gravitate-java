@@ -14,19 +14,20 @@
     </resultMap>
 
     <select id="getAllBlogs" resultMap="tResult">
-        SELECT T.blog_id AS __id,T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type,U.profile_picture_path FROM blog T
+        SELECT T.blog_id AS __id,T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type,U.profile_picture_path
+        FROM blog T
         INNER JOIN app_user U
         ON
         T.user_id = U.user_id
-        <if test="topic != null and search != null">
-            WHERE LOWER(T.title) LIKE LOWER('%' || #{topic} || '%') AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
-        </if>
-        <if test="topic != null and search == null">
-            WHERE LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
-        </if>
-        <if test="search != null and topic == null">
-            WHERE LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
-        </if>
+        <where>
+            <if test="topic != null">
+                LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
+            </if>
+            <if test="search != null">
+                AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') AND LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
+            </if>
+        </where>
+        ORDER BY T.created_at DESC
     </select>
 
     <!--<resultMap id="BlogCommentsResult" type="Map">
