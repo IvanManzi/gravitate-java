@@ -41,7 +41,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/project/task/**","/api/v1/project/incentive/user","/api/v1/project/all").hasAnyAuthority(NON_ADMIN,ADMIN_USER, PROJECT_MANAGER);
+        http.authorizeRequests().antMatchers("/api/v1/project/task/**","/api/v1/project/incentive/user","/api/v1/project/jira/**").hasAnyAuthority(NON_ADMIN,ADMIN_USER, PROJECT_MANAGER);
         http.authorizeRequests().antMatchers("/api/v1/project/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 
