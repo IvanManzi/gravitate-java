@@ -9,8 +9,42 @@
         (#{userId},#{tags}, #{title},#{description})
     </insert>
 
-    <select id="getAllDiscussionForums" resultType="com.model.DiscussionForumVO">
-        SELECT * FROM discussion_forum ORDER BY created_at DESC
+    <resultMap id="allForumsResult" type="Map">
+        <collection property="comments" ofType="Map" select="selectDiscussionForumAnswers" column="__id" />
+    </resultMap>
+
+    <select id="getAllDiscussionForums" resultMap="allForumsResult">
+        SELECT D.discussion_forum_id,D.discussion_forum_id AS __id,D.user_id,D.title,D.tags,D.description,D.created_at,D.updated_at,A.first_name,A.last_name,
+        A.email,A.profile_picture_path
+        FROM discussion_forum D
+        INNER JOIN
+        app_user A
+        ON
+        A.user_id = D.user_id
+        <where>
+            <if test="title != null">
+                D.title LIKE '%' || #{title} || '%'
+            </if>
+            <if test="search != null">
+                AND A.first_name LIKE '%' || #{search} || '%' AND A.last_name LIKE '%' || #{search} || '%'
+            </if>
+            <if test="tags != null">
+                AND D.tags LIKE '%' || #{tags} || '%'
+            </if>
+        </where>
+        ORDER BY D.created_at DESC
+    </select>
+
+
+    <select id="selectDiscussionForumAnswers" resultType="Map">
+        SELECT D.forum_answer_id,D.forum_id,D.user_id,D.comment,D.parent,D.created_at,A.first_name,A.last_name,
+        A.email,A.profile_picture_path
+        FROM discussion_forum_answer D
+        INNER JOIN
+        app_user A
+        ON
+        A.user_id = D.user_id
+        WHERE D.forum_id = #{__id}
     </select>
 
     <update id="updateDiscussionForum" parameterType="com.model.DiscussionForumVO">

@@ -11,7 +11,9 @@ public interface DiscussionForumDao {
 
     int createDiscussionForum(DiscussionForumVO discussionForumVO);
 
-    List<DiscussionForumVO> getAllDiscussionForums();
+    List<DiscussionForumVO> getAllDiscussionForums(@Param("search")String search,
+                                                   @Param("title")String title,
+                                                   @Param("tags")String tags);
 
     int updateDiscussionForum(DiscussionForumVO discussionForumVO);
 
