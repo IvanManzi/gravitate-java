@@ -1,8 +1,10 @@
 package com.content_manager_service.service.impl;
 
 
+import com.content_manager_service.dao.DiscussionForumAnswerDao;
 import com.content_manager_service.dao.DiscussionForumDao;
 import com.content_manager_service.service.DiscussionForumManagerService;
+import com.model.DiscussionForumAnswerVO;
 import com.model.DiscussionForumVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
 
     private final DiscussionForumDao discussionForumDao;
 
+    private final DiscussionForumAnswerDao discussionForumAnswerDao;
+
     @Override
     public ResponseEntity createDiscussionForum(DiscussionForumVO discussionForumVO) {
         int result = discussionForumDao.createDiscussionForum(discussionForumVO);
@@ -30,8 +34,17 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
     }
 
     @Override
-    public ResponseEntity getAllDiscussionForums() {
-        List<DiscussionForumVO> discussionForums = discussionForumDao.getAllDiscussionForums();
+    public ResponseEntity createDiscussionForumComment(DiscussionForumAnswerVO discussionForumAnswerVO) {
+        int result = discussionForumAnswerDao.createDiscussionForumAnswer(discussionForumAnswerVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Forum answer successfully created. ");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity getAllDiscussionForums(String search,String title,String tags) {
+        List<DiscussionForumVO> discussionForums = discussionForumDao.getAllDiscussionForums(search,title,tags);
         if(discussionForums.isEmpty()){
           return APIResponse.resourceNotFound();
         }

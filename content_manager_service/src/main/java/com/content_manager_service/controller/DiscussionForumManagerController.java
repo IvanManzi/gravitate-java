@@ -1,8 +1,10 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.CreateDiscussionForumAnswer;
 import com.content_manager_service.form.CreateDiscussionForumRequest;
 import com.content_manager_service.form.UpdateDiscussionForumRequest;
 import com.content_manager_service.service.DiscussionForumManagerService;
+import com.model.DiscussionForumAnswerVO;
 import com.model.DiscussionForumVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +38,24 @@ public class DiscussionForumManagerController {
         return discussionForumManagerService.createDiscussionForum(discussionForumVO);
     }
 
+    @PostMapping(value = "/comment/create")
+    public ResponseEntity createDiscussionForumAnswer(@Valid @RequestBody CreateDiscussionForumAnswer createDiscussionForumAnswer,
+                                                HttpServletRequest request) throws IOException {
+        DiscussionForumAnswerVO discussionForumAnswerVO = new DiscussionForumAnswerVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        discussionForumAnswerVO.setUserId(Long.valueOf(userId));
+        discussionForumAnswerVO.setForumId(createDiscussionForumAnswer.forumId());
+        discussionForumAnswerVO.setParent(createDiscussionForumAnswer.parent());
+        discussionForumAnswerVO.setComment(createDiscussionForumAnswer.comment());
+        return discussionForumManagerService.createDiscussionForumComment(discussionForumAnswerVO);
+    }
+
     @GetMapping(value = "/all")
-    public ResponseEntity getAllDiscussionForums() {
-        return discussionForumManagerService.getAllDiscussionForums();
+    public ResponseEntity getAllDiscussionForums(@RequestParam(value = "search",required = false) String search,
+                                                 @RequestParam(value = "title",required = false) String title,
+                                                 @RequestParam(value = "tags",required = false) String tags) {
+        return discussionForumManagerService.getAllDiscussionForums(search,title,tags);
     }
 
     @GetMapping(value = "/quarter")
