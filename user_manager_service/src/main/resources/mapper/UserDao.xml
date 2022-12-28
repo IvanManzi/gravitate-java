@@ -61,9 +61,14 @@
         user_id = #{userId}
     </update>
 
-    <select id="getAllGravitateUsers" parameterType="String" resultType="Map">
+    <resultMap id="allUsersResult" type="Map">
+        <collection property="projects" ofType="com.model.ProjectVO" select="getUserProjects" column="__id" />
+    </resultMap>
+
+    <select id="getAllGravitateUsers" parameterType="String" resultMap="allUsersResult">
         SELECT
         A.user_id,
+        A.user_id AS __id,
         A.user_type,
         A.is_account_non_expired,
         A.is_account_non_locked,
@@ -104,6 +109,12 @@
             AND first_name LIKE #{pattern} AND last_name LIKE #{pattern}
         </if>
     </select>
+
+
+    <select id="getUserProjects" resultType="com.model.ProjectVO">
+        SELECT * FROM project P INNER JOIN user_project U ON U.project_id = P.project_id WHERE U.user_id = #{__id}
+    </select>
+
 
     <select id="getGravitateUserById" parameterType="Long" resultType="com.model.UserVO">
         SELECT * FROM app_user WHERE user_id = #{userId}
