@@ -19,15 +19,17 @@
         INNER JOIN
         wish W
         ON W.user_id = A.user_id
-        <if test="wishType != null and date != null">
-            WHERE W.wish_type = #{wishType} AND W.created_at::date = #{date}
-        </if>
-        <if test="search != null and not (wishType or date)">
-            WHERE LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
-        </if>
-        <if test="userLevel != 'ROLE_ADMIN_USER' and not(wishType or date or search) ">
-            WHERE A.user_id = #{userId}
-        </if>
+        <where>
+            <if test="wishType != null">
+                LOWER(W.wish_type) LIKE LOWER('%' || #{wishType} || '%')
+            </if>
+            <if test="date != null">
+                W.created_at::date = #{date}
+            </if>
+            <if test="search != null">
+                LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
+            </if>
+        </where>
         ORDER BY W.created_at DESC
     </select>
 
@@ -35,7 +37,7 @@
 
 
     <select id="getWishReply" parameterType="Long" resultType="Map">
-        SELECT R.wish_reply_id,R.wish_id,R.user_id,R.message,R.created_at,R.updated_at,A.first_mame,A.last_name,A.email,A.profile_picture_path
+        SELECT R.wish_reply_id,R.wish_id,R.user_id,R.message,R.created_at,R.updated_at,A.first_name,A.last_name,A.email,A.profile_picture_path
         FROM wish_reply R
         INNER JOIN
         app_user A
