@@ -33,6 +33,9 @@ public class ClientReferralVO implements Serializable {
     private String clientName;
 
 
+    private String phoneNumber;
+
+
     private String clientEmail;
 
 

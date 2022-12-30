@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
+
 public class MyJiraClient {
 
     private static String username = "nostalgie@hviewtech.com";
@@ -28,29 +34,28 @@ public class MyJiraClient {
         this.restClient = getJiraRestClient();
     }
 
-    public static MyJiraClient instantiateClient(){
+    public static JiraRestClient instantiateClient(){
         MyJiraClient myJiraClient = new MyJiraClient(username, password, jiraUrl);
-        return myJiraClient;
+        return myJiraClient.getJiraRestClient();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, UnirestException {
 
         //MyJiraClient myJiraClient = new MyJiraClient("nostalgie@hviewtech.com", "NH7ccfsEdZFsMCdRqWth928C", "https://highviewtech.atlassian.net/");
-        MyJiraClient myJiraClient = instantiateClient();
+        //JiraRestClient jiraRestClient = instantiateClient();
         //System.out.println(myJiraClient.getAllProjects());
-        System.out.println(myJiraClient.getSingleProject(URI.create("https://highviewtech.atlassian.net/rest/api/2/project/10001")));
-        /*final String issueKey = myJiraClient.createIssue("ABCD", 1L, "Issue created from JRJC");
-        myJiraClient.updateIssueDescription(issueKey, "This is description from my Jira Client");
-        Issue issue = myJiraClient.getIssue(issueKey);
-        System.out.println(issue.getDescription());
-        myJiraClient.voteForAnIssue(issue);
-        System.out.println(myJiraClient.getTotalVotesCount(issueKey));
-        myJiraClient.addComment(issue, "This is comment from my Jira Client");
-        List<Comment> comments = myJiraClient.getAllComments(issueKey);
-        comments.forEach(c -> System.out.println(c.getBody()));
-        myJiraClient.deleteIssue(issueKey, true);*/
+        //System.out.println(jiraRestClient.getProjectClient().getAllProjects().claim());
 
-        myJiraClient.restClient.close();
+        // This code sample uses the  'Unirest' library:
+        // http://unirest.io/java.html
+        HttpResponse<JsonNode> response = Unirest.get("https://highviewtech.atlassian.net/rest/api/3/project/search")
+                .basicAuth(username, password)
+                .header("Accept", "application/json")
+                .asJson();
+
+        System.out.println(response.getBody());
+
+
     }
 
     public static String createIssue(String projectKey, Long issueType, String issueSummary) {

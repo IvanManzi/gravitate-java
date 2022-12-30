@@ -28,6 +28,7 @@
         <if test="positionType != null">
             AND P.opportunity_type = #{positionType}
         </if>
+        ORDER BY P.created_at DESC
     </select>
 
     <update id="updatePosition" parameterType="com.model.PositionVO">

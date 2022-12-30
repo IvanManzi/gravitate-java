@@ -13,7 +13,7 @@
         <collection property="task_reports" ofType="Map" select="getProjectTaskReports" column="projectId=project_id,userId=user_id" />
     </resultMap>
 
-    <select id="getAllUserTaskReports" resultMap="tResult">
+    <select id="getAllTaskReports" resultMap="tResult">
         SELECT A.user_id, A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
         FROM app_user A
         INNER JOIN
@@ -24,6 +24,9 @@
         project P
         ON
         P.project_id = U.project_id
+        <if test="userLevel != 'ROLE_ADMIN_USER' ">
+            WHERE A.user_id = #{userId}
+        </if>
     </select>
 
     <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">

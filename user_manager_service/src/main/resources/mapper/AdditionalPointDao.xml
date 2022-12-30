@@ -15,7 +15,7 @@
         WHERE
         user_id = #{userId}
         <if test="quarter != null || date != null">
-            AND date = #{date} AND quarter = #{quarter}
+            AND created_at = #{date} AND quarter = #{quarter}
         </if>
     </select>
 

@@ -40,8 +40,11 @@ public class TaskReportManagerController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllGravitateUserTaskReports(){
-        return taskReportManagerService.getAllUsersTaskReports();
+    public ResponseEntity<APIResponse> getAllGravitateUserTaskReports(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        String role = JwtUtils.getUserRoleFromJwtToken(token);
+        return taskReportManagerService.getAllTaskReports(Long.valueOf(userId),role);
     }
 
     @PutMapping(value = "/")

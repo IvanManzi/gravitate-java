@@ -29,6 +29,9 @@
             <if test="search != null">
                 LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
             </if>
+            <if test="userLevel != 'ROLE_ADMIN_USER' ">
+                W.user_id = #{userId}
+            </if>
         </where>
         ORDER BY W.created_at DESC
     </select>

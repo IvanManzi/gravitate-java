@@ -8,7 +8,7 @@ public interface TaskReportManagerService {
 
     ResponseEntity<APIResponse> createTaskReport(TaskReportVO taskReportVO);
 
-    ResponseEntity<APIResponse> getAllUsersTaskReports();
+    ResponseEntity<APIResponse> getAllTaskReports(Long userId,String userLevel);
 
     ResponseEntity<APIResponse> updateTaskReport(TaskReportVO taskReportVO);
 

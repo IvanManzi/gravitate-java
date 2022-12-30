@@ -30,6 +30,7 @@
         <if test="userLevel != 'ROLE_ADMIN_USER' ">
             WHERE R.referred_by = #{userId}
         </if>
+        ORDER BY R.created_at DESC
     </select>
 
     <select id="selectUserById" resultType="com.model.UserVO" parameterType="Long">
