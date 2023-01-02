@@ -10,7 +10,7 @@ public interface ProjectCRUDService {
 
     ResponseEntity<APIResponse> createProject(ProjectVO projectVO);
 
-    ResponseEntity<APIResponse> getAllProjects();
+    ResponseEntity<APIResponse> getAllProjects(Long userId, String role);
 
     ResponseEntity<APIResponse> updateProject(ProjectVO projectVO);
 

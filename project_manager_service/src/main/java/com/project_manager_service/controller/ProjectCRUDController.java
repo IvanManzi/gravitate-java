@@ -39,8 +39,11 @@ public class ProjectCRUDController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllProjects() {
-        return projectCRUDService.getAllProjects();
+    public ResponseEntity getAllProjects(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        String role = JwtUtils.getUserRoleFromJwtToken(token);
+        return projectCRUDService.getAllProjects(Long.valueOf(userId),role);
     }
 
     @PutMapping(value = "/")

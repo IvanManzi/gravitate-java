@@ -12,6 +12,6 @@ public interface TaskReportDao {
     int createTaskReport(TaskReportVO taskReportVO);
     List<TaskReportVO> getUserTaskReports(@Param("userId") Long userId,@Param("projectId") Long projectId);
     int updateTaskReport(TaskReportVO taskReportVO);
-    List<Map> getAllTaskReports(Long userId,String userLevel);
+    List<Map> getAllTaskReports(@Param("userId")Long userId,@Param("userLevel") String userLevel);
     int deleteTaskReport(Long reportId);
 }

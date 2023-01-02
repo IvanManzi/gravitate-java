@@ -9,33 +9,17 @@
         (#{projectId},#{userId},#{jiraProjectId},#{jiraTaskId},#{startDate},#{taskName},#{hoursSpent})
     </insert>
 
-    <resultMap id="tResult" type="Map">
-        <collection property="task_reports" ofType="Map" select="getProjectTaskReports" column="projectId=project_id,userId=user_id" />
-    </resultMap>
-
-    <select id="getAllTaskReports" resultMap="tResult">
-        SELECT A.user_id, A.first_name, A.last_name, A.billing, A.email, A.user_type, P.project_id, P.project_name
-        FROM app_user A
+    <select id="getAllTaskReports" resultType="Map">
+        SELECT P.project_name,T.task_report_id,T.project_id,T.user_id,T.jira_project_id,T.jira_task_id,T.start_date,T.task_name,T.hours_spent,T.created_at
+        FROM task_report T
         INNER JOIN
-        user_project U
-        ON
-        U.user_id = A.user_id
-        RIGHT JOIN
         project P
         ON
-        P.project_id = U.project_id
+        P.project_id = T.project_id
         <if test="userLevel != 'ROLE_ADMIN_USER' ">
-            WHERE A.user_id = #{userId}
+            WHERE T.user_id = #{userId}
         </if>
-    </select>
-
-    <select id="getProjectTaskReports" resultType="com.model.TaskReportVO">
-        SELECT task_report_id,project_id,user_id,jira_project_id,jira_task_id,start_date,task_name,COUNT(hours_spent) as hoursSpent, created_at, updated_at
-        FROM task_report A
-        WHERE
-        project_id = #{projectId}
-        AND user_id = #{userId}
-        GROUP BY task_report_id
+        ORDER BY T.created_at DESC
     </select>
 
     <select id="getUserTaskReports" resultType="com.model.TaskReportVO">

@@ -1,7 +1,10 @@
 package com.project_manager_service.service.impl;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.model.ProjectVO;
+import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.service.JiraProjectManagerService;
 import com.util.APIResponse;
 import com.util.JiraUtils;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -20,19 +24,23 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class JiraProjectManagerServiceImpl implements JiraProjectManagerService {
 
+    private final ProjectDao projectDao;
+
 
     @Override
-    public ResponseEntity<APIResponse> getAllProjects() throws UnirestException, ExecutionException, InterruptedException {
-        Map<String,Object> data = new HashMap<>();
-        data.put("DATA", (Object) JiraUtils.getAllProjects());
-        return APIResponse.resultSuccess(data);
+    public String getAllProjects(Long userId,String userLevel) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        List<Map> projects = projectDao.getAllProjects(userId,userLevel);
+        return JiraUtils.getAllProjects(projects);
     }
 
     @Override
-    public ResponseEntity<APIResponse> getProjectTeamWithAssignedTasks(String projectId) throws UnirestException, ExecutionException, InterruptedException {
-        Map<String,Object> data = new HashMap<>();
-        data.put("DATA", (Object) JiraUtils.getAssignedUsersWithTasks1(projectId));
-        return APIResponse.resultSuccess(data);
+    public String getProjectTeamWithAssignedTasks(String projectId) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        return JiraUtils.getAssignedUsersWithTasks1(projectId);
+    }
+
+    @Override
+    public String getUserAssignedTasks(String projectKey,String accountKey, String status) throws ExecutionException, InterruptedException, JsonProcessingException {
+        return JiraUtils.getUserProjectTasks1(projectKey,accountKey,status);
     }
 
 

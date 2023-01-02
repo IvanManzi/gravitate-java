@@ -32,8 +32,8 @@ public class ProjectCRUDServiceImpl implements ProjectCRUDService {
     }
 
     @Override
-    public ResponseEntity getAllProjects() {
-        List<Map> projects = projectDao.getAllProjects();
+    public ResponseEntity getAllProjects(Long userId,String role) {
+        List<Map> projects = projectDao.getAllProjects(userId,role);
         if(projects.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
