@@ -14,6 +14,7 @@
         <if test="policyType != null">
             WHERE policy_type = #{policyType}
         </if>
+        ORDER BY created_at DESC
     </select>
 
     <update id="updateGravitatePolicy" parameterType="com.model.PolicyVO">

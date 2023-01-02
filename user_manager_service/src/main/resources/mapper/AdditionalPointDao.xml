@@ -17,6 +17,7 @@
         <if test="quarter != null || date != null">
             AND created_at = #{date} AND quarter = #{quarter}
         </if>
+        ORDER BY created_at DESC
     </select>
 
 

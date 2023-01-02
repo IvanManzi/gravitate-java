@@ -18,6 +18,7 @@
         role R
         ON
         P.role_id = R.role_id
+        ORDER BY P.created_at DESC
     </select>
 
     <update id="updateRolePerformanceEvaluation" parameterType="com.model.RolePerformanceEvaluationVO">

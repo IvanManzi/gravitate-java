@@ -34,6 +34,7 @@
         <if test="userLevel != 'ROLE_ADMIN_USER' ">
             WHERE S.user_id = #{userId}
         </if>
+        ORDER BY S.created_at DESC
     </select>
 
     <select id="selectUserById" resultType="com.model.UserVO" parameterType="Long">
