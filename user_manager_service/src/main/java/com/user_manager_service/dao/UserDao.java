@@ -13,11 +13,12 @@ public interface UserDao {
     int updateGravitateUser(UserVO userVO);
     int checkIfUsernameExists(String username);
     UserVO getGravitateUserByUsername(String username);
+    Map getGravitateUserInfo(String username);
     int deleteGravitateUser(Long userId);
     int updateGravitateUserPassword(UserVO userVO);
     List<Map> getAllGravitateUsers(@Param("search") String search, @Param("roleId") Long roleId );
     UserVO getGravitateUserById(Long userId);
-    List<Map> getGravitateUserTeamMembers();
+    List<Map> getGravitateUserTeamMembers(Long userId);
     List<UserVO> getGravitateManagerUsers(String search);
     int updateUserStatus(@Param("userId") Long userId,@Param("status") boolean status);
 }

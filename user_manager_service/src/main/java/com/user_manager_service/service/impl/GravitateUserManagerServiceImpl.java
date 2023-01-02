@@ -6,6 +6,7 @@ import com.util.APIResponse;
 import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
 import com.user_manager_service.service.GravitateUserManagerService;
+import com.util.JwtUtils;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.util.Constants.*;
@@ -125,7 +127,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
             HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
             //call content manager service to update changes
             boolean response = restTemplate.postForObject(
-                    "http://CONTENT-MANAGER-SERVICE/api/v1/content/project/assign",
+                    "http://PROJECT-MANAGER-SERVICE/api/v1/project/assign",
                     request,
                     boolean.class
             );
@@ -150,8 +152,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getGravitateUserByUsername(String username) {
-        UserVO user = userDao.getGravitateUserByUsername(username);
+    public ResponseEntity getGravitateUserByInfo(String username) {
+        Map user = userDao.getGravitateUserInfo(username);
         if(ValidationUtil.isNullObject(user)){
             return  APIResponse.resultFail("User not found");
         }
@@ -188,8 +190,8 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getGravitateUserTeamMembers() {
-        List<Map> teamMembers = userDao.getGravitateUserTeamMembers();
+    public ResponseEntity getGravitateUserTeamMembers(Long userId) {
+        List<Map> teamMembers = userDao.getGravitateUserTeamMembers(userId);
         if(teamMembers.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{

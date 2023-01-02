@@ -67,7 +67,8 @@ public class GravitateUserManagerController {
     public ResponseEntity getGravitateUsernameProfile(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String username = JwtUtils.getUserNameFromToken(token);
-        return gravitateUserManagerService.getGravitateUserByUsername(username);
+        return gravitateUserManagerService.getGravitateUserByInfo(username);
+
     }
 
     @PutMapping(value = "/update")
@@ -123,8 +124,10 @@ public class GravitateUserManagerController {
     }
 
     @GetMapping("/team/members")
-    public ResponseEntity getGravitateUserTeamMembers(){
-        return gravitateUserManagerService.getGravitateUserTeamMembers();
+    public ResponseEntity getGravitateUserTeamMembers(HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        return gravitateUserManagerService.getGravitateUserTeamMembers(Long.valueOf(userId));
     }
 
     @GetMapping("/managers")

@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getAllWishes" resultMap="wishesResult">
-        SELECT W.wish_id AS __id, W.wish_id ,W.admin_id,W.wish_type,W.comment,A.user_id,A.email,A.country,A.first_name,A.last_name,A.phone_number,A.profile_picture_path
+        SELECT W.wish_id AS __id, W.wish_id ,W.admin_id,W.wish_type,W.comment,W.created_at,A.user_id,A.email,A.country,A.first_name,A.last_name,A.phone_number,A.profile_picture_path
         FROM app_user A
         INNER JOIN
         wish W
@@ -24,13 +24,13 @@
                 LOWER(W.wish_type) LIKE LOWER('%' || #{wishType} || '%')
             </if>
             <if test="date != null">
-                W.created_at::date = #{date}
+                AND W.created_at::date = #{date}
+            </if>
+            <if test="userId != null">
+                AND W.user_id = #{userId}
             </if>
             <if test="search != null">
-                LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
-            </if>
-            <if test="userLevel != 'ROLE_ADMIN_USER' ">
-                W.user_id = #{userId}
+                AND LOWER(A.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(A.last_name) LIKE LOWER('%' || #{search} || '%')
             </if>
         </where>
         ORDER BY W.created_at DESC
