@@ -74,11 +74,11 @@ public class GravitateWallOfWishesController {
     public ResponseEntity getAllWishes(HttpServletRequest request,
                                        @RequestParam(value = "wishType",required = false) String wishType,
                                        @RequestParam(value = "search",required = false) String search,
+                                       @RequestParam(value = "userId",required = false) Long userId,
                                        @RequestParam(value = "date",required = false)@DateTimeFormat(pattern="yyyy-MM-dd") Date date) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
         String role = JwtUtils.getUserRoleFromJwtToken(token);
-        return gravitateWishesManagerService.getAllWishes(wishType,date,search,role,Long.valueOf(userId));
+        return gravitateWishesManagerService.getAllWishes(wishType,date,search,role,userId);
 
     }
 
