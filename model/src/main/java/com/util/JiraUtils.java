@@ -1,8 +1,8 @@
 package com.util;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -23,23 +23,34 @@ public class JiraUtils {
 
     private static final String JIRA_AUTH_HEADER = "Basic " + Base64.getEncoder().encodeToString((JIRA_USERNAME+":"+JIRA_TOKEN).getBytes());
 
-    public static JSONObject getAllProjects() throws UnirestException, ExecutionException, InterruptedException {
+    public static String getAllProjects(List<Map> projects) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
         HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL+"/project/search")
                 .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
                 .header("Accept", "application/json")
                 .queryString("expand","insight,lead,issueTypes")
                 .asJson();
         JSONObject jsonObject = response.getBody().getObject();
-        JSONArray projectsArray = jsonObject.getJSONArray("values");
-        for(int i = 0; i < projectsArray.length(); i++){
-            //TODO: Add assigned users, add done issues in insights array, add components(Technologies), add project start date,add project risks
-            Integer doneIssues = getProjectProgress(projectsArray.getJSONObject(i).get("key").toString());
-            JSONObject assignedUsers = getProjectAssignedUsers(projectsArray.getJSONObject(i).get("key").toString());
-
-            projectsArray.getJSONObject(i).getJSONObject("insight").put("totalDoneIssuesCount",doneIssues);
-            projectsArray.getJSONObject(i).put("assignedUsers",assignedUsers);
+        JSONArray jiraProjectsArray = jsonObject.getJSONArray("values");
+        for (int i = 0; i < projects.size(); i++){
+            for(int j = 0; j < jiraProjectsArray.length(); j++){
+                if(projects.get(i).get("jira_id").equals(jiraProjectsArray.getJSONObject(j).get("id"))){
+                    Integer doneIssues = getProjectProgress(jiraProjectsArray.getJSONObject(j).get("key").toString());
+                    JSONObject assignedUsers = getProjectAssignedUsers(jiraProjectsArray.getJSONObject(j).get("key").toString());
+                    jiraProjectsArray.getJSONObject(j).put("projectInfo",projects.get(i));
+                    jiraProjectsArray.getJSONObject(j).getJSONObject("insight").put("totalDoneIssuesCount",doneIssues);
+                    jiraProjectsArray.getJSONObject(j).put("assignedUsers",assignedUsers);
+                }
+            }
         }
-        return jsonObject;
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Convert the JSONObject to a Java object
+        Map<String, Object> map = mapper.readValue(jsonObject.toString(), new TypeReference<Map<String, Object>>() {});
+
+        // Convert the Java object to a JSON string
+        String jsonString = mapper.writeValueAsString(map);
+
+        return jsonString;
     }
 
     public static JSONObject getProjectInfo(String projectKey) throws UnirestException {
@@ -68,7 +79,7 @@ public class JiraUtils {
         List<Callable<HttpResponse<JsonNode>>> tasks = new ArrayList<>();
         for (Object role : jsonObject.keySet()) {
             String roleUrl = jsonObject.get((String) role).toString();
-            System.out.println(roleUrl);
+            //System.out.println(roleUrl);
             Callable<HttpResponse<JsonNode>> task = () -> Unirest.get(roleUrl)
                     .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
                     .header("Accept", "application/json")
@@ -120,12 +131,14 @@ public class JiraUtils {
         return object.getInt("total");
     }
 
-    public static JSONArray getAssignedUsersWithTasks1(String projectKey) throws UnirestException, ExecutionException, InterruptedException {
+    public static String getAssignedUsersWithTasks1(String projectKey) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
         JSONArray allUsers = null;
         JSONArray temp = null;
         JSONObject temp2 = null;
+        JSONObject data = new JSONObject();
         HashMap<String,Object> adminUserTasks = null;
         HashMap<String,Object> memberUserTasks = null;
+
         JSONObject jsonObject = getProjectAssignedUsers(projectKey);
         if(jsonObject.has("Administrator")){
             if(jsonObject.getJSONObject("Administrator").getJSONArray("actors").length() > 0){
@@ -149,9 +162,15 @@ public class JiraUtils {
             temp2 = allUsers.getJSONObject(i).getJSONObject("actorUser");
             allUsers.getJSONObject(i).put("tasksInfo",getUserProjectTasks(projectKey, (String) temp2.get("accountId")));
         }
-        System.out.println(allUsers);
+        //System.out.println(allUsers);
+        data.put("data",allUsers);
 
-        return null;
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = mapper.readValue(data.toString(), new TypeReference<Map<String, Object>>() {});
+
+        String jsonString = mapper.writeValueAsString(map);
+
+        return jsonString;
     }
 
     public static JSONObject getUserProjectTasks(String projectKey,String accountId) throws ExecutionException, InterruptedException {
@@ -190,6 +209,61 @@ public class JiraUtils {
         returnObject.put("tasks",userTasks);
         returnObject.put("stats",statsObj);
         return returnObject;
+    }
+
+    public static String getUserProjectTasks1(String projectKey,String accountId, String status) throws ExecutionException, InterruptedException, JsonProcessingException {
+        JSONObject data = null;
+        JSONObject temp = null;
+        JSONObject returnObject = new JSONObject();
+        JSONObject statsObj = new JSONObject();
+        int doneCounter = 0;
+        int inProgressCounter = 0;
+        int notStartedCounter = 0;
+
+
+
+        JSONArray userTasks = new JSONArray();
+        HttpResponse<JsonNode> response = Unirest.get("https://highviewtech.atlassian.net/rest/api/2/search")
+                .header("Authorization", JIRA_AUTH_HEADER)
+                .queryString("jql", "project="+projectKey+" AND assignee="+accountId)
+                .asJsonAsync().get();
+        data = response.getBody().getObject();
+        JSONArray issues = data.getJSONArray("issues");
+        for (int i = 0; i < issues.length(); i++){
+            temp = (JSONObject) issues.getJSONObject(i).getJSONObject("fields").get("status");
+            if(temp.get("name").equals("Done")){
+                doneCounter++;
+            }
+            if(temp.get("name").equals("To Do")){
+                notStartedCounter++;
+            }
+            if(temp.get("name").equals("In Progress")){
+                inProgressCounter++;
+            }
+            //check if status is not null
+            if(!ValidationUtil.isNullObject(status)){
+                if(temp.get("name").equals(status)){
+                    userTasks.put(issues.getJSONObject(i).get("fields"));
+                    //userTasks.put(i,issues.getJSONObject(i).get("fields"));
+                }
+            }else{
+                userTasks.put(issues.getJSONObject(i).get("fields"));
+            }
+        }
+
+        statsObj.put("doneCounter",doneCounter);
+        statsObj.put("inProgressCounter",inProgressCounter);
+        statsObj.put("notStartedCounter",notStartedCounter);
+
+        returnObject.put("tasks",userTasks);
+        returnObject.put("stats",statsObj);
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = mapper.readValue(returnObject.toString(), new TypeReference<Map<String, Object>>() {});
+
+        String jsonString = mapper.writeValueAsString(map);
+
+        return jsonString;
     }
 
     /*public static JsonNode getAssignedUsersWithTasks(String projectKey) throws UnirestException, ExecutionException, InterruptedException {
@@ -233,7 +307,7 @@ public class JiraUtils {
 
 
 
-    public static void main(String[] args) throws UnirestException, ExecutionException, InterruptedException {
-        getAllProjects();
+    public static void main(String[] args) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        getUserProjectTasks("GR","dsfaiqsdfasdfawer");
     }
 }
