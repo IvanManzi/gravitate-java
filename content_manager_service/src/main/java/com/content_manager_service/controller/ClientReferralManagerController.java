@@ -35,6 +35,7 @@ public class ClientReferralManagerController {
         clientReferralVO.setReferredBy(Long.valueOf(userId));
         clientReferralVO.setIsReferencable(createClientReferralRequest.referencable());
         clientReferralVO.setClientEmail(createClientReferralRequest.email());
+        clientReferralVO.setPhoneNumber(createClientReferralRequest.number());
         clientReferralVO.setClientName(createClientReferralRequest.clientName());
         clientReferralVO.setClientDescription(createClientReferralRequest.clientDescription());
         clientReferralVO.setOrganisationName(createClientReferralRequest.organisationName());
