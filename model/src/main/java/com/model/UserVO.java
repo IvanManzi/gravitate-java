@@ -34,6 +34,8 @@ public class UserVO implements Serializable {
 
     private String email;
 
+    private String jiraId;
+
     private String alternateEmail;
 
     @JsonIgnore

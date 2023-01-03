@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.mashape.unirest.http.JsonNode;
@@ -23,7 +25,87 @@ public class JiraUtils {
 
     private static final String JIRA_AUTH_HEADER = "Basic " + Base64.getEncoder().encodeToString((JIRA_USERNAME+":"+JIRA_TOKEN).getBytes());
 
+
+
     public static String getAllProjects(List<Map> projects) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        // Create a cache to store the results of the API calls, with entries expiring after one hour
+        Cache<String, Object> cache = Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.HOURS)
+                .maximumSize(1000)
+                .build();
+
+        // Create a HashMap to store the projects with their corresponding ids
+        Map<String, Map> projectsById = new HashMap<>();
+        for (Map project : projects) {
+            String id = (String) project.get("jira_id");
+            projectsById.put(id, project);
+        }
+
+        HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL + "/project/search")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .header("Accept", "application/json")
+                .queryString("expand", "insight,lead,issueTypes")
+                .asJson();
+        JSONObject jsonObject = response.getBody().getObject();
+        JSONArray jiraProjectsArray = jsonObject.getJSONArray("values");
+        for (int i = 0; i < jiraProjectsArray.length(); i++) {
+            String id = jiraProjectsArray.getJSONObject(i).get("id").toString();
+            // Check if the project has a corresponding id in the HashMap
+            if (projectsById.containsKey(id)) {
+                // Check if the result for the given project id is in the cache
+                Integer doneIssues = (Integer) cache.getIfPresent("done_" + id);
+                if (doneIssues == null) {
+                    // If the result is not in the cache, get it from the API and store it in the cache
+                    doneIssues = getProjectDoneIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                    cache.put("done_" + id, doneIssues);
+                }
+                Integer pendingIssues = (Integer) cache.getIfPresent("pending_" + id);
+                if (pendingIssues == null) {
+                    pendingIssues = getProjectPendingIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                    cache.put("pending_" + id, pendingIssues);
+                }
+                Integer inProgressIssues = (Integer) cache.getIfPresent("in_progress_" + id);
+                if (inProgressIssues == null) {
+                    inProgressIssues = getProjectInProgressIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                    cache.put("in_progress_" + id, inProgressIssues);
+                    JSONObject assignedUsers = (JSONObject) cache.getIfPresent("assigned_" + id);
+                    if (assignedUsers == null) {
+                        assignedUsers = getProjectAssignedUsers(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                        cache.put("assigned_" + id, assignedUsers);
+                    }
+
+                    jiraProjectsArray.getJSONObject(i).put("projectInfo", projectsById.get(id));
+                    jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("totalDoneIssuesCount", doneIssues);
+                    jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("issuesInProgressCounter", inProgressIssues);
+                    jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("notStartedCounter", pendingIssues);
+
+                    jiraProjectsArray.getJSONObject(i).put("assignedUsers", assignedUsers);
+                } else {
+                    jiraProjectsArray.remove(i);
+                }
+            }
+        }
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Convert the JSONObject to a Java object
+            Map<String, Object> map = mapper.readValue(jsonObject.toString(), new TypeReference<Map<String, Object>>() {
+            });
+
+            // Convert the Java object to a JSON string
+            String jsonString = mapper.writeValueAsString(map);
+
+            return jsonString;
+    }
+
+
+        public static String getAllProjects1(List<Map> projects) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        // Create a HashMap to store the projects with their corresponding ids
+        Map<String, Map> projectsById = new HashMap<>();
+        for (Map project : projects) {
+            String id = (String) project.get("jira_id");
+            projectsById.put(id, project);
+        }
+
         HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL+"/project/search")
                 .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
                 .header("Accept", "application/json")
@@ -31,15 +113,23 @@ public class JiraUtils {
                 .asJson();
         JSONObject jsonObject = response.getBody().getObject();
         JSONArray jiraProjectsArray = jsonObject.getJSONArray("values");
-        for (int i = 0; i < projects.size(); i++){
-            for(int j = 0; j < jiraProjectsArray.length(); j++){
-                if(projects.get(i).get("jira_id").equals(jiraProjectsArray.getJSONObject(j).get("id"))){
-                    Integer doneIssues = getProjectProgress(jiraProjectsArray.getJSONObject(j).get("key").toString());
-                    JSONObject assignedUsers = getProjectAssignedUsers(jiraProjectsArray.getJSONObject(j).get("key").toString());
-                    jiraProjectsArray.getJSONObject(j).put("projectInfo",projects.get(i));
-                    jiraProjectsArray.getJSONObject(j).getJSONObject("insight").put("totalDoneIssuesCount",doneIssues);
-                    jiraProjectsArray.getJSONObject(j).put("assignedUsers",assignedUsers);
-                }
+        for (int i = 0; i < jiraProjectsArray.length(); i++){
+            String id = jiraProjectsArray.getJSONObject(i).get("id").toString();
+            // Check if the project has a corresponding id in the HashMap
+            if (projectsById.containsKey(id)) {
+                Integer doneIssues = getProjectDoneIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                Integer pendingIssues = getProjectPendingIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                Integer inProgressIssues = getProjectInProgressIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
+
+                JSONObject assignedUsers = getProjectAssignedUsers(jiraProjectsArray.getJSONObject(i).get("key").toString());
+                jiraProjectsArray.getJSONObject(i).put("projectInfo", projectsById.get(id));
+                jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("totalDoneIssuesCount",doneIssues);
+                jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("issuesInProgressCounter",inProgressIssues);
+                jiraProjectsArray.getJSONObject(i).getJSONObject("insight").put("notStartedCounter",pendingIssues);
+
+                jiraProjectsArray.getJSONObject(i).put("assignedUsers", assignedUsers);
+            }else{
+                jiraProjectsArray.remove(i);
             }
         }
         ObjectMapper mapper = new ObjectMapper();
@@ -52,6 +142,7 @@ public class JiraUtils {
 
         return jsonString;
     }
+
 
     public static JSONObject getProjectInfo(String projectKey) throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL+"/project/"+projectKey)
@@ -92,12 +183,15 @@ public class JiraUtils {
 
         // Create the return object and add the results for each role
         JSONObject returnObject = new JSONObject();
-        for (int i = 0; i < jsonObject.length(); i++) {
+        Integer allUsersCount = 0;
+        returnObject.put("totalAssignedUsers",allUsersCount);
+        for (int i = 1; i < jsonObject.length(); i++) { //initialised i = 1 to skip the atlassian-addons-project-access role actors
             Object role = jsonObject.keySet().toArray()[i];
+            allUsersCount += futures.get(i).get().getBody().getObject().getJSONArray("actors").length();
             returnObject.put((String) role, futures.get(i).get().getBody().getObject());
         }
-
-        // Shutdown the thread pool
+        returnObject.put("totalAssignedUsers",allUsersCount);
+        // Shutdown thread pool
         threadPool.shutdown();
         return returnObject;
     }
@@ -121,11 +215,33 @@ public class JiraUtils {
         return response.getBody();
     }
 
-    public static Integer getProjectProgress(String key) throws UnirestException {
+    public static Integer getProjectDoneIssues(String key) throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL + "/search")
                 .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
                 .header("Accept", "application/json")
-                .queryString("jql", "project="+key+" AND status=done")
+                .queryString("jql", "project="+key+" AND status=Done")
+                .asJson();
+        JSONObject object = response.getBody().getObject();
+        return object.getInt("total");
+    }
+
+    public static Integer getProjectPendingIssues(String key) throws UnirestException {
+        String status = "\"To Do\"/";
+        HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL + "/search")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .header("Accept", "application/json")
+                .queryString("jql", "project="+key+" AND status="+status.replaceAll("[/\\\\]", ""))
+                .asJson();
+        JSONObject object = response.getBody().getObject();
+        return object.getInt("total");
+    }
+
+    public static Integer getProjectInProgressIssues(String key) throws UnirestException {
+        String status = "\"In Progress\"/";
+        HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL + "/search")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .header("Accept", "application/json")
+                .queryString("jql", "project="+key+" AND status="+status.replaceAll("[/\\\\]", ""))
                 .asJson();
         JSONObject object = response.getBody().getObject();
         return object.getInt("total");
@@ -180,44 +296,6 @@ public class JiraUtils {
         JSONObject statsObj = new JSONObject();
         int doneCounter = 0;
         int inProgressCounter = 0;
-        int highPriorityCounter = 0;
-
-
-
-        JSONArray userTasks = new JSONArray();
-        HttpResponse<JsonNode> response = Unirest.get("https://highviewtech.atlassian.net/rest/api/2/search")
-                .header("Authorization", JIRA_AUTH_HEADER)
-                .queryString("jql", "project="+projectKey+" AND assignee="+accountId)
-                .asJsonAsync().get();
-        data = response.getBody().getObject();
-        JSONArray issues = data.getJSONArray("issues");
-        for (int i = 0; i < issues.length(); i++){
-            temp = (JSONObject) issues.getJSONObject(i).getJSONObject("fields").get("status");
-            if(temp.get("name").equals("Done")){
-                doneCounter++;
-            }
-            if(temp.get("name").equals("To Do")){
-                inProgressCounter++;
-            }
-            userTasks.put(i,issues.getJSONObject(i).get("fields"));
-        }
-
-        statsObj.put("doneCounter",doneCounter);
-        statsObj.put("inProgressCounter",inProgressCounter);
-        statsObj.put("highPriorityCounter",highPriorityCounter);
-
-        returnObject.put("tasks",userTasks);
-        returnObject.put("stats",statsObj);
-        return returnObject;
-    }
-
-    public static String getUserProjectTasks1(String projectKey,String accountId, String status) throws ExecutionException, InterruptedException, JsonProcessingException {
-        JSONObject data = null;
-        JSONObject temp = null;
-        JSONObject returnObject = new JSONObject();
-        JSONObject statsObj = new JSONObject();
-        int doneCounter = 0;
-        int inProgressCounter = 0;
         int notStartedCounter = 0;
 
 
@@ -240,15 +318,7 @@ public class JiraUtils {
             if(temp.get("name").equals("In Progress")){
                 inProgressCounter++;
             }
-            //check if status is not null
-            if(!ValidationUtil.isNullObject(status)){
-                if(temp.get("name").equals(status)){
-                    userTasks.put(issues.getJSONObject(i).get("fields"));
-                    //userTasks.put(i,issues.getJSONObject(i).get("fields"));
-                }
-            }else{
-                userTasks.put(issues.getJSONObject(i).get("fields"));
-            }
+            userTasks.put(issues.getJSONObject(i).get("fields"));
         }
 
         statsObj.put("doneCounter",doneCounter);
@@ -258,6 +328,70 @@ public class JiraUtils {
         returnObject.put("tasks",userTasks);
         returnObject.put("stats",statsObj);
 
+        return returnObject;
+    }
+
+    private static final int CACHE_SIZE = 1000; // Maximum number of entries in the cache
+    private static final long CACHE_TTL = 60 * 60 * 1000; // 1 hour cache expiration time
+    private static Map<String, CacheEntry> cache = new LinkedHashMap<>();
+
+    public static String getUserProjectTasks1(String projectKey, String accountId, String status) throws ExecutionException, InterruptedException, JsonProcessingException {
+        JSONObject temp = null;
+        JSONObject returnObject = new JSONObject();
+        JSONObject statsObj = new JSONObject();
+        int doneCounter = 0;
+        int inProgressCounter = 0;
+        int notStartedCounter = 0;
+
+        // Key for the cache
+        String cacheKey = projectKey + "-" + accountId + "-" + status;
+
+        // Check if the results are in the cache
+        CacheEntry cacheEntry = cache.get(cacheKey);
+        long currentTime = System.currentTimeMillis();
+        if (cacheEntry == null || currentTime - cacheEntry.timestamp > CACHE_TTL) {
+            // Results not in cache or cache entry expired, make the HTTP request and store the results in the cache
+            HttpResponse<JsonNode> response = Unirest.get("https://highviewtech.atlassian.net/rest/api/2/search")
+                    .header("Authorization", JIRA_AUTH_HEADER)
+                    .queryString("jql", "project="+projectKey+" AND assignee="+accountId)
+                    .asJsonAsync().get();
+            JSONObject data = response.getBody().getObject();
+            cacheEntry = new CacheEntry(data, currentTime);
+            cache.put(cacheKey, cacheEntry);
+        }
+
+
+        JSONArray userTasks = new JSONArray();
+        JSONArray issues = cacheEntry.data.getJSONArray("issues");
+        for (int i = 0; i < issues.length(); i++) {
+            temp = (JSONObject) issues.getJSONObject(i).getJSONObject("fields").get("status");
+            if (temp.get("name").equals("Done")) {
+                doneCounter++;
+            }
+            if (temp.get("name").equals("To Do")) {
+                notStartedCounter++;
+            }
+            if (temp.get("name").equals("In Progress")) {
+                inProgressCounter++;
+            }
+            //check if status is not null
+            if (!ValidationUtil.isNullObject(status)) {
+                if (temp.get("name").equals(status)) {
+                    userTasks.put(issues.getJSONObject(i).get("fields"));
+                    //userTasks.put(i,issues.getJSONObject(i).get("fields"));
+                }
+            } else {
+                userTasks.put(issues.getJSONObject(i).get("fields"));
+            }
+        }
+
+        statsObj.put("doneCounter", doneCounter);
+        statsObj.put("inProgressCounter", inProgressCounter);
+        statsObj.put("notStartedCounter", notStartedCounter);
+
+        returnObject.put("tasks", userTasks);
+        returnObject.put("stats", statsObj);
+
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.readValue(returnObject.toString(), new TypeReference<Map<String, Object>>() {});
 
@@ -266,48 +400,11 @@ public class JiraUtils {
         return jsonString;
     }
 
-    /*public static JsonNode getAssignedUsersWithTasks(String projectKey) throws UnirestException, ExecutionException, InterruptedException {
-        // Make a GET request to the Jira REST API to get all issues in the specified project
-        HttpResponse<JsonNode> response = Unirest.get("https://highviewtech.atlassian.net/rest/api/2/search")
-                .header("Authorization", JIRA_AUTH_HEADER)
-                .queryString("jql", "project = " + projectKey)
-                .asJsonAsync().get();
-
-        JsonNode body = response.getBody();
-        JsonNode issues = body.get("issues");
-
-        // Create a map to store the user assignments and task statuses
-        Map<String, List<String>> userAssignments = new HashMap<>();
-
-        // Iterate through the issues and add the assignments and task statuses to the map
-        for (int i = 0; i < issues.size(); i++) {
-            JsonNode issue = issues.get(i);
-            JsonNode fields = issue.get("fields");
-            JsonNode assignee = fields.get("assignee");
-
-            // If the issue is not assigned, skip it
-            if (assignee == null) {
-                continue;
-            }
-
-            String name = assignee.get("name").asText();
-            String status = fields.get("status").get("name").asText();
-
-            if (!userAssignments.containsKey(name)) {
-                userAssignments.put(name, new ArrayList<>());
-            }
-            userAssignments.get(name).add(status);
-        }
-
-        return new JsonNode(userAssignments);
-    }*/
-
-
 
 
 
 
     public static void main(String[] args) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
-        getUserProjectTasks("GR","dsfaiqsdfasdfawer");
+        System.out.println(getProjectPendingIssues("GR"));
     }
 }
