@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface JiraProjectManagerService {
 
-    String getAllProjects(Long userId,String userLevel) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException;
+    String getAllProjects(Long userId,String userLevel,Integer phase) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException;
 
     String getProjectTeamWithAssignedTasks(String projectId) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException;
 

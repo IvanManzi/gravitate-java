@@ -30,11 +30,11 @@ public class JiraProjectManagerController {
 
 
     @GetMapping(value = "/all")
-    public String getAllJiraProjects(HttpServletRequest request) throws UnirestException, ExecutionException, InterruptedException, IOException {
+    public String getAllJiraProjects(HttpServletRequest request,@RequestParam(value = "phase",required = false)Integer phase) throws UnirestException, ExecutionException, InterruptedException, IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         String role = JwtUtils.getUserRoleFromJwtToken(token);
-        return jiraProjectManagerService.getAllProjects(Long.valueOf(userId),role);
+        return jiraProjectManagerService.getAllProjects(Long.valueOf(userId),role,phase);
     }
 
     @GetMapping(value = "/assignee")
