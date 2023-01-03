@@ -39,6 +39,7 @@ public record UpdateGravitateUserForm(@NotNull
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+                                      String jiraId,
                                       List<Long> projects,
                                       Long managerId) {
 }

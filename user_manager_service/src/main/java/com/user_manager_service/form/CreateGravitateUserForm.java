@@ -40,6 +40,8 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       @NotBlank
                                       String contractPath,
 
+                                      String jiraId,
+
                                       List<Long> projects,
                                       Long managerId) {
 }

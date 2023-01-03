@@ -49,6 +49,7 @@ public class GravitateUserManagerController {
         userVO.setAccountNumber(createGravitateUserForm.accountNumber());
         userVO.setBilling(createGravitateUserForm.billing());
         userVO.setUserLevel(createGravitateUserForm.userLevel());
+        userVO.setJiraId(createGravitateUserForm.jiraId());
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setManagedBy(createGravitateUserForm.managerId());
         return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token);
@@ -94,6 +95,7 @@ public class GravitateUserManagerController {
         userVO.setAccountNumber(updateGravitateUserForm.accountNumber());
         userVO.setBilling(updateGravitateUserForm.billing());
         userVO.setUserLevel(updateGravitateUserForm.userLevel());
+        userVO.setJiraId(updateGravitateUserForm.jiraId());
         userVO.setRoleId(updateGravitateUserForm.roleId());
         userVO.setManagedBy(updateGravitateUserForm.managerId());
         return gravitateUserManagerService.updateGravitateUser(userVO,updateGravitateUserForm.projects(),token);

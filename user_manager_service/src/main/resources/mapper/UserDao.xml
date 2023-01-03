@@ -4,9 +4,9 @@
 
     <insert id="createGravitateUser" parameterType="com.model.UserVO" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO app_user
-        (user_type,managed_by,role_id,user_level,email,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number)
+        (user_type,managed_by,role_id,user_level,jira_id,email,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number)
         VALUES
-        (#{userType},#{managedBy},#{roleId},#{userLevel},#{email},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber})
+        (#{userType},#{managedBy},#{roleId},#{userLevel},#{jiraId},#{email},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber})
     </insert>
 
     <select id="checkIfUsernameExists" parameterType="String" resultType="int">
@@ -35,6 +35,7 @@
         A.user_level,
         A.managed_by,
         A.email,
+        A.jira_id,
         A.alternate_email,
         A.password,
         A.first_name,
@@ -70,6 +71,7 @@
         managed_by = #{managedBy},
         role_id = #{roleId},
         user_level = #{userLevel},
+        jira_id = #{jiraId},
         email = #{email},
         alternate_email = #{alternateEmail},
         first_name = #{firstName},
@@ -110,6 +112,7 @@
         A.status,
         A.user_level,
         A.managed_by,
+        A.jira_id,
         A.email,
         A.alternate_email,
         A.password,
