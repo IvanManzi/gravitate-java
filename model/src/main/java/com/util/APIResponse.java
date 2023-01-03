@@ -3,6 +3,7 @@ package com.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -72,6 +73,19 @@ public class APIResponse<T> {
     public static ResponseEntity resultSuccess(Map<String,Object> data){
         Map<String,Object> response = new HashMap<>();
         response.put(Constants.RETURN_DATA,data);
+        return ResponseEntity.ok(
+                APIResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .data(response)
+                        .message("Operation success.")
+                        .build()
+        );
+    }
+
+    public static ResponseEntity resultSuccess(JSONObject object){
+        Map<String,Object> response = new HashMap<>();
+        response.put(Constants.RETURN_DATA,object);
         return ResponseEntity.ok(
                 APIResponse.builder()
                         .statusCode(HttpStatus.OK.value())
