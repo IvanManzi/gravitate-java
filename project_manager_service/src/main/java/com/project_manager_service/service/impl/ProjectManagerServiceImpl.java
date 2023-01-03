@@ -3,7 +3,7 @@ package com.project_manager_service.service.impl;
 import com.model.ProjectVO;
 import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.dao.UserProjectDao;
-import com.project_manager_service.service.ProjectCRUDService;
+import com.project_manager_service.service.ProjectManagerService;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectCRUDServiceImpl implements ProjectCRUDService {
+public class ProjectManagerServiceImpl implements ProjectManagerService {
 
     private final ProjectDao projectDao;
 
@@ -32,8 +32,8 @@ public class ProjectCRUDServiceImpl implements ProjectCRUDService {
     }
 
     @Override
-    public ResponseEntity getAllProjects(Long userId,String role) {
-        List<Map> projects = projectDao.getAllProjects(userId,role);
+    public ResponseEntity getAllProjects(Long userId,String role,Integer phase) {
+        List<Map> projects = projectDao.getAllProjects(userId,role,phase);
         if(projects.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{
@@ -51,6 +51,24 @@ public class ProjectCRUDServiceImpl implements ProjectCRUDService {
         }else{
             return APIResponse.resultFail();
         }
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> markProjectAsFavorite(Long projectId) {
+        int result = projectDao.markAsFavorite(projectId);
+        if(result > 0){
+            return APIResponse.resultSuccess("Project successfully marked as favorite!");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity<APIResponse> updateProjectPhase(ProjectVO projectVO) {
+        int result = projectDao.updateProjectPhase(projectVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Project phase successfully updated.");
+        }
+        return APIResponse.resultFail();
     }
 
     @Override

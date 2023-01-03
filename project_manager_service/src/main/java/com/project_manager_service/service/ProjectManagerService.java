@@ -4,15 +4,17 @@ import com.model.ProjectVO;
 import com.util.APIResponse;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
-public interface ProjectCRUDService {
+public interface ProjectManagerService {
 
     ResponseEntity<APIResponse> createProject(ProjectVO projectVO);
 
-    ResponseEntity<APIResponse> getAllProjects(Long userId, String role);
+    ResponseEntity<APIResponse> getAllProjects(Long userId, String role,Integer phase);
 
     ResponseEntity<APIResponse> updateProject(ProjectVO projectVO);
+
+    ResponseEntity<APIResponse> markProjectAsFavorite(Long projectId);
+
+    ResponseEntity<APIResponse> updateProjectPhase(ProjectVO projectVO);
 
     ResponseEntity<APIResponse> deleteProject(Long projectId);
 }

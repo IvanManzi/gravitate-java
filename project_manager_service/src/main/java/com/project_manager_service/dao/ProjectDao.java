@@ -12,7 +12,10 @@ public interface ProjectDao {
 
     int createProject(ProjectVO projectVO);
     ProjectVO getProjectByJiraId(String jiraId);
-    List<Map> getAllProjects(@Param("userId")Long userId,@Param("userLevel")String role);
+    List<Map> getAllProjects(@Param("userId")Long userId,
+                             @Param("userLevel")String role,@Param("phase")Integer phase);
     int updateProject(ProjectVO projectVO);
     int deleteProject(Long projectId);
+    int markAsFavorite(Long projectId);
+    int updateProjectPhase(ProjectVO projectVO);
 }

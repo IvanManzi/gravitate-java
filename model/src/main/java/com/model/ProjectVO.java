@@ -35,6 +35,15 @@ public class ProjectVO implements Serializable {
 
     private String projectDescription;
 
+    private String technologies;
+
+    private Date startDate;
+
+    private boolean isFavorite;
+
+    //0 for investigation(Default),1 for Design, 2 Build, 3 for Testing, 4 for launch
+    private Integer phase;
+
     private Date createdAt;
 
     private Date updatedAt;

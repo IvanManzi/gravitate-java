@@ -4,9 +4,9 @@
 
     <insert id="createProject" parameterType="com.model.ProjectVO">
         INSERT INTO project
-        (client_email, client_name, jira_id, phone_number, project_description, project_name, admin_id, project_lead)
+        (client_email, client_name, jira_id, phone_number, project_description,start_date,technologies, project_name, admin_id, project_lead)
         VALUES
-        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription}, #{projectName}, #{adminId}, #{projectLead})
+        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription},#{startDate},#{technologies},#{projectName}, #{adminId}, #{projectLead})
     </insert>
 
     <resultMap id="allProjectsResult" type="Map">
@@ -20,7 +20,10 @@
                 P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId})
             </if>
             <if test="userLevel == 'ROLE_PROJECT_MANAGER' ">
-                P.project_lead = #{userId}
+                AND P.project_lead = #{userId}
+            </if>
+            <if test="phase != null">
+                AND P.phase = #{phase}
             </if>
         </where>
         ORDER BY P.created_at DESC
@@ -44,6 +47,8 @@
         phone_number = #{phoneNumber},
         jira_id = #{jiraId},
         project_description = #{projectDescription},
+        technologies = #{technologies},
+        start_date = #{startDate},
         project_name = #{projectName}
         WHERE
         project_id = #{projectId}
@@ -52,6 +57,15 @@
     <delete id="deleteProject" parameterType="Long">
         DELETE FROM project WHERE project_id = #{projectId}
     </delete>
+
+
+    <update id="markAsFavorite" parameterType="Long">
+        UPDATE project SET is_favorite = true WHERE project_id = #{projectId}
+    </update>
+
+    <update id="updateProjectPhase" parameterType="com.model.ProjectVO">
+        UPDATE project SET phase = #{phase} WHERE project_id = #{projectId}
+    </update>
 
 
 

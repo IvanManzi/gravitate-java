@@ -29,7 +29,7 @@ public class JiraProjectManagerServiceImpl implements JiraProjectManagerService 
 
     @Override
     public String getAllProjects(Long userId,String userLevel) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
-        List<Map> projects = projectDao.getAllProjects(userId,userLevel);
+        List<Map> projects = projectDao.getAllProjects(userId,userLevel,null);
         return JiraUtils.getAllProjects(projects);
     }
 

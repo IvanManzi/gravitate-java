@@ -3,10 +3,9 @@ package com.project_manager_service.controller;
 import com.model.ProjectVO;
 import com.project_manager_service.form.CreateProjectRequest;
 import com.project_manager_service.form.UpdateProjectRequest;
-import com.project_manager_service.service.ProjectCRUDService;
+import com.project_manager_service.service.ProjectManagerService;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +17,9 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/project")
 @RequiredArgsConstructor
-public class ProjectCRUDController {
+public class ProjectManagerController {
 
-    private final ProjectCRUDService projectCRUDService;
+    private final ProjectManagerService projectManagerService;
 
     @PostMapping(value = "/create")
     public ResponseEntity createProject(@Valid @RequestBody CreateProjectRequest createProjectRequest, HttpServletRequest request) throws IOException {
@@ -33,17 +32,19 @@ public class ProjectCRUDController {
         projectVO.setProjectName(createProjectRequest.projectName());
         projectVO.setClientName(createProjectRequest.clientName());
         projectVO.setClientEmail(createProjectRequest.email());
+        projectVO.setStartDate(createProjectRequest.startDate());
+        projectVO.setTechnologies(createProjectRequest.technologies());
         projectVO.setPhoneNumber(createProjectRequest.phoneNumber());
         projectVO.setProjectDescription(createProjectRequest.description());
-        return projectCRUDService.createProject(projectVO);
+        return projectManagerService.createProject(projectVO);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllProjects(HttpServletRequest request) throws IOException {
+    public ResponseEntity getAllProjects(HttpServletRequest request,@RequestParam(value = "phase",required = false)Integer phase) throws IOException {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         String role = JwtUtils.getUserRoleFromJwtToken(token);
-        return projectCRUDService.getAllProjects(Long.valueOf(userId),role);
+        return projectManagerService.getAllProjects(Long.valueOf(userId),role,phase);
     }
 
     @PutMapping(value = "/")
@@ -61,11 +62,27 @@ public class ProjectCRUDController {
         projectVO.setClientEmail(updateProjectRequest.email());
         projectVO.setPhoneNumber(updateProjectRequest.phoneNumber());
         projectVO.setProjectDescription(updateProjectRequest.description());
-        return projectCRUDService.updateProject(projectVO);
+        projectVO.setStartDate(updateProjectRequest.startDate());
+        projectVO.setTechnologies(updateProjectRequest.technologies());
+        return projectManagerService.updateProject(projectVO);
     }
     @DeleteMapping(value = "/{projectId}")
     public ResponseEntity deleteProject(@PathVariable("projectId") Long projectId){
-        return projectCRUDService.deleteProject(projectId);
+        return projectManagerService.deleteProject(projectId);
+    }
+
+    @PutMapping(value = "/{projectId}/mark-favorite")
+    public ResponseEntity markProjectAsFavorite(@PathVariable("projectId") Long projectId){
+        return projectManagerService.markProjectAsFavorite(projectId);
+    }
+
+    @PutMapping(value = "/{projectId}/phase/{phaseId}")
+    public ResponseEntity updateProjectPhase(@PathVariable("projectId") Long projectId,
+                                             @PathVariable("phaseId")Integer phase){
+        ProjectVO projectVO = new ProjectVO();
+        projectVO.setPhase(phase);
+        projectVO.setProjectId(projectId);
+        return projectManagerService.updateProjectPhase(projectVO);
     }
 
 
