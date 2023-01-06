@@ -6,7 +6,8 @@ import java.util.Date;
 
 public record UpdateProjectRequest(@NotNull Long projectId,
                                    @NotNull Long projectLead,
-                                   @NotBlank String jiraId,
+                                   @NotBlank String jiraAccountId,
+                                   @NotBlank String jiraProjectKey,
                                    @NotNull Date startDate,
                                    @NotBlank String technologies,
                                    @NotNull Integer status,

@@ -4,9 +4,9 @@
 
     <insert id="createProject" parameterType="com.model.ProjectVO">
         INSERT INTO project
-        (client_email, client_name, jira_id, phone_number, project_description,start_date,technologies, project_name, admin_id, project_lead)
+        (client_email, client_name, lead_jira_account_id, jira_project_key, phone_number, project_description,start_date,technologies, project_name, admin_id, project_lead)
         VALUES
-        (#{clientEmail}, #{clientName},#{jiraId}, #{phoneNumber}, #{projectDescription},#{startDate},#{technologies},#{projectName}, #{adminId}, #{projectLead})
+        (#{clientEmail}, #{clientName},#{leadJiraAccountId},#{jiraProjectKey}, #{phoneNumber}, #{projectDescription},#{startDate},#{technologies},#{projectName}, #{adminId}, #{projectLead})
     </insert>
 
     <resultMap id="allProjectsResult" type="Map">
@@ -41,11 +41,11 @@
         UPDATE project
         SET
         project_lead = #{projectLead},
+        lead_jira_account_id = #{leadJiraAccountId},
         status = #{status},
         client_email = #{clientEmail},
         client_name = #{clientName},
         phone_number = #{phoneNumber},
-        jira_id = #{jiraId},
         project_description = #{projectDescription},
         technologies = #{technologies},
         start_date = #{startDate},
@@ -54,8 +54,8 @@
         project_id = #{projectId}
     </update>
 
-    <delete id="deleteProject" parameterType="Long">
-        DELETE FROM project WHERE project_id = #{projectId}
+    <delete id="deleteProject" parameterType="String">
+        DELETE FROM project WHERE jira_project_key = #{jiraProjectKey}
     </delete>
 
 

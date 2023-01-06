@@ -19,25 +19,21 @@ public class JiraProjectManagerServiceImpl implements JiraProjectManagerService 
 
     private final ProjectDao projectDao;
 
-
     @Override
     public String getAllProjects(Long userId,String userLevel,Integer phase) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
         List<Map> projects = projectDao.getAllProjects(userId,userLevel,phase);
         if(projects.isEmpty()){
             return null;
         }
-        return JiraUtils.getAllProjects1(projects);
+        return JiraUtils.getAllProjects(projects);
     }
 
     @Override
-    public String getProjectTeamWithAssignedTasks(String projectId) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
-        return JiraUtils.getAssignedUsersWithTasks1(projectId);
+    public String getProjectTeamWithAssignedTasks(String projectId,String acountId,String taskLabel) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        return JiraUtils.getAssignedUsersWithTasks1(projectId,acountId,taskLabel);
     }
 
-    @Override
-    public String getUserAssignedTasks(String projectKey,String accountKey, String status) throws ExecutionException, InterruptedException, JsonProcessingException {
-        return JiraUtils.getUserProjectTasks1(projectKey,accountKey,status);
-    }
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.project_manager_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.ProjectVO;
 import com.project_manager_service.form.CreateProjectRequest;
 import com.project_manager_service.form.UpdateProjectRequest;
@@ -22,13 +24,13 @@ public class ProjectManagerController {
     private final ProjectManagerService projectManagerService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity createProject(@Valid @RequestBody CreateProjectRequest createProjectRequest, HttpServletRequest request) throws IOException {
+    public ResponseEntity createProject(@Valid @RequestBody CreateProjectRequest createProjectRequest, HttpServletRequest request) throws IOException, UnirestException {
         ProjectVO projectVO = new ProjectVO();
         String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectLead(createProjectRequest.projectLead());
-        projectVO.setJiraId(createProjectRequest.jiraId());
+        projectVO.setLeadJiraAccountId(createProjectRequest.jiraAccountId());
         projectVO.setProjectName(createProjectRequest.projectName());
         projectVO.setClientName(createProjectRequest.clientName());
         projectVO.setClientEmail(createProjectRequest.email());
@@ -48,13 +50,14 @@ public class ProjectManagerController {
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest, HttpServletRequest request) throws IOException {
+    public ResponseEntity updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest, HttpServletRequest request) throws IOException, UnirestException {
         ProjectVO projectVO = new ProjectVO();
         String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         projectVO.setProjectId(updateProjectRequest.projectId());
         projectVO.setProjectLead(updateProjectRequest.projectLead());
-        projectVO.setJiraId(updateProjectRequest.jiraId());
+        projectVO.setLeadJiraAccountId(updateProjectRequest.jiraAccountId());
+        projectVO.setJiraProjectKey(updateProjectRequest.jiraProjectKey());
         projectVO.setStatus(updateProjectRequest.status());
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectName(updateProjectRequest.projectName());
@@ -66,8 +69,8 @@ public class ProjectManagerController {
         projectVO.setTechnologies(updateProjectRequest.technologies());
         return projectManagerService.updateProject(projectVO);
     }
-    @DeleteMapping(value = "/{projectId}")
-    public ResponseEntity deleteProject(@PathVariable("projectId") Long projectId){
+    @DeleteMapping(value = "/{jiraProjectKey}")
+    public ResponseEntity deleteProject(@PathVariable("jiraProjectKey") String projectId) throws UnirestException, JsonProcessingException {
         return projectManagerService.deleteProject(projectId);
     }
 

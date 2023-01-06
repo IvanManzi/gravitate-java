@@ -6,7 +6,7 @@ import java.util.Date;
 
 public record CreateProjectRequest(@NotBlank String clientName,
                                    @NotNull Long projectLead,
-                                   @NotBlank String jiraId,
+                                   @NotBlank String jiraAccountId,
                                    @NotNull Date startDate,
                                    @NotBlank String technologies,
                                    @NotBlank String projectName,

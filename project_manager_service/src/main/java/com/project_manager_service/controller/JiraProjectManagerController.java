@@ -8,10 +8,7 @@ import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -38,14 +35,10 @@ public class JiraProjectManagerController {
     }
 
     @GetMapping(value = "/assignee")
-    public String getAssignedUsersTasks(@RequestParam("projectKey") String projectKey) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
-        return jiraProjectManagerService.getProjectTeamWithAssignedTasks(projectKey);
-    }
-
-    @GetMapping(value = "/search")
-    public String getUserAssignedTasks(@RequestParam("projectKey")String key,
-                                       @RequestParam("accountId") String accountId,@RequestParam(value = "status",required = false)String status) throws ExecutionException, InterruptedException, JsonProcessingException {
-        return jiraProjectManagerService.getUserAssignedTasks(key,accountId,status);
+    public String getAssignedUsersTasks(@RequestParam(value = "projectKey",required = true) String projectKey,
+                                        @RequestParam(value = "taskLabel",required = false) String taskLabel,
+                                        @RequestParam(value = "accountId",required = false)String accountId) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
+        return jiraProjectManagerService.getProjectTeamWithAssignedTasks(projectKey,accountId,taskLabel);
     }
 
 }

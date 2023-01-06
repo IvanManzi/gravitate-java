@@ -1,10 +1,14 @@
 package com.project_manager_service.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.ProjectVO;
 import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.dao.UserProjectDao;
 import com.project_manager_service.service.ProjectManagerService;
 import com.util.APIResponse;
+import com.util.JiraUtils;
+import com.util.VerifyCodeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,9 +26,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
 
 
     @Override
-    public ResponseEntity createProject(ProjectVO projectVO) {
+    public ResponseEntity createProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
+        projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890"));
         int result = projectDao.createProject(projectVO);
         if(result > 0){
+            JiraUtils.createJiraProject(projectVO.getProjectName(),
+                    projectVO.getJiraProjectKey(),
+                    projectVO.getProjectDescription(),
+                    projectVO.getLeadJiraAccountId());
             return APIResponse.resultSuccess("Project successfully created.");
         }else{
             return APIResponse.resultFail();
@@ -44,9 +53,12 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     }
 
     @Override
-    public ResponseEntity updateProject(ProjectVO projectVO) {
+    public ResponseEntity updateProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
         int result = projectDao.updateProject(projectVO);
         if(result > 0){
+            JiraUtils.updateJiraProject(projectVO.getJiraProjectKey(),
+                    projectVO.getProjectName(),
+                    projectVO.getProjectDescription(),projectVO.getLeadJiraAccountId());
             return APIResponse.resultSuccess("Project successfully updated");
         }else{
             return APIResponse.resultFail();
@@ -72,9 +84,10 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     }
 
     @Override
-    public ResponseEntity deleteProject(Long projectId) {
-        int result = projectDao.deleteProject(projectId);
+    public ResponseEntity deleteProject(String projectKey) throws UnirestException, JsonProcessingException {
+        int result = projectDao.deleteProject(projectKey);
         if(result > 0){
+            JiraUtils.deleteJiraProject(projectKey);
             return APIResponse.resultSuccess("Project successfully deleted. ");
         }else{
             return APIResponse.resultFail();

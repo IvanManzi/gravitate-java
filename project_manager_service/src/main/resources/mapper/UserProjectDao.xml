@@ -79,7 +79,7 @@
         client_email = #{clientEmail},
         client_name = #{clientName},
         phone_number = #{phoneNumber},
-        jira_id = #{jiraId},
+        jira_id = #{jiraProjectKey},
         project_description = #{projectDescription},
         project_name = #{projectName}
         WHERE
