@@ -12,11 +12,17 @@
     <select id="getUserAdditionalPoints" resultType="com.model.AdditionalPointVO">
         SELECT *
         FROM additional_point
-        WHERE
-        user_id = #{userId}
-        <if test="quarter != null || date != null">
-            AND created_at = #{date} AND quarter = #{quarter}
-        </if>
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="year != null">
+                AND extract(year from created_at) = #{year}
+            </if>
+            <if test="quarter != null">
+                AND quarter = #{quarter}
+            </if>
+        </where>
         ORDER BY created_at DESC
     </select>
 

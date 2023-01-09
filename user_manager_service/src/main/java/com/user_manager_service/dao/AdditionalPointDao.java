@@ -15,5 +15,5 @@ public interface AdditionalPointDao {
 
     List<Map> getUserAdditionalPoints(@Param("userId") Long userId,
                                       @Param("quarter") String quarter,
-                                      @Param("date") Date date);
+                                      @Param("year") Integer year);
 }
