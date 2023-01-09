@@ -12,6 +12,8 @@ import com.util.VerifyCodeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +29,12 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
 
     @Override
     public ResponseEntity createProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
-        projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890"));
+        projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ"));
+        List<Long> projects = new ArrayList<>();
         int result = projectDao.createProject(projectVO);
         if(result > 0){
+            projects.add(projectVO.getProjectId());
+            userProjectDao.assignUserToProjects(projectVO.getProjectLead(), projects);
             JiraUtils.createJiraProject(projectVO.getProjectName(),
                     projectVO.getJiraProjectKey(),
                     projectVO.getProjectDescription(),

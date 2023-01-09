@@ -40,6 +40,19 @@
     </delete>
 
 
+    <update id="markMonthlyTasksAsPaid">
+        UPDATE task_report
+        SET
+        is_paid = true,
+        is_archived = true
+        WHERE task_report_id IN (
+                SELECT task_report_id FROM task_report  WHERE extract(month from created_at) = #{month}
+                AND extract(year from created_at) = #{year}
+            )
+        AND user_id = #{userId}
+    </update>
+
+
 
 
 </mapper>

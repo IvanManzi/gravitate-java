@@ -21,6 +21,11 @@ public class ProjectIncentiveManagerServiceImpl implements ProjectIncentiveManag
 
     @Override
     public ResponseEntity<APIResponse> createProjectIncentive(ProjectIncentiveVO projectIncentiveVO) {
+        //check if user hasn't received an incentive on the project
+        int check = projectIncentiveDao.checkIfIncentiveExists(projectIncentiveVO.getProjectId(),projectIncentiveVO.getUserId());
+        if(check == 1){
+            return APIResponse.resultFail("Project incentive already awarded.");
+        }
         int result = projectIncentiveDao.createProjectIncentive(projectIncentiveVO);
         if(result > 0){
             return APIResponse.resultSuccess("Project Incentive successfully created. ");

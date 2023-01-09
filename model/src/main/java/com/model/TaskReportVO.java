@@ -15,6 +15,11 @@ public class TaskReportVO implements Serializable {
     private final static long serialVersionUID=1L;
     private Long taskReportId;
 
+    //set to false by default
+    private boolean isPaid;
+
+    private boolean isArchived;
+
     private Long projectId;
 
     private Long userId;

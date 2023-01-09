@@ -34,7 +34,11 @@
     </select>
 
     <select id="getProjectByJiraId" parameterType="String" resultType="com.model.ProjectVO">
-        SELECT * FROM project WHERE jira_id = #{jiraId}
+        SELECT * FROM project WHERE jira_project_key = #{jiraId}
+    </select>
+
+    <select id="getProjectById" parameterType="Long" resultType="com.model.ProjectVO">
+        SELECT * FROM project WHERE project_id = #{projectId}
     </select>
 
     <update id="updateProject" parameterType="com.model.ProjectVO">

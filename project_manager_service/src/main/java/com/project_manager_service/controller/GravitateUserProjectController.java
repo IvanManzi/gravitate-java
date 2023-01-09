@@ -1,6 +1,7 @@
 package com.project_manager_service.controller;
 
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.project_manager_service.form.AssignProjectsToUserRequest;
 import com.project_manager_service.service.GravitateUserProjectService;
 import com.util.JwtUtils;
@@ -25,8 +26,10 @@ public class GravitateUserProjectController {
     private final GravitateUserProjectService gravitateUserProjectService;
 
     @PostMapping(value = "/assign")
-    public boolean assignProjectToGravitateUser(@RequestBody AssignProjectsToUserRequest assignProjectsToUserRequest){
-        return gravitateUserProjectService.assignUserToProject(assignProjectsToUserRequest.userId(), assignProjectsToUserRequest.projects());
+    public boolean assignProjectToGravitateUser(@RequestBody AssignProjectsToUserRequest assignProjectsToUserRequest) throws UnirestException {
+        return gravitateUserProjectService.assignUserToProject(assignProjectsToUserRequest.jiraAccountId(),
+                assignProjectsToUserRequest.userId(),
+                assignProjectsToUserRequest.projects());
     }
 
     @GetMapping(value = "/billing-info/all")
@@ -35,12 +38,11 @@ public class GravitateUserProjectController {
     }
 
     @GetMapping(value = "/user/billing-info")
-    public ResponseEntity getUserBillingInformation(@RequestParam("from")@DateTimeFormat(pattern="yyyy-MM-dd")Date from,
-                                                    @DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam("to") Date to, HttpServletRequest request) throws IOException {
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String userId = JwtUtils.getUserIdFromJwtToken(token);
+    public ResponseEntity getUserBillingInformation(@RequestParam(value = "from",required = false)@DateTimeFormat(pattern="yyyy-MM-dd")Date from,
+                                                    @DateTimeFormat(pattern="yyyy-MM-dd") @RequestParam(value = "to",required = false) Date to,
+                                                    @RequestParam(value = "userId",required = false) Long userId)  {
         log.info("from date {} to date {}",from,to);
-        return gravitateUserProjectService.getUserBillingInformation(Long.valueOf(userId),from,to);
+        return gravitateUserProjectService.getUserBillingInformation(userId,from,to);
     }
 
     @GetMapping(value = "/")

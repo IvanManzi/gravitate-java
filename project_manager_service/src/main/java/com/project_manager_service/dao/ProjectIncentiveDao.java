@@ -12,4 +12,6 @@ public interface ProjectIncentiveDao {
     int createProjectIncentive(ProjectIncentiveVO projectIncentiveVO);
 
     List<ProjectIncentiveVO> getUserProjectIncentives(@Param("userId") Long userId,@Param("projectId") Long projectId);
+
+    int checkIfIncentiveExists(@Param("projectId") Long projectId,@Param("userId") Long userId);
 }

@@ -1,13 +1,16 @@
 package com.project_manager_service.service.impl;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.ProjectVO;
-import com.model.TaskReportVO;
+import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.dao.ProjectIncentiveDao;
 import com.project_manager_service.dao.TaskReportDao;
 import com.project_manager_service.dao.UserProjectDao;
 import com.project_manager_service.service.GravitateUserProjectService;
 import com.util.APIResponse;
+import com.util.JiraUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,28 +18,39 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GravitateUserProjectServiceImpl implements GravitateUserProjectService {
     private final UserProjectDao userProjectDao;
 
     private final TaskReportDao taskReportDao;
 
+    private final ProjectDao projectDao;
+
     private final ProjectIncentiveDao projectIncentiveDao;
 
     @Override
-    public boolean assignUserToProject(Long userId, List<Long> projects) {
-        List<Long> userProjects = new ArrayList<>();
+    public boolean assignUserToProject(String jiraAccountId ,Long userId, List<Long> projects) throws UnirestException {
+        List<String> jiraProjects = new ArrayList<>();
         //check if user isn't already assigned to these projects
         for(Long projectId : projects){
             int status = userProjectDao.checkIfUserIsAssignedToProject(userId,projectId);
-            if(status != 1){
-                userProjects.add(projectId);
+            if(status == 1){
+                projects.remove(projectId);
+            }else{
+                jiraProjects.add(projectDao.getProjectById(projectId).getJiraProjectKey());
             }
         }
-        if(userProjects.isEmpty()){
+        if(projects.isEmpty()){
             return true;// User is already assigned to projects
         }
-        int result = userProjectDao.createUserProject(userId,userProjects);
+        log.info("{}", projects);
+        log.info("{}",jiraProjects);
+
+        int result = userProjectDao.assignUserToProjects(userId,projects);
         if(result > 0) {
+            for(String project : jiraProjects){
+                JiraUtils.assignProjectToUser(project,jiraAccountId);
+            }
             return true;
         }
         return false;
@@ -59,7 +73,7 @@ public class GravitateUserProjectServiceImpl implements GravitateUserProjectServ
 
     @Override
     public ResponseEntity getUserBillingInformation(Long userId, Date from, Date to) {
-        List<Map> userBillingInfo = userProjectDao.getUserBillingInformation(userId,from,to);
+        List<Map> userBillingInfo = userProjectDao.getAllProjectsBillingInformation(userId,from,to);
         if(userBillingInfo.isEmpty()){
             return APIResponse.resourceNotFound();
         }

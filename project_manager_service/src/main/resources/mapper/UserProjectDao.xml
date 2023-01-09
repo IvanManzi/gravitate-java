@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project_manager_service.dao.UserProjectDao" >
 
-    <insert id="createUserProject" parameterType="com.model.UserProjectVO">
+    <insert id="createUserProject" >
         INSERT INTO user_project
         (user_id, project_id)
         VALUES
@@ -37,7 +37,53 @@
         p.project_id = U.project_id
     </select>
 
-    <select id="getUserBillingInformation" resultType="Map">
+    <resultMap id="billingInfoResult" type="Map">
+        <collection property="tasks" ofType="Map" select="getUserProjectTasks" column="userId=__userId,projectId=__project_id" />
+        <collection property="incentives" ofType="Map" select="getUserProjectIncentives" column="userId=__userId,projectId=__project_id" />
+    </resultMap>
+
+    <select id="getAllProjectsBillingInformation" resultMap="billingInfoResult">
+       SELECT P.project_id,P.project_id AS __project_id,P.project_name,R.user_id,R.user_id AS __userId,SUM(R.hours_spent) AS totalHours,extract(month from R.created_at) AS month FROM project P
+        INNER JOIN
+        task_report R
+        ON
+        P.project_id = R.project_id
+        <where>
+            <if test="from!=null and to!=null">
+                R.created_at BETWEEN #{from}::date AND #{to}::date AND R.is_archived = false
+            </if>
+            <if test="userId != null">
+                AND R.user_id = #{userId} AND R.is_archived = false
+            </if>
+            <if test="from == null and to == null and userId == null">
+                AND R.is_archived = false
+            </if>
+        </where>
+        GROUP BY P.project_id, extract(month from R.created_at),R.user_id
+    </select>
+
+    <select id="getUserProjectTasks" resultType="Map">
+        SELECT T.task_report_id,T.project_id,T.user_id,T.task_name,T.start_date,T.hours_spent,T.jira_task_id,T.created_at
+        FROM task_report T
+        WHERE
+        T.user_id = #{userId}
+        AND T.project_id = #{projectId}
+        AND T.is_archived = false
+    </select>
+
+    <select id="getUserProjectIncentives" resultType="Map">
+        SELECT I.project_incentive_id,I.project_id,I.user_id,I.admin_id,I.status,SUM(I.performance_bonus) AS totalPerformanceBonus,SUM(I.employee_referral) AS employeeReferralTotalAmount,I.performance_bonus,
+        I.client_referral,I.employee_referral,I.hot_opportunity,I.total_amount,I.created_at
+        FROM project_incentive I
+        WHERE
+        project_id = #{projectId}
+        AND
+        user_id = #{userId}
+        GROUP BY I.project_incentive_id,I.project_id,I.user_id,I.admin_id,I.status,I.performance_bonus,I.client_referral,I.employee_referral,I.hot_opportunity,I.total_amount,I.created_at
+
+    </select>
+
+    <!--<select id="getUserBillingInformation" resultType="Map">
         SELECT  DISTINCT P.project_id,A.user_id,A.billing,P.total_amount,EXTRACT(QUARTER FROM P.created_at) AS Month, SUM(T.hours_spent) As total_hours,P.status,
         COALESCE(P.performance_bonus,0) + COALESCE(P.employee_referral,0) AS incentives FROM project_incentive P
         INNER JOIN
@@ -50,7 +96,7 @@
         T.project_id = P.project_id
         WHERE P.created_at BETWEEN #{from}::date AND #{to}::date AND A.user_id = #{userId}
         GROUP BY P.project_id,A.user_id,A.billing,P.total_amount,T.hours_spent,P.performance_bonus,P.employee_referral,P.status,P.created_at
-    </select>
+    </select>-->
 
     <select id="checkIfUserIsAssignedToProject" parameterType="Long" resultType="int">
         SELECT CASE

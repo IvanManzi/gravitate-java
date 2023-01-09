@@ -50,6 +50,15 @@ public class TaskReportManagerServiceImpl implements TaskReportManagerService {
     }
 
     @Override
+    public ResponseEntity<APIResponse> markMonthlyTaskReportsAsPaid(Long userId, Integer month,Integer year) {
+        int result = taskReportDao.markMonthlyTasksAsPaid(userId,month,year);
+        if(result > 0){
+            return APIResponse.resultSuccess("User task reports marked as paid.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
     public ResponseEntity<APIResponse> updateTaskReport(TaskReportVO taskReportVO) {
         int result = taskReportDao.updateTaskReport(taskReportVO);
         if(result > 0){
