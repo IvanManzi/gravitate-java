@@ -17,6 +17,8 @@ public interface UserSkillDao {
 
     int deleteUserSkill(Long skillId);
 
-    List<UserSkillVO> getSkillsByQuarter(@Param("userId") Long userId,@Param("quarter") Integer quarter);
+    List<UserSkillVO> getSkillsByQuarter(@Param("userId") Long userId,
+                                         @Param("quarter") Integer quarter,
+                                         @Param("year")Integer year);
 
 }

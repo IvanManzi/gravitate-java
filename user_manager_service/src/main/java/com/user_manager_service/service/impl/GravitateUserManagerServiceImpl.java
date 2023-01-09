@@ -72,7 +72,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 headers.setBearerAuth(token);
-                AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),projects);
+                AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),userVO.getJiraId(),projects);
                 HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
                 //call content manager service to assign projects to user
                 boolean response = restTemplate.postForObject(
@@ -123,7 +123,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(token);
-            AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),projects);
+            AssignProjectsToUserRequest assignProjectsToUserRequest = new AssignProjectsToUserRequest(userVO.getUserId(),userVO.getJiraId(),projects);
             HttpEntity<AssignProjectsToUserRequest> request = new HttpEntity<AssignProjectsToUserRequest>(assignProjectsToUserRequest, headers);
             //call content manager service to update changes
             boolean response = restTemplate.postForObject(
@@ -167,6 +167,9 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         //verify old password
         UserVO user = userDao.getGravitateUserById(userVO.getUserId());
+        if(ValidationUtil.isNullObject(user)){
+            return APIResponse.resultFail("User not found.");
+        }
         if(bCryptPasswordEncoder.matches(oldPassword,user.getPassword())){
             userDao.updateGravitateUserPassword(userVO);
             return APIResponse.resultSuccess("Password successfully updated. ");

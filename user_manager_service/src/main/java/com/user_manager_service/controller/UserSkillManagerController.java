@@ -44,7 +44,8 @@ public class UserSkillManagerController {
 
     @GetMapping(value = "/quarter")
     public ResponseEntity getGravitateUserSkillsByQuarter(@RequestParam("userId") Long userId,
-                                                          @RequestParam("quarter") Integer quarter){
-        return userSkillManagerService.getUserSkillsByQuarter(userId,quarter);
+                                                          @RequestParam("quarter") Integer quarter,
+                                                          @RequestParam("year") Integer year){
+        return userSkillManagerService.getUserSkillsByQuarter(userId,quarter,year);
     }
 }
