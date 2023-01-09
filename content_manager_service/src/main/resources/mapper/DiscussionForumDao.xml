@@ -63,9 +63,7 @@
         DELETE FROM discussion_forum WHERE discussion_forum_id = #{forumId}
     </delete>
 
-    <select id="getUserDiscussionForumsByQuarter" resultType="com.model.DiscussionForumVO">
-        SELECT * FROM discussion_forum WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
-    </select>
+
 
 
 </mapper>

@@ -10,6 +10,36 @@
     </insert>
 
 
+    <update id="acceptForumSolution" parameterType="Long">
+        UPDATE discussion_forum_answer SET is_accepted = true WHERE forum_answer_id = #{forumAnswerId}
+    </update>
+
+    <resultMap id="approvedSolutionsResults" type="Map">
+        <collection property="question" ofType="com.model.DiscussionForumVO" select="selectDiscussionForumById" column="forum_id" />
+    </resultMap>
+
+    <select id="getUserAcceptedDiscussionForumAnswers" resultMap="approvedSolutionsResults">
+        SELECT A.forum_answer_id,A.is_accepted,A.forum_id,A.user_id,A.comment,A.parent,A.created_at,A.updated_at
+        FROM discussion_forum D
+        INNER JOIN
+        discussion_forum_answer A
+        ON
+        D.discussion_forum_id = A.forum_id
+        WHERE
+        A.user_id = #{userId}
+        AND
+        extract(quarter FROM A.created_at) = #{quarter}
+        AND
+        extract(year FROM A.created_at) = #{year}
+        AND
+        A.is_accepted = true
+    </select>
+
+    <select id="selectDiscussionForumById" resultType="com.model.DiscussionForumVO">
+        SELECT * FROM discussion_forum WHERE discussion_forum_id = #{forumId}
+    </select>
+
+
 
 
 

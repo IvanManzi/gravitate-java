@@ -1,9 +1,11 @@
 package com.content_manager_service.dao;
 
+import com.model.DiscussionForumAnswerVO;
 import com.model.DiscussionForumVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -18,6 +20,4 @@ public interface DiscussionForumDao {
     int updateDiscussionForum(DiscussionForumVO discussionForumVO);
 
     int deleteDiscussionForum(Long forumId);
-
-    List<DiscussionForumVO> getUserDiscussionForumsByQuarter(@Param("userId") Long userId,@Param("quarter") Integer quarter);
 }

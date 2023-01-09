@@ -12,9 +12,11 @@ public interface DiscussionForumManagerService {
 
     ResponseEntity getAllDiscussionForums(String search,String title,String tags);
 
-    ResponseEntity getUserDiscussionForumsByQuarter(Long userId,Integer quarter);
+    ResponseEntity getUserAcceptedDiscussionSolutionsByQuarter(Long userId, Integer quarter, Integer year);
 
     ResponseEntity updateDiscussionForum(DiscussionForumVO discussionForumVO);
+
+    ResponseEntity acceptDiscussionForumAnswer(Long answerId);
 
     ResponseEntity deleteDiscussionForum(Long forumId);
 }

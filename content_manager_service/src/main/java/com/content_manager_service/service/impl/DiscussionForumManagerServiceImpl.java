@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +51,8 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
     }
 
     @Override
-    public ResponseEntity getUserDiscussionForumsByQuarter(Long userId, Integer quarter) {
-        List<DiscussionForumVO> discussionForums = discussionForumDao.getUserDiscussionForumsByQuarter(userId,quarter);
+    public ResponseEntity getUserAcceptedDiscussionSolutionsByQuarter(Long userId, Integer quarter, Integer year) {
+        List<Map> discussionForums = discussionForumAnswerDao.getUserAcceptedDiscussionForumAnswers(userId,quarter,year);
         if(discussionForums.isEmpty()){
             return APIResponse.resourceNotFound();
         }
@@ -69,6 +66,15 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
         int result = discussionForumDao.updateDiscussionForum(discussionForumVO);
         if(result > 0){
             return APIResponse.resultSuccess("Discussion successfully updated. ");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity acceptDiscussionForumAnswer(Long answerId) {
+        int result = discussionForumAnswerDao.acceptForumSolution(answerId);
+        if(result > 0){
+            return APIResponse.resultSuccess("Forum answer successfully approved.");
         }
         return APIResponse.resultFail();
     }

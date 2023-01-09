@@ -59,8 +59,15 @@ public class DiscussionForumManagerController {
     }
 
     @GetMapping(value = "/quarter")
-    public ResponseEntity getUserDiscussionForumsByQuarter(@RequestParam("userId") Long userId,@RequestParam("quarter") Integer quarter){
-        return discussionForumManagerService.getUserDiscussionForumsByQuarter(userId,quarter);
+    public ResponseEntity getUserAcceptedSolutionsByQuarter(@RequestParam("userId") Long userId,
+                                                           @RequestParam("year") Integer year,
+                                                           @RequestParam("quarter") Integer quarter){
+        return discussionForumManagerService.getUserAcceptedDiscussionSolutionsByQuarter(userId,quarter,year);
+    }
+
+    @PutMapping(value = "/solution/{solutionId}/approve")
+    public ResponseEntity approveDiscussionForumSolution(@PathVariable("solutionId") Long solutionId){
+        return discussionForumManagerService.acceptDiscussionForumAnswer(solutionId);
     }
 
     @PutMapping(value = "/")

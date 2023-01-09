@@ -24,7 +24,7 @@
                 LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
             </if>
             <if test="search != null">
-                AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') AND LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
+                AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
             </if>
         </where>
         ORDER BY T.created_at DESC
