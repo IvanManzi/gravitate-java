@@ -24,16 +24,12 @@ spring:
               args:
                 name: CONTENT-MANAGER-SERVICE
                 fallbackuri: forward:/fallback/
+                ringBufferSizeInClosedState: 50
 
         - id: USER-MANAGER-SERVICE
           uri: lb://USER-MANAGER-SERVICE
           predicates:
             - Path=/api/v1/user/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: USER-MANAGER-SERVICE
-                fallbackuri: forward:/fallback/
 
         - id: PROJECT-MANAGER-SERVICE
           uri: lb://PROJECT-MANAGER-SERVICE
