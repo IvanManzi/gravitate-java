@@ -3,6 +3,7 @@ package com.project_manager_service.service.impl;
 import com.model.ProjectVO;
 import com.model.TaskReportVO;
 import com.project_manager_service.dao.ProjectDao;
+import com.project_manager_service.dao.ProjectIncentiveDao;
 import com.project_manager_service.dao.TaskReportDao;
 import com.project_manager_service.service.TaskReportManagerService;
 import com.util.APIResponse;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class TaskReportManagerServiceImpl implements TaskReportManagerService {
 
     private final TaskReportDao taskReportDao;
+
+    private final ProjectIncentiveDao projectIncentiveDao;
     private final ProjectDao projectDao;
 
     @Override
@@ -47,15 +50,6 @@ public class TaskReportManagerServiceImpl implements TaskReportManagerService {
         Map<String,Object> data = new HashMap<>();
         data.put("TASK_REPORTS",taskReports);
         return APIResponse.resultSuccess(data);
-    }
-
-    @Override
-    public ResponseEntity<APIResponse> markMonthlyTaskReportsAsPaid(Long userId, Integer month,Integer year) {
-        int result = taskReportDao.markMonthlyTasksAsPaid(userId,month,year);
-        if(result > 0){
-            return APIResponse.resultSuccess("User task reports marked as paid.");
-        }
-        return APIResponse.resultFail();
     }
 
     @Override

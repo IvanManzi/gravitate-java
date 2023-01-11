@@ -30,11 +30,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     @Override
     public ResponseEntity createProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
         projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ"));
-        List<Long> projects = new ArrayList<>();
         int result = projectDao.createProject(projectVO);
         if(result > 0){
-            projects.add(projectVO.getProjectId());
-            userProjectDao.assignUserToProjects(projectVO.getProjectLead(), projects);
             JiraUtils.createJiraProject(projectVO.getProjectName(),
                     projectVO.getJiraProjectKey(),
                     projectVO.getProjectDescription(),

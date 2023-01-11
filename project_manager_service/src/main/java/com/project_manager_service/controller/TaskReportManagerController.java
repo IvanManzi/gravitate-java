@@ -63,12 +63,7 @@ public class TaskReportManagerController {
         return taskReportManagerService.deleteTaskReport(reportId);
     }
 
-    @PutMapping(value = "/monthly/payment-status")
-    public ResponseEntity<APIResponse> markMonthlyTasksAsPaid(@RequestParam("userId") Long userId,
-                                                              @RequestParam("month") Integer month,
-                                                              @RequestParam("year") Integer year){
-        return taskReportManagerService.markMonthlyTaskReportsAsPaid(userId,month,year);
-    }
+
 
 
 

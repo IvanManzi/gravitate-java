@@ -14,5 +14,11 @@ public interface TaskReportDao {
     int updateTaskReport(TaskReportVO taskReportVO);
     List<Map> getAllTaskReports(@Param("userId")Long userId,@Param("userLevel") String userLevel);
     int deleteTaskReport(Long reportId);
-    int markMonthlyTasksAsPaid(@Param("userId")Long userId, @Param("month") Integer month,@Param("year") Integer year);
+    int markMonthlyTasksAsPaid(@Param("userId")Long userId,
+                               @Param("month") Integer month,
+                               @Param("year") Integer year,
+                               @Param("projectId") Long projectId);
+    int checkIfMonthlyTaskReportsArePaid(@Param("projectId") Long projectId,
+                                         @Param("userId") Long userId,
+                                         @Param("month") Integer month);
 }

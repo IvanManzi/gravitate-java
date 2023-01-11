@@ -15,5 +15,7 @@ public record CreateProjectIncentiveRequest(@NotNull
                                             @NotNull
                                             Double clientReferral,
                                             @NotNull
+                                            Integer month,
+                                            @NotNull
                                             Double hotOpportunity) {
 }

@@ -10,8 +10,6 @@ public interface TaskReportManagerService {
 
     ResponseEntity<APIResponse> getAllTaskReports(Long userId,String userLevel);
 
-    ResponseEntity<APIResponse> markMonthlyTaskReportsAsPaid(Long userId,Integer month,Integer year);
-
     ResponseEntity<APIResponse> updateTaskReport(TaskReportVO taskReportVO);
 
     ResponseEntity<APIResponse> deleteTaskReport(Long reportId);

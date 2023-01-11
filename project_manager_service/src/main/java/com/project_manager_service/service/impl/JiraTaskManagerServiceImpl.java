@@ -23,7 +23,7 @@ public class JiraTaskManagerServiceImpl implements JiraTaskManagerService {
 
     @Override
     public String updateIssue(UpdateJiraIssueRequest updateJiraIssueRequest) throws UnirestException, JsonProcessingException {
-        return JiraUtils.updateIssue(updateJiraIssueRequest.issueTypeKey(),
+        return JiraUtils.updateIssue(updateJiraIssueRequest.issueId(),
                 updateJiraIssueRequest.projectKey(),
                 updateJiraIssueRequest.summary(),
                 updateJiraIssueRequest.description(),

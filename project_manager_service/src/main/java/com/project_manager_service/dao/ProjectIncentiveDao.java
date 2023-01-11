@@ -13,5 +13,9 @@ public interface ProjectIncentiveDao {
 
     List<ProjectIncentiveVO> getUserProjectIncentives(@Param("userId") Long userId,@Param("projectId") Long projectId);
 
-    int checkIfIncentiveExists(@Param("projectId") Long projectId,@Param("userId") Long userId);
+    int checkIfIncentiveExistsInCurrentMonth(@Param("projectId") Long projectId,
+                                             @Param("userId") Long userId,
+                                             @Param("month") Integer month);
+
+    int markMonthlyProjectIncentiveAsPaid(@Param("month") Integer month,@Param("year") Integer year);
 }

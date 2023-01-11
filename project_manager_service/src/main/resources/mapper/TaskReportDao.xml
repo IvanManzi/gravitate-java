@@ -47,10 +47,29 @@
         is_archived = true
         WHERE task_report_id IN (
                 SELECT task_report_id FROM task_report  WHERE extract(month from created_at) = #{month}
-                AND extract(year from created_at) = #{year}
+                AND extract(year from created_at) = #{year} AND project_id = #{projectId}
             )
         AND user_id = #{userId}
     </update>
+
+
+    <select id="checkIfMonthlyTaskReportsArePaid" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+            SELECT 1 FROM task_report
+            WHERE
+            project_id = #{projectId}
+            AND
+            user_id = #{userId}
+            AND
+            extract(month from created_at) = #{month}
+            AND
+            is_paid = true
+            LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
 
 
 

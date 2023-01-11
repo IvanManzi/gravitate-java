@@ -24,6 +24,7 @@ public class ProjectIncentiveVO implements Serializable {
     private Double employeeReferral;
     private Double hotOpportunity;
     private Double totalAmount;
+    private Integer month;
     private Date createdAt;
     private Date updatedAt;
 

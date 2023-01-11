@@ -39,6 +39,7 @@ public class ProjectIncentiveManagerController {
         projectIncentiveVO.setEmployeeReferral(createProjectIncentiveRequest.employeeReferral());
         projectIncentiveVO.setClientReferral(createProjectIncentiveRequest.clientReferral());
         projectIncentiveVO.setHotOpportunity(createProjectIncentiveRequest.hotOpportunity());
+        projectIncentiveVO.setMonth(createProjectIncentiveRequest.month());
         projectIncentiveVO.setTotalAmount(createProjectIncentiveRequest.totalAmount());
         return projectIncentiveManagerService.createProjectIncentive(projectIncentiveVO);
     }
