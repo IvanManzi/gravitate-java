@@ -1,7 +1,9 @@
 package com.project_manager_service.service.impl;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.model.ProjectIncentiveVO;
 import com.model.ProjectVO;
+import com.model.TaskReportVO;
 import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.dao.ProjectIncentiveDao;
 import com.project_manager_service.dao.TaskReportDao;
@@ -11,6 +13,7 @@ import com.util.APIResponse;
 import com.util.JiraUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +79,19 @@ public class GravitateUserProjectServiceImpl implements GravitateUserProjectServ
         List<Map> userBillingInfo = userProjectDao.getAllProjectsBillingInformation(userId,from,to);
         if(userBillingInfo.isEmpty()){
             return APIResponse.resourceNotFound();
+        }
+        //loop through the result to add paid status for each monthly tasks
+        for(Map billingInfo : userBillingInfo){
+            List<Map> taskReports = (List<Map>) billingInfo.get("tasks");
+            if(!taskReports.isEmpty()){
+                if(taskReports.get(0).get("is_paid").equals(false)){
+                    billingInfo.put("isPaid",false);
+                }else{
+                    billingInfo.put("isPaid",true);
+                }
+            }else{
+                billingInfo.put("isPaid",false);
+            }
         }
         Map<String,Object> data = new HashMap<>();
         data.put("USER_BILLING_INFO",userBillingInfo);

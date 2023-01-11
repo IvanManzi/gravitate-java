@@ -68,7 +68,7 @@ public class GravitateUserManagerController {
     public ResponseEntity getGravitateUsernameProfile(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String username = JwtUtils.getUserNameFromToken(token);
-        return gravitateUserManagerService.getGravitateUserByInfo(username);
+        return gravitateUserManagerService.getGravitateUserInfoByUsername(username,token);
 
     }
 

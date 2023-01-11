@@ -6,14 +6,11 @@ import com.util.APIResponse;
 import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
 import com.user_manager_service.service.GravitateUserManagerService;
-import com.util.JwtUtils;
+import com.google.gson.Gson;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -152,11 +149,25 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getGravitateUserByInfo(String username) {
+    public ResponseEntity getGravitateUserInfoByUsername(String username,String token) {
         Map user = userDao.getGravitateUserInfo(username);
         if(ValidationUtil.isNullObject(user)){
             return  APIResponse.resultFail("User not found");
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange("http://PROJECT-MANAGER-SERVICE/api/v1/project/jira/all",
+                HttpMethod.GET,
+                entity,
+                String.class);
+        Gson gson = new Gson();
+        Object parsedJson = gson.fromJson(response.getBody(), Object.class);
+        user.put("projects",parsedJson);
+        user.put("teamMembers",userDao.getGravitateUserTeamMembers((Long) user.get("user_id")));
+        user.put("totalEmployeeReferralsEarned",userDao.getUserTotalEmployeeReferrals((Long) user.get("user_id")));
+        user.put("totalHotOpportunitiesEarned",userDao.getUserTotalHotOpportunities((Long) user.get("user_id")));
+        user.put("totalBillingToDate",userDao.getUserTotalBilling(user.get("user_id")));
         Map<String,Object> data = new HashMap<>();
         data.put("GRAVITATE_USER",user);
         return APIResponse.resultSuccess(data);
