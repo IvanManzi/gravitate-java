@@ -38,13 +38,13 @@
     </select>
 
     <resultMap id="billingInfoResult" type="Map">
-        <collection property="tasks" ofType="Map" select="getUserProjectTasks" column="userId=__userId,projectId=__project_id,month=month" />
+        <collection property="tasks" ofType="Map" select="getUserProjectTasks" column="userId=__userId,projectId=__project_id,month=month,isPaid=is_paid" />
         <collection property="incentives" ofType="Map" select="getUserProjectIncentives" column="userId=__userId,projectId=__project_id,month=month" />
         <collection property="user" ofType="com.model.UserVO" select="getAssignedUser" column="userId=__userId" />
     </resultMap>
 
     <select id="getAllProjectsBillingInformation" resultMap="billingInfoResult">
-       SELECT P.project_id,P.project_id AS __project_id,P.project_name,R.user_id,R.user_id AS __userId,SUM(R.hours_spent) AS totalHours,extract(month from R.created_at) AS month,extract(year from R.created_at) AS year FROM project P
+       SELECT P.project_id,P.project_id AS __project_id,P.project_name,R.is_paid,R.user_id,R.user_id AS __userId,SUM(R.hours_spent) AS totalHours,extract(month from R.created_at) AS month,extract(year from R.created_at) AS year FROM project P
         INNER JOIN
         task_report R
         ON
@@ -57,7 +57,7 @@
                 AND R.user_id = #{userId}
             </if>
         </where>
-        GROUP BY P.project_id, extract(month from R.created_at),extract(year from R.created_at),R.user_id
+        GROUP BY P.project_id, extract(month from R.created_at),extract(year from R.created_at),R.user_id,R.is_paid
     </select>
 
     <select id="getUserProjectTasks" resultType="Map">
@@ -67,6 +67,7 @@
         T.user_id = #{userId}
         AND T.project_id = #{projectId}
         AND extract(month from T.created_at) = #{month}  <!--filter tasks by month-->
+        AND T.is_paid = #{isPaid}
     </select>
 
     <select id="getUserProjectIncentives" resultType="Map">

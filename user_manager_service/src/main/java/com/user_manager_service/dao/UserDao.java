@@ -18,7 +18,8 @@ public interface UserDao {
     int updateGravitateUserPassword(UserVO userVO);
     List<Map> getAllGravitateUsers(@Param("search") String search, @Param("roleId") Long roleId );
     UserVO getGravitateUserById(Long userId);
-    List<Map> getGravitateUserTeamMembers(Long userId);
+    List<Map> getGravitateUserTeamMembers(@Param("userLevel") String userLevel,
+                                          @Param("userId") Long userId,@Param("manager") Long manager);
     List<UserVO> getGravitateManagerUsers(String search);
     int updateUserStatus(@Param("userId") Long userId,@Param("status") boolean status);
     int getUserTotalEmployeeReferrals(Long userId);

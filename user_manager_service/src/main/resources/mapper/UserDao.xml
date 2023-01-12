@@ -124,7 +124,7 @@
     </update>
 
     <resultMap id="allUsersResult" type="Map">
-        <collection property="projects" ofType="com.model.ProjectVO" select="getUserProjects" column="__id" />
+        <collection property="projects" ofType="com.model.ProjectVO" select="getUserProjects" column="userId=__id" />
     </resultMap>
 
     <select id="getAllGravitateUsers" parameterType="String" resultMap="allUsersResult">
@@ -176,7 +176,11 @@
 
 
     <select id="getUserProjects" resultType="com.model.ProjectVO">
-        SELECT * FROM project P INNER JOIN user_project U ON U.project_id = P.project_id WHERE U.user_id = #{__id}
+        SELECT * FROM project P
+        WHERE
+        P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId})
+        OR
+        P.project_lead = #{userId}
     </select>
 
 
@@ -192,8 +196,15 @@
         role R
         ON
         A.role_id = R.role_id
-        WHERE A.user_level != 1 <!--Admin has user level 1-->
-        AND A.user_id != #{userId}
+        <where>
+            <if test="userLevel == 'ROLE_PROJECT_MANAGER' ">
+                A.managed_by = #{userId}
+            </if>
+            <if test="userLevel == 'ROLE_NON_ADMIN_USER'">
+                AND A.managed_by = #{manager}
+            </if>
+        </where>
+        ORDER BY A.created_at DESC
     </select>
 
     <select id="getGravitateManagerUsers" resultType="com.model.UserVO">
