@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.PerformanceEvaluationCriteriaScoreDao" >
+
+    <insert id="createPerformanceEvaluationCriteriaScore" parameterType="com.model.PerformanceEvaluationCriteriaScoreVO">
+        INSERT INTO performance_evaluation_criteria_score
+        (admin_id,performance_evaluation_id,user_id,quarter,sprint,year,points)
+        VALUES
+        (#{adminId},#{performanceEvaluationId},#{userId},#{quarter},#{sprint},#{year},#{points})
+    </insert>
+
+
+    <resultMap id="performanceCriteriaResult" type="Map">
+        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,quarter=quarter,userId=user_id" />
+    </resultMap>
+
+
+    <select id="getAllUsersPerformanceEvaluationCriteria" resultMap="performanceCriteriaResult">
+        SELECT P.role_performance_evaluation_id,P.criteria,P.description,S.quarter,S.user_id,S.year
+        FROM performance_evaluation P
+        INNER JOIN
+        performance_evaluation_criteria_score S
+        ON
+        P.role_performance_evaluation_id = S.performance_evaluation_id
+        <where>
+            <if test="userId != null">
+                S.user_id = #{userId}
+            </if>
+            <if test="quarter != null">
+                AND S.quarter = #{quarter}
+            </if>
+            <if test="sprint != null">
+                AND S.sprint = (#{sprint})
+            </if>
+            <if test="year != null">
+                AND S.year = #{year}
+            </if>
+        </where>
+        GROUP BY P.role_performance_evaluation_id,S.year,S.quarter,S.user_id
+        <!--<if test="groupByItems != null">
+            <foreach collection="groupByItems" item="item" index="index" open="" separator="," close="">
+                ,CONCAT('S.', #{item})
+            </foreach>
+        </if>-->
+    </select>
+
+
+
+    <select id="getUserPerformanceScores" resultType="com.model.PerformanceEvaluationCriteriaScoreVO">
+        SELECT * FROM performance_evaluation_criteria_score
+        WHERE user_id = #{userId} AND quarter = #{quarter} AND year = #{year}
+    </select>
+
+
+
+
+</mapper>

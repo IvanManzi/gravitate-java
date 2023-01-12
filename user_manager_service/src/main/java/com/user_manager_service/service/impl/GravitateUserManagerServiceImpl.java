@@ -149,7 +149,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getGravitateUserInfoByUsername(String username,String token) {
+    public ResponseEntity getGravitateUserInfoByUsername(String username,String token, String userLevel) {
         Map user = userDao.getGravitateUserInfo(username);
         if(ValidationUtil.isNullObject(user)){
             return  APIResponse.resultFail("User not found");
@@ -164,7 +164,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         Gson gson = new Gson();
         Object parsedJson = gson.fromJson(response.getBody(), Object.class);
         user.put("projects",parsedJson);
-        user.put("teamMembers",userDao.getGravitateUserTeamMembers((Long) user.get("user_id")));
+        user.put("teamMembers",userDao.getGravitateUserTeamMembers(userLevel,(Long) user.get("user_id"),(Long)user.get("managed_by")));
         user.put("totalEmployeeReferralsEarned",userDao.getUserTotalEmployeeReferrals((Long) user.get("user_id")));
         user.put("totalHotOpportunitiesEarned",userDao.getUserTotalHotOpportunities((Long) user.get("user_id")));
         user.put("totalBillingToDate",userDao.getUserTotalBilling(user.get("user_id")));
@@ -204,8 +204,12 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity getGravitateUserTeamMembers(Long userId) {
-        List<Map> teamMembers = userDao.getGravitateUserTeamMembers(userId);
+    public ResponseEntity getGravitateUserTeamMembers(String userLevel,Long userId) {
+        UserVO user = userDao.getGravitateUserById(userId);
+        if(ValidationUtil.isNullObject(user)){
+            return APIResponse.resultFail("User not found. ");
+        }
+        List<Map> teamMembers = userDao.getGravitateUserTeamMembers(userLevel,userId,user.getManagedBy());
         if(teamMembers.isEmpty()){
             return APIResponse.resourceNotFound();
         }else{

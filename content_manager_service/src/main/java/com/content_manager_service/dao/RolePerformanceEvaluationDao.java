@@ -13,6 +13,5 @@ public interface RolePerformanceEvaluationDao {
     List<Map> getAllRolePerformanceEvaluation();
     int updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
     int deleteRolePerformanceEvaluation(Long performanceEvaluationId);
-
-
+    List<Map> getUserRolePerformanceCriterias(Long userId);
 }

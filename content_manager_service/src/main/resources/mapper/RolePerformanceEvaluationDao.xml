@@ -11,7 +11,7 @@
 
     <select id="getAllRolePerformanceEvaluation" resultType="Map">
         SELECT
-        R.role_id,P.role_performance_evaluation_id,R.role_name,P.criteria, P.description
+        R.role_id,P.role_performance_evaluation_id,R.role_name,P.criteria, P.description, P.created_at
         FROM
         performance_evaluation P
         INNER JOIN
@@ -28,12 +28,25 @@
         criteria = #{criteria},
         description = #{description}
         WHERE
-        role_performance_evaluation_id = #{rolePerformanceEvaluationId} AND admin_id = #{adminId}
+        role_performance_evaluation_id = #{rolePerformanceEvaluationId}
     </update>
 
     <delete id="deleteRolePerformanceEvaluation" parameterType="Long">
         DELETE FROM performance_evaluation WHERE role_performance_evaluation_id = #{rolePerformanceEvaluationId}
     </delete>
+
+    <select id="getUserRolePerformanceCriterias" resultType="Map" parameterType="long">
+        SELECT P.role_performance_evaluation_id,R.role_name,P.criteria,P.created_at FROM performance_evaluation P
+        INNER JOIN
+        role R
+        ON
+        R.role_id = P.role_id
+        INNER JOIN
+        app_user A
+        ON
+        A.role_id = P.role_id
+        WHERE A.user_id = #{userId} ORDER BY P.created_at DESC
+    </select>
 
 
 

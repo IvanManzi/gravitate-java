@@ -14,10 +14,10 @@ public interface GravitateUserManagerService {
     ResponseEntity getGravitateUserById(Long userId);
     ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token);
     ResponseEntity deleteGravitateUser(Long userId);
-    ResponseEntity getGravitateUserInfoByUsername(String username, String token);
+    ResponseEntity getGravitateUserInfoByUsername(String username, String token,String userLevel);
     ResponseEntity updateGravitateUserPassword(UserVO userVO, String oldPassword);
     ResponseEntity<APIResponse> updateGravitateUserPassword(UserVO userVO);
-    ResponseEntity getGravitateUserTeamMembers(Long userId);
+    ResponseEntity getGravitateUserTeamMembers(String userLevel,Long userId);
     ResponseEntity getGravitateManagerUsers(String search);
     ResponseEntity updateGravitateUserAccountStatus(Long userId, boolean status);
 

@@ -68,7 +68,8 @@ public class GravitateUserManagerController {
     public ResponseEntity getGravitateUsernameProfile(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String username = JwtUtils.getUserNameFromToken(token);
-        return gravitateUserManagerService.getGravitateUserInfoByUsername(username,token);
+        String userLevel = JwtUtils.getUserRoleFromJwtToken(token);
+        return gravitateUserManagerService.getGravitateUserInfoByUsername(username,token,userLevel);
 
     }
 
@@ -129,7 +130,8 @@ public class GravitateUserManagerController {
     public ResponseEntity getGravitateUserTeamMembers(HttpServletRequest request) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        return gravitateUserManagerService.getGravitateUserTeamMembers(Long.valueOf(userId));
+        String userLevel = JwtUtils.getUserRoleFromJwtToken(token);
+        return gravitateUserManagerService.getGravitateUserTeamMembers(userLevel,Long.valueOf(userId));
     }
 
     @GetMapping("/managers")

@@ -1,11 +1,14 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.AwardPerformancePointsRequest;
 import com.content_manager_service.form.CreateRolePerformanceRequest;
 import com.content_manager_service.form.UpdateRolePerformanceRequest;
 import com.content_manager_service.service.RolePerformanceEvaluationService;
+import com.model.PerformanceEvaluationCriteriaScoreVO;
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
 import com.util.JwtUtils;
+import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -59,6 +65,44 @@ public class RolePerformanceEvaluationController {
     public ResponseEntity<APIResponse> deletePerformanceEvaluation(@PathVariable("performanceId") Long performanceId){
         return rolePerformanceEvaluationService.deleteRolePerformanceEvaluation(performanceId);
     }
+
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<APIResponse> getUserRolePerformanceEvaluations(@PathVariable("userId") Long userId) {
+        return rolePerformanceEvaluationService.getUserRolePerformanceEvaluationCriterias(userId);
+    }
+
+    @PostMapping(value = "/award-points")
+    public ResponseEntity<APIResponse> awardPointsOnUserPerformanceEvaluationCriteria(@Valid @RequestBody AwardPerformancePointsRequest awardPerformancePointsRequest, HttpServletRequest request) throws IOException {
+        PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO = new PerformanceEvaluationCriteriaScoreVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+
+        performanceEvaluationCriteriaScoreVO.setAdminId(Long.valueOf(userId));
+        performanceEvaluationCriteriaScoreVO.setPerformanceEvaluationId(awardPerformancePointsRequest.performanceEvaluationId());
+        performanceEvaluationCriteriaScoreVO.setUserId(awardPerformancePointsRequest.userId());
+        performanceEvaluationCriteriaScoreVO.setQuarter(awardPerformancePointsRequest.quarter());
+        performanceEvaluationCriteriaScoreVO.setYear(awardPerformancePointsRequest.year());
+        performanceEvaluationCriteriaScoreVO.setSprint(awardPerformancePointsRequest.sprint());
+        performanceEvaluationCriteriaScoreVO.setPoints(awardPerformancePointsRequest.points());
+        return rolePerformanceEvaluationService.awardPointsOnPerformanceEvaluationCriteria(performanceEvaluationCriteriaScoreVO);
+    }
+
+    @GetMapping(value = "/{userId}/points")
+    public ResponseEntity<APIResponse> getUserPerformanceScores(@PathVariable("userId") Long userId,
+                                                           @RequestParam(value = "quarter") Integer quarter,
+                                                           @RequestParam(value = "sprint")Integer sprint,
+                                                           @RequestParam(value = "year") Integer year
+                                                           /*@RequestParam(value = "groupBy") String groupBy*/) {
+        /*List<Integer> sprintValues = new ArrayList<>();
+        if(!ValidationUtil.isNullObject(sprints)){
+            sprintValues = new ArrayList<>();
+            for(String s : sprints.split(",")) {
+                sprintValues.add(Integer.parseInt(s.trim()));
+            }
+        }*/
+        return rolePerformanceEvaluationService.getUserPerformanceEvaluationPoints(userId,quarter,sprint,year);
+    }
+
 
 
 }

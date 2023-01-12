@@ -1,8 +1,10 @@
 package com.content_manager_service.service.impl;
 
 
+import com.content_manager_service.dao.PerformanceEvaluationCriteriaScoreDao;
 import com.content_manager_service.dao.RolePerformanceEvaluationDao;
 import com.content_manager_service.service.RolePerformanceEvaluationService;
+import com.model.PerformanceEvaluationCriteriaScoreVO;
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.util.Constants.*;
-
 @Service
 @RequiredArgsConstructor
 public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEvaluationService {
 
     private final RolePerformanceEvaluationDao rolePerformanceEvaluationDao;
+
+    private final PerformanceEvaluationCriteriaScoreDao performanceEvaluationCriteriaScoreDao;
 
     @Override
     public ResponseEntity createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO) {
@@ -41,6 +43,37 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
             data.put("PERFORMANCE_EVALUATIONS",performanceEvaluations);
             return APIResponse.resultSuccess(data);
         }
+    }
+
+    @Override
+    public ResponseEntity getUserRolePerformanceEvaluationCriterias(Long userId) {
+        List<Map> performanceCriterias = rolePerformanceEvaluationDao.getUserRolePerformanceCriterias(userId);
+        if(performanceCriterias.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("USER_PERFORMANCE_CRITERIAS",performanceCriterias);
+        return APIResponse.resultSuccess(data);
+    }
+
+    @Override
+    public ResponseEntity awardPointsOnPerformanceEvaluationCriteria(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO) {
+        int result = performanceEvaluationCriteriaScoreDao.createPerformanceEvaluationCriteriaScore(performanceEvaluationCriteriaScoreVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Score successfully awarded.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity getUserPerformanceEvaluationPoints(Long userId, Integer quarter, Integer sprint, Integer year) {
+        List<Map> userPerformances = performanceEvaluationCriteriaScoreDao.getAllUsersPerformanceEvaluationCriteria(userId,quarter,sprint,year);
+        if(userPerformances.isEmpty()){
+            return APIResponse.resourceNotFound();
+        }
+        Map<String,Object> data = new HashMap<>();
+        data.put("USER_PERFORMANCES",userPerformances);
+        return APIResponse.resultSuccess(data);
     }
 
     @Override
