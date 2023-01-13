@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -114,9 +115,6 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) {
         int result = userDao.updateGravitateUser(userVO);
         if(result > 0){
-            if(ValidationUtil.isNullObject(projects)){
-                return APIResponse.resultSuccess();
-            }
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(token);
@@ -162,8 +160,10 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
                 entity,
                 String.class);
         Gson gson = new Gson();
-        Object parsedJson = gson.fromJson(response.getBody(), Object.class);
-        user.put("projects",parsedJson);
+        Object projectsJson = gson.fromJson(response.getBody(), Object.class);
+        user.put("projects",projectsJson);
+        user.put("performances",userDao.getUserPerformance((Long) user.get("user_id")));
+        user.put("WISHES",userDao.getUserWishes((Long) user.get("user_id")));
         user.put("teamMembers",userDao.getGravitateUserTeamMembers(userLevel,(Long) user.get("user_id"),(Long)user.get("managed_by")));
         user.put("totalEmployeeReferralsEarned",userDao.getUserTotalEmployeeReferrals((Long) user.get("user_id")));
         user.put("totalHotOpportunitiesEarned",userDao.getUserTotalHotOpportunities((Long) user.get("user_id")));
