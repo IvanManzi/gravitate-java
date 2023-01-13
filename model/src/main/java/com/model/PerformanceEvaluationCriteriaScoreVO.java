@@ -19,7 +19,6 @@ public class PerformanceEvaluationCriteriaScoreVO implements Serializable {
 
     private Long performanceEvaluationId;
 
-
     private Long adminId;
 
     private Long userId;
