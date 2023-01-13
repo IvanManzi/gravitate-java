@@ -27,4 +27,8 @@ public interface UserDao {
     int getUserTotalHotOpportunities(Long userId);
 
     int getUserTotalBilling(Object userId);
+
+    List<Map> getUserWishes(Long userId);
+
+    List<Map> getUserPerformance(Long userId);
 }

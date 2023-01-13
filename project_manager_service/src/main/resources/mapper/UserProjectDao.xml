@@ -6,8 +6,18 @@
         INSERT INTO user_project
         (user_id, project_id)
         VALUES
-        <foreach collection="projects" item="projectId" index="index" open="(" separator="),("  close=")">
-            #{userId}, #{projectId}
+        <foreach collection="projects" item="element" index="index" separator=",">
+            (#{userId},#{element.projectId})
+        </foreach>
+    </insert>
+
+
+    <insert id="assignUserToProjects2" >
+        INSERT INTO user_project
+        (user_id, project_id)
+        VALUES
+        <foreach collection="projects" item="element" index="index" separator=",">
+            (#{userId},#{element})
         </foreach>
 
     </insert>
@@ -116,32 +126,29 @@
 
     <select id="getGravitateUserProjects" resultType="com.model.ProjectVO" parameterType="Long">
         SELECT * FROM project P
-        INNER JOIN
-        user_project U
-        ON
-        U.project_id = P.project_id
-        WHERE U.user_id = #{userId}
+        WHERE
+        P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId})
+        OR
+        P.project_lead = #{userId}
     </select>
 
-    <!--<update id="updateProject" parameterType="com.model.ProjectVO">
-        UPDATE project
-        SET
-        status = #{status},
-        client_email = #{clientEmail},
-        client_name = #{clientName},
-        phone_number = #{phoneNumber},
-        jira_id = #{jiraProjectKey},
-        project_description = #{projectDescription},
-        project_name = #{projectName}
-        WHERE
-        project_id = #{projectId}
-        AND
-        admin_id = #{adminId}
-    </update>
+    <delete id="removeAllAssignedProjects" parameterType="Long">
+        DELETE FROM user_project WHERE user_id = #{userId}
+    </delete>
 
-    <delete id="deleteProject" parameterType="Long">
-        DELETE FROM project WHERE project_id = #{projectId}
-    </delete>-->
+    <delete id="removeAllAssignedProjects2">
+        DELETE FROM user_project
+        WHERE user_id = #{userId}
+        AND project_id NOT IN
+        <foreach item="project" index="index" collection="projects" open="(" separator="," close=")">
+            #{project.projectId}
+        </foreach>
+    </delete>
+
+
+    <delete id="removeUserOnProject">
+        DELETE FROM user_project WHERE user_id = #{userId] AND project_id = #{projectId}
+    </delete>
 
 
 
