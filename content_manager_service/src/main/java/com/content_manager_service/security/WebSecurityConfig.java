@@ -42,6 +42,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         http.cors();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/content/blog/**",
+                                                        "/api/v1/content/performance-evaluation/{userId}/points",
                                                         "/api/v1/content/task/**",
                                                         "/api/v1/content/position/all",
                                                         "/api/v1/content/position/referral/create",
