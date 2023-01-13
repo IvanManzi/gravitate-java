@@ -11,12 +11,12 @@
 
 
     <resultMap id="performanceCriteriaResult" type="Map">
-        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,quarter=quarter,userId=user_id" />
+        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,quarter=quarter,userId=user_id,performanceEvaluationId=performance_evaluation_id" />
     </resultMap>
 
 
     <select id="getAllUsersPerformanceEvaluationCriteria" resultMap="performanceCriteriaResult">
-        SELECT P.role_performance_evaluation_id,P.criteria,P.description,S.quarter,S.user_id,S.year
+        SELECT P.role_performance_evaluation_id AS performance_evaluation_id,P.criteria,P.description,S.quarter,S.user_id,S.year
         FROM performance_evaluation P
         INNER JOIN
         performance_evaluation_criteria_score S
@@ -44,11 +44,37 @@
         </if>-->
     </select>
 
+    <select id="checkIfEvaluationExists" resultType="int" parameterType="com.model.PerformanceEvaluationCriteriaScoreVO">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM performance_evaluation_criteria_score
+        WHERE
+        quarter = #{quarter}
+        AND
+        sprint = #{sprint}
+        AND
+        user_id = #{userId}
+        AND
+        performance_evaluation_id = #{performanceEvaluationId}
+        LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+
 
 
     <select id="getUserPerformanceScores" resultType="com.model.PerformanceEvaluationCriteriaScoreVO">
         SELECT * FROM performance_evaluation_criteria_score
-        WHERE user_id = #{userId} AND quarter = #{quarter} AND year = #{year}
+        WHERE
+        user_id = #{userId}
+        AND
+        quarter = #{quarter}
+        AND
+        year = #{year}
+        AND
+        performance_evaluation_id = #{performanceEvaluationId}
     </select>
 
 

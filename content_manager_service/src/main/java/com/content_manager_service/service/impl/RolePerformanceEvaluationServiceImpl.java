@@ -58,6 +58,11 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
 
     @Override
     public ResponseEntity awardPointsOnPerformanceEvaluationCriteria(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO) {
+        //check if no evaluation was made in the same year,quarter, sprint, and user on the specified criteria
+        int check = performanceEvaluationCriteriaScoreDao.checkIfEvaluationExists(performanceEvaluationCriteriaScoreVO);
+        if(check == 1){
+            return APIResponse.resultFail("Evaluation on this criteria already made for the specified user. ");
+        }
         int result = performanceEvaluationCriteriaScoreDao.createPerformanceEvaluationCriteriaScore(performanceEvaluationCriteriaScoreVO);
         if(result > 0){
             return APIResponse.resultSuccess("Score successfully awarded.");

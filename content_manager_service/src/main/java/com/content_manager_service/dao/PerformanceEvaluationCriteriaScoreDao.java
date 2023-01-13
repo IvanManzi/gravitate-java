@@ -18,4 +18,6 @@ public interface PerformanceEvaluationCriteriaScoreDao {
                                                     @Param("sprint") Integer sprints,
                                                     @Param("year") Integer year
                                                     /*@Param("groupBy") String groupBy*/);
+
+    int checkIfEvaluationExists(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO);
 }
