@@ -257,7 +257,7 @@
     </select>
 
     <select id="getUserQuarterPerformance" resultType="Map">
-        SELECT SUM(points) FROM performance_evaluation_criteria_score WHERE user_id = #{userId} AND quarter = #{quarter}
+        SELECT SUM(points) AS totalPoints,COUNT(sprint) AS totalSprints FROM performance_evaluation_criteria_score WHERE user_id = #{userId} AND quarter = #{quarter}
     </select>
 
 
