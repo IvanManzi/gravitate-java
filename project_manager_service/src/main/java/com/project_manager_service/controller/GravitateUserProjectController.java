@@ -44,9 +44,4 @@ public class GravitateUserProjectController {
         log.info("from date {} to date {}",from,to);
         return gravitateUserProjectService.getUserBillingInformation(userId,from,to);
     }
-
-    @GetMapping(value = "/")
-    public ResponseEntity getGravitateUserProjects(@RequestParam("userId") Long userId){
-        return gravitateUserProjectService.getGravitateUserProjects(userId);
-    }
 }

@@ -124,8 +124,8 @@
         END
     </select>
 
-    <select id="getGravitateUserProjects" resultType="com.model.ProjectVO" parameterType="Long">
-        SELECT * FROM project P
+    <select id="getGravitateUserProjects" resultType="Long" parameterType="Long">
+        SELECT P.project_id FROM project P
         WHERE
         P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId})
         OR
@@ -139,9 +139,9 @@
     <delete id="removeAllAssignedProjects2">
         DELETE FROM user_project
         WHERE user_id = #{userId}
-        AND project_id NOT IN
+        AND project_id IN
         <foreach item="project" index="index" collection="projects" open="(" separator="," close=")">
-            #{project.projectId}
+            #{project}
         </foreach>
     </delete>
 

@@ -33,30 +33,38 @@ public class GravitateUserProjectServiceImpl implements GravitateUserProjectServ
 
     @Override
     public boolean assignUserToProject(String jiraAccountId ,Long userId, List<Long> projects) throws UnirestException {
-        List<String> jiraProjects = new ArrayList<>();
-        //check if user isn't already assigned to these projects
-        for(Long projectId : projects){
-            int status = userProjectDao.checkIfUserIsAssignedToProject(userId,projectId);
-            if(status == 1){
-                projects.remove(projectId);
-            }else{
-                jiraProjects.add(projectDao.getProjectById(projectId).getJiraProjectKey());
-            }
-        }
+        List<Long> currentlyAssignedProjects = userProjectDao.getGravitateUserProjects(userId);
+        System.out.println("currently assigned "+ currentlyAssignedProjects);
+        System.out.println("obj "+ projects);
         if(projects.isEmpty()){
-            return true;// User is already assigned to projects
-        }
-        log.info("{}", projects);
-        log.info("{}",jiraProjects);
-
-        int result = userProjectDao.assignUserToProjects(userId,projects);
-        if(result > 0) {
-            for(String project : jiraProjects){
-                JiraUtils.assignProjectToUser(project,jiraAccountId);
-            }
+            //remove all assigned projects
+            userProjectDao.removeAllAssignedProjects(userId);
             return true;
         }
-        return false;
+
+        List<Long> newProjects = new ArrayList<Long>(projects);
+        List<Long> removedProjects = new ArrayList<Long>(currentlyAssignedProjects);
+
+        newProjects.removeAll(currentlyAssignedProjects);
+        removedProjects.removeAll(projects);
+
+        //System.out.println("New Projects: " + newProjects);
+        //System.out.println("Removed Projects: " + removedProjects);
+
+        if(newProjects.size() > 0){
+            int result = userProjectDao.assignUserToProjects2(userId,projects);
+            //check if removedProjects array is empty
+            if(removedProjects.size() > 0){
+                //remove miss-allocated projects
+                userProjectDao.removeAllAssignedProjects2(userId,removedProjects);
+            }
+            if(result > 0) {
+                for (Long projectId : newProjects) {
+                    JiraUtils.assignProjectToUser(projectDao.getProjectById(projectId).getJiraProjectKey(), jiraAccountId);
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -95,17 +103,6 @@ public class GravitateUserProjectServiceImpl implements GravitateUserProjectServ
         }
         Map<String,Object> data = new HashMap<>();
         data.put("USER_BILLING_INFO",userBillingInfo);
-        return APIResponse.resultSuccess(data);
-    }
-
-    @Override
-    public ResponseEntity getGravitateUserProjects(Long userId) {
-        List<ProjectVO> userProjects = userProjectDao.getGravitateUserProjects(userId);
-        if(userProjects.isEmpty()){
-            return APIResponse.resourceNotFound();
-        }
-        Map<String,Object> data = new HashMap<>();
-        data.put("USER_PROJECTS",userProjects);
         return APIResponse.resultSuccess(data);
     }
 }
