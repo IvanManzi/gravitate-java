@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 import java.util.*;
 
 import static com.util.Constants.*;
