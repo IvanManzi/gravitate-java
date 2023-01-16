@@ -65,21 +65,25 @@
     </select>
 
     <select id="getUserTotalEmployeeReferrals" resultType="int">
-        SELECT COALESCE(SUM(P.incentive_amount), 0) AS total FROM position_referral R
+        SELECT COALESCE(SUM(P.referral_amount), 0) AS total FROM position_referral R
         INNER JOIN
         position P
         ON
         P.position_id = R.position_id
-        WHERE R.referred_by = #{userId};
+        WHERE R.referred_by = #{userId}
+        AND
+        R.referral_status = 66
     </select>
 
     <select id="getUserTotalHotOpportunities" resultType="int">
-        SELECT COALESCE(SUM(P.referral_amount), 0) AS total FROM position_self_referral R
+        SELECT COALESCE(SUM(P.incentive_amount), 0) AS total FROM position_self_referral R
         INNER JOIN
         position P
         ON
         P.position_id = R.position_id
         WHERE R.user_id = #{userId}
+        AND
+        R.referral_status = 66
     </select>
 
     <delete id="deleteGravitateUser" parameterType="Long">
