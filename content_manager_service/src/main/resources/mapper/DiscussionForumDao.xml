@@ -26,7 +26,7 @@
                 D.title LIKE '%' || #{title} || '%'
             </if>
             <if test="search != null">
-                AND A.first_name LIKE '%' || #{search} || '%' AND A.last_name LIKE '%' || #{search} || '%'
+                AND A.first_name LIKE '%' || #{search} || '%' OR A.last_name LIKE '%' || #{search} || '%'
             </if>
             <if test="tags != null">
                 AND D.tags LIKE '%' || #{tags} || '%'
