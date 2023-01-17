@@ -1,6 +1,17 @@
 server:
   port: 1071
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ivaanki00@gmail.com
+    password: svuegooshtkrpgsz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: USER-MANAGER-SERVICE
   datasource:
