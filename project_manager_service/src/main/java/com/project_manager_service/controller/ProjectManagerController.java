@@ -89,6 +89,17 @@ public class ProjectManagerController {
     }
 
 
+    @PutMapping(value = "/{projectId}/status/{phaseId}")
+    public ResponseEntity updateProjectStatus(@PathVariable("projectId") Long projectId,
+                                             @PathVariable("phaseId")Integer status){
+        ProjectVO projectVO = new ProjectVO();
+        projectVO.setStatus(status);
+        projectVO.setProjectId(projectId);
+        return projectManagerService.updateProjectStatus(projectVO);
+    }
+
+
+
 
 
 }

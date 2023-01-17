@@ -86,6 +86,15 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     }
 
     @Override
+    public ResponseEntity<APIResponse> updateProjectStatus(ProjectVO projectVO) {
+        int result = projectDao.updateProjectStatus(projectVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Project status successfully updated.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
     public ResponseEntity deleteProject(String projectKey) throws UnirestException, JsonProcessingException {
         int result = projectDao.deleteProject(projectKey);
         if(result > 0){

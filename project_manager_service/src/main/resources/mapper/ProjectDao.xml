@@ -17,10 +17,10 @@
         SELECT * FROM project P
         <where>
             <if test="userLevel == 'ROLE_NON_ADMIN_USER' ">
-                P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId})
+                P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId}) AND P.status = 1
             </if>
             <if test="userLevel == 'ROLE_PROJECT_MANAGER' ">
-                AND P.project_lead = #{userId}
+                AND P.project_lead = #{userId} AND P.status = 1
             </if>
             <if test="phase != null">
                 AND P.phase = #{phase}
@@ -69,6 +69,13 @@
 
     <update id="updateProjectPhase" parameterType="com.model.ProjectVO">
         UPDATE project SET phase = #{phase} WHERE project_id = #{projectId}
+    </update>
+
+    <update id="updateProjectStatus" parameterType="com.model.ProjectVO">
+        UPDATE project
+        SET
+        status = #{status}
+        WHERE project_id = #{projectId}
     </update>
 
 

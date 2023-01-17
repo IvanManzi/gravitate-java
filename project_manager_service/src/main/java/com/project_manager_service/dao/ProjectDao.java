@@ -19,4 +19,5 @@ public interface ProjectDao {
     int deleteProject(String jiraProjectKey);
     int markAsFavorite(Long projectId);
     int updateProjectPhase(ProjectVO projectVO);
+    int updateProjectStatus(ProjectVO projectVO);
 }

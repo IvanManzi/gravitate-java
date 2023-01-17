@@ -18,5 +18,7 @@ public interface ProjectManagerService {
 
     ResponseEntity<APIResponse> updateProjectPhase(ProjectVO projectVO);
 
+    ResponseEntity<APIResponse> updateProjectStatus(ProjectVO projectVO);
+
     ResponseEntity<APIResponse> deleteProject(String projectKey) throws UnirestException, JsonProcessingException;
 }
