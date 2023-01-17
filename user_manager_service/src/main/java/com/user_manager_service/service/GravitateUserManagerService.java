@@ -1,6 +1,7 @@
 package com.user_manager_service.service;
 
 
+import com.model.EmailDetailsV0;
 import com.model.UserVO;
 import com.util.APIResponse;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface GravitateUserManagerService {
 
-    ResponseEntity createGravitateUser(UserVO userVO, List<Long> projects, String token);
+    ResponseEntity createGravitateUser(UserVO userVO, List<Long> projects, String token, EmailDetailsV0 emailDetailsV0);
     ResponseEntity getAllGravitateUsers(String search,Long roleId);
     ResponseEntity getGravitateUserById(Long userId);
     ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token);

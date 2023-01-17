@@ -1,5 +1,6 @@
 package com.user_manager_service.controller;
 
+import com.model.EmailDetailsV0;
 import com.model.UserVO;
 import com.user_manager_service.form.CreateGravitateUserForm;
 import com.user_manager_service.form.ForgetPasswordRequest;
@@ -28,9 +29,18 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm,HttpServletRequest request){
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request){
         UserVO userVO = new UserVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+
+        //create email details obj
+        EmailDetailsV0 emailDetailsV0 = new EmailDetailsV0();
+        emailDetailsV0.setRecipient(createGravitateUserForm.email());
+        emailDetailsV0.setRecipientFirstName(createGravitateUserForm.firstName());
+        emailDetailsV0.setRecipientLastName(createGravitateUserForm.lastName());
+        emailDetailsV0.setPassword(createGravitateUserForm.password());
+        emailDetailsV0.setSubject("Welcome To Gravitate");
+
         //create user obj
         userVO.setUserType(createGravitateUserForm.userType());
         userVO.setEmail(createGravitateUserForm.email());
@@ -52,7 +62,7 @@ public class GravitateUserManagerController {
         userVO.setJiraId(createGravitateUserForm.jiraId());
         userVO.setRoleId(createGravitateUserForm.roleId());
         userVO.setManagedBy(createGravitateUserForm.managerId());
-        return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token);
+        return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token,emailDetailsV0);
     }
     @GetMapping(value = "/all")
     public ResponseEntity getAllGravitateUsers(@RequestParam(value = "search",required = false) String search,@RequestParam(value = "roleId",required = false) Long roleId) throws IOException{

@@ -1,7 +1,9 @@
 package com.user_manager_service.service.impl;
 
+import com.model.EmailDetailsV0;
 import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
+import com.user_manager_service.service.EmailService;
 import com.util.APIResponse;
 import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
@@ -28,6 +30,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     private final UserDao userDao;
     private final RestTemplate restTemplate;
     private final SecurityQuestionDao securityQuestionDao;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -52,12 +55,13 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
 
     @Override
-    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token) {
+    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) {
         //check if email is unique
         int check = userDao.checkIfUsernameExists(userVO.getEmail());
         if(check == 1){
             return APIResponse.resultFail("Email already taken.");
         }
+        emailService.sendSimpleMail(emailDetailsV0);
         int result = userDao.createGravitateUser(userVO);
         if(result > 0){
             //check if user has assigned projects
