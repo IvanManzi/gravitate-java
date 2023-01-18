@@ -61,7 +61,6 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
 
     private List<Map> buildCommentTree(Long blogId, Long parent) {
         List<Map> parentComments = blogDao.getBlogComments(blogId, parent);
-        System.out.println(parentComments);
         List<Map> childComments;
         if(parentComments.isEmpty()){
             return parentComments;
@@ -80,7 +79,6 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
                 parentComment.put("comments",childComments);
             }
         }
-        System.out.println(parentComments);
         return parentComments;
     }
 
