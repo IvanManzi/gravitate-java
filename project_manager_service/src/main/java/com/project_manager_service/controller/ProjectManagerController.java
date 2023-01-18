@@ -58,7 +58,6 @@ public class ProjectManagerController {
         projectVO.setProjectLead(updateProjectRequest.projectLead());
         projectVO.setLeadJiraAccountId(updateProjectRequest.jiraAccountId());
         projectVO.setJiraProjectKey(updateProjectRequest.jiraProjectKey());
-        projectVO.setStatus(updateProjectRequest.status());
         projectVO.setAdminId(Long.valueOf(userId));
         projectVO.setProjectName(updateProjectRequest.projectName());
         projectVO.setClientName(updateProjectRequest.clientName());
