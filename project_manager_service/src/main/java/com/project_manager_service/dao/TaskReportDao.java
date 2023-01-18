@@ -12,7 +12,9 @@ public interface TaskReportDao {
     int createTaskReport(TaskReportVO taskReportVO);
     List<TaskReportVO> getUserTaskReports(@Param("userId") Long userId,@Param("projectId") Long projectId);
     int updateTaskReport(TaskReportVO taskReportVO);
-    List<Map> getAllTaskReports(@Param("userId")Long userId,@Param("userLevel") String userLevel);
+    List<Map> getAllTaskReports(@Param("userId")Long userId,
+                                @Param("userLevel") String userLevel,
+                                @Param("isArchived") boolean isArchived);
     int deleteTaskReport(Long reportId);
     int markMonthlyTasksAsPaid(@Param("userId")Long userId,
                                @Param("month") Integer month,

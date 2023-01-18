@@ -16,9 +16,14 @@
         project P
         ON
         P.project_id = T.project_id
-        <if test="userLevel != 'ROLE_ADMIN_USER' ">
-            WHERE T.user_id = #{userId}
-        </if>
+        <where>
+            <if test="userLevel != 'ROLE_ADMIN_USER' ">
+                WHERE T.user_id = #{userId}
+            </if>
+            <if test="isArchived != null">
+                AND is_archived = #{isArchived}
+            </if>
+        </where>
         ORDER BY T.created_at DESC
     </select>
 

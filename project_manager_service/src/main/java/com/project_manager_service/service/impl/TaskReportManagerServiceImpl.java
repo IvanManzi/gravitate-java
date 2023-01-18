@@ -42,8 +42,8 @@ public class TaskReportManagerServiceImpl implements TaskReportManagerService {
     }
 
     @Override
-    public ResponseEntity<APIResponse> getAllTaskReports(Long userId,String userLevel) {
-        List<Map> taskReports = taskReportDao.getAllTaskReports(userId,userLevel);
+    public ResponseEntity<APIResponse> getAllTaskReports(Long userId,String userLevel,boolean isArchived) {
+        List<Map> taskReports = taskReportDao.getAllTaskReports(userId,userLevel,isArchived);
         if(taskReports.isEmpty()){
             return APIResponse.resourceNotFound();
         }

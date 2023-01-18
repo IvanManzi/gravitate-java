@@ -40,11 +40,12 @@ public class TaskReportManagerController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<APIResponse> getAllGravitateUserTaskReports(HttpServletRequest request) throws IOException {
+    public ResponseEntity<APIResponse> getAllGravitateUserTaskReports(HttpServletRequest request,
+                                                                      @RequestParam(value = "isArchived", required = false) boolean isArchived) throws IOException {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         String role = JwtUtils.getUserRoleFromJwtToken(token);
-        return taskReportManagerService.getAllTaskReports(Long.valueOf(userId),role);
+        return taskReportManagerService.getAllTaskReports(Long.valueOf(userId),role,isArchived);
     }
 
     @PutMapping(value = "/")
