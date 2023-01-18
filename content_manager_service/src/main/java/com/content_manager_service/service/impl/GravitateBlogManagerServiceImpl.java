@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,39 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
         List<Map> teamBlogs = blogDao.getAllBlogs(search,topic);
         if(teamBlogs.isEmpty()){
             return APIResponse.resourceNotFound();
-        }else{
-            Map<String,Object> data = new HashMap<>();
-            data.put("ALL_BLOGS",teamBlogs);
-            return APIResponse.resultSuccess(data);
         }
+        for(Map blog : teamBlogs){
+            blog.put("comments",buildCommentTree((Long) blog.get("blog_id"),(Long) blog.get("parent")));
+        }
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("ALL_BLOGS",teamBlogs);
+        return APIResponse.resultSuccess(data);
+    }
+
+    private List<Map> buildCommentTree(Long blogId, Long parent) {
+        List<Map> parentComments = blogDao.getBlogComments(blogId, parent);
+        System.out.println(parentComments);
+        List<Map> childComments;
+        if(parentComments.isEmpty()){
+            return parentComments;
+        }
+        for(Map parentComment : parentComments){
+            //retrieve child comments
+            childComments = blogDao.getBlogComments(blogId,(Long) parentComment.get("blog_reply_id"));
+            if(childComments.isEmpty()){
+                continue;
+            }else{
+                for(Map childComment : childComments){
+                    if(childComment.get("parent") != null && !childComment.get("parent").equals(parentComment.get("blog_reply_id"))){
+                        childComment.put("comments",buildCommentTree(blogId,(Long)childComment.get("parent")));
+                    }
+                }
+                parentComment.put("comments",childComments);
+            }
+        }
+        System.out.println(parentComments);
+        return parentComments;
     }
 
     @Override

@@ -4,9 +4,9 @@
 
     <insert id="createBlogReply" parameterType="com.model.BlogReplyVO">
         INSERT INTO blog_reply
-        (blog_id,user_id,comment)
+        (blog_id,user_id,comment,parent)
         VALUES
-        (#{blogId},#{userId},#{comment})
+        (#{blogId},#{userId},#{comment},#{parent})
     </insert>
 
 

@@ -9,12 +9,12 @@
         (#{userId},#{title},#{tags},#{problemDescription},#{topicThumbnail})
     </insert>
 
-    <resultMap id="tResult" type="Map">
+    <!--<resultMap id="tResult" type="Map">
         <collection property="comments" ofType="Map" select="selectBlogReply" column="__id" />
-    </resultMap>
+    </resultMap>-->
 
-    <select id="getAllBlogs" resultMap="tResult">
-        SELECT T.blog_id AS __id,T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type,U.profile_picture_path
+    <select id="getAllBlogs" resultType="Map">
+        SELECT T.blog_id,T.title,T.tags,T.problem_description,T.topic_thumbnail,T.created_at,U.email,U.first_name,U.last_name,U.user_type,U.profile_picture_path
         FROM blog T
         INNER JOIN app_user U
         ON
@@ -34,7 +34,7 @@
         <collection property="sub_comments" ofType="com.model.BlogReplyVO" select="getBlogCommentSubComments" column="blog_reply_id" />
     </resultMap>-->
 
-    <select id="selectBlogReply" resultType="Map">
+    <!--<select id="selectBlogReply" resultType="Map">
         SELECT R.blog_reply_id,R.blog_id,R.user_id,R.comment,R.parent,R.created_at,R.updated_at,A.first_name,A.last_name,A.email,
         A.profile_picture_path
         FROM blog_reply R
@@ -43,12 +43,25 @@
         ON
         A.user_id = R.user_id
         WHERE R.blog_id = #{__id}
-    </select>
-
-
-    <!--<select id="getBlogCommentSubComments" resultType="com.model.BlogReplyVO">
-        SELECT * FROM blog_reply WHERE parent = #{blogReplyId}
     </select>-->
+
+
+    <select id="getBlogComments" resultType="Map">
+        SELECT R.blog_reply_id,R.blog_id,R.user_id,R.comment,R.parent,R.created_at,R.updated_at,A.first_name,A.last_name,A.email,
+        A.profile_picture_path
+        FROM blog_reply R
+        INNER JOIN
+        app_user A
+        ON
+        A.user_id = R.user_id
+        WHERE R.blog_id = #{blogId}
+        <if test="parent != null">
+            AND R.parent = #{parent}
+        </if>
+        <if test="parent == null">
+            AND R.parent IS NULL
+        </if>
+    </select>
 
     <select id="getUserBlogsByQuarter" resultType="com.model.BlogVO">
         SELECT * FROM blog WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
