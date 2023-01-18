@@ -23,6 +23,9 @@
             <if test="wishType != null">
                 LOWER(W.wish_type) LIKE LOWER('%' || #{wishType} || '%')
             </if>
+            <if test="wishType == 'Birthday' ">
+                AND DATE(W.created_at) = CURRENT_DATE
+            </if>
             <if test="date != null">
                 AND W.created_at::date = #{date}
             </if>
