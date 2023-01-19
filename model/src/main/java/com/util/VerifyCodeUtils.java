@@ -1,5 +1,7 @@
 package com.util;
 
+import com.google.gson.Gson;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -252,6 +254,18 @@ public class VerifyCodeUtils {
         }
 
     }
+
+    public static String[] removeEscapeCharacters(String[] input) {
+        if(input.length < 1){
+            return input;
+        }
+        for (int i = 0; i < input.length; i++) {
+            input[i] = input[i].replaceAll("(?i)\\\\", "");
+        }
+        return input;
+    }
+
+
 
     /*
      * public static void main(String[] args) throws IOException { File dir =
