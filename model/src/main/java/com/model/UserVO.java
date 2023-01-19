@@ -1,10 +1,12 @@
 package com.model;
 
 
+import com.util.AdminPageAccessTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
+import org.apache.ibatis.annotations.TypeDiscriminator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -31,6 +33,18 @@ public class UserVO implements Serializable {
     private Integer userLevel;
 
     private Long managedBy;
+
+    private String[] adminPageAccess;
+
+    @TypeDiscriminator(column = "", typeHandler = AdminPageAccessTypeHandler.class, cases = {})
+    public void setAdminPageAccess(String[] adminPageAccess){
+        this.adminPageAccess = adminPageAccess;
+    }
+    public String[] getAdminPageAccess(){
+        return this.adminPageAccess;
+    }
+
+    private String otp;
 
     private String email;
 
