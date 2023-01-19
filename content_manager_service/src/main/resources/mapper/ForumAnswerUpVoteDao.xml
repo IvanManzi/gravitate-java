@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.content_manager_service.dao.ForumAnswerUpVoteDao" >
+
+    <insert id="createForumAnswerUpVote" parameterType="com.model.ForumAnswerUpVoteVO">
+        INSERT INTO forum_answer_up_vote
+        (user_id,forum_answer_id)
+        VALUES
+        (#{userId},#{forumAnswerId})
+    </insert>
+
+    <select id="checkIfUserMadeForumAnswerUpVote" parameterType="com.model.ForumAnswerUpVoteVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM forum_answer_up_vote
+        WHERE
+        user_id = #{userId} AND forum_answer_id = #{forumAnswerId} LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+
+
+
+</mapper>
