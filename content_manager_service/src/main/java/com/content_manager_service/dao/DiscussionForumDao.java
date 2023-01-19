@@ -20,4 +20,6 @@ public interface DiscussionForumDao {
     int updateDiscussionForum(DiscussionForumVO discussionForumVO);
 
     int deleteDiscussionForum(Long forumId);
+
+    int incrementForumViewsCount(DiscussionForumVO discussionForumVO);
 }

@@ -6,6 +6,7 @@ import com.content_manager_service.form.UpdateDiscussionForumRequest;
 import com.content_manager_service.service.DiscussionForumManagerService;
 import com.model.DiscussionForumAnswerVO;
 import com.model.DiscussionForumVO;
+import com.model.ForumAnswerUpVoteVO;
 import com.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +70,24 @@ public class DiscussionForumManagerController {
     public ResponseEntity approveDiscussionForumSolution(@PathVariable("solutionId") Long solutionId){
         return discussionForumManagerService.acceptDiscussionForumAnswer(solutionId);
     }
+
+    @PutMapping(value = "/solution/{solutionId}/upVote")
+    public ResponseEntity upVoteForumSolution(HttpServletRequest request,@PathVariable("solutionId") Long solutionId) throws IOException {
+        ForumAnswerUpVoteVO forumAnswerUpVoteVO = new ForumAnswerUpVoteVO();
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        forumAnswerUpVoteVO.setForumAnswerId(solutionId);
+        forumAnswerUpVoteVO.setUserId(Long.valueOf(userId));
+
+        return discussionForumManagerService.upVoteForumAnswer(forumAnswerUpVoteVO);
+    }
+    @PutMapping(value = "/{forumId}/views")
+    public ResponseEntity incrementForumViews(@PathVariable("forumId") Long forumId){
+        DiscussionForumVO discussionForumVO = new DiscussionForumVO();
+        discussionForumVO.setDiscussionForumId(forumId);
+        return discussionForumManagerService.incrementForumViews(discussionForumVO);
+    }
+
 
     @PutMapping(value = "/")
     public ResponseEntity updateDiscussionForum(@Valid @RequestBody UpdateDiscussionForumRequest updateDiscussionForumRequest,

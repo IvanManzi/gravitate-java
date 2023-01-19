@@ -3,9 +3,11 @@ package com.content_manager_service.service.impl;
 
 import com.content_manager_service.dao.DiscussionForumAnswerDao;
 import com.content_manager_service.dao.DiscussionForumDao;
+import com.content_manager_service.dao.ForumAnswerUpVoteDao;
 import com.content_manager_service.service.DiscussionForumManagerService;
 import com.model.DiscussionForumAnswerVO;
 import com.model.DiscussionForumVO;
+import com.model.ForumAnswerUpVoteVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
     private final DiscussionForumDao discussionForumDao;
 
     private final DiscussionForumAnswerDao discussionForumAnswerDao;
+
+    private final ForumAnswerUpVoteDao forumAnswerUpVoteDao;
 
     @Override
     public ResponseEntity createDiscussionForum(DiscussionForumVO discussionForumVO) {
@@ -75,6 +79,28 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
         int result = discussionForumAnswerDao.acceptForumSolution(answerId);
         if(result > 0){
             return APIResponse.resultSuccess("Forum answer successfully approved.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity upVoteForumAnswer(ForumAnswerUpVoteVO forumAnswerUpVoteVO) {
+        int check = forumAnswerUpVoteDao.checkIfUserMadeForumAnswerUpVote(forumAnswerUpVoteVO);
+        if(check == 1){
+            return APIResponse.resultFail("You already up voted the answer. ");
+        }
+        int result = forumAnswerUpVoteDao.createForumAnswerUpVote(forumAnswerUpVoteVO);
+        if (result > 0){
+            return APIResponse.resultSuccess("Up vote successfully made. ");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity incrementForumViews(DiscussionForumVO discussionForumVO) {
+        int result = discussionForumDao.incrementForumViewsCount(discussionForumVO);
+        if(result > 0){
+            return APIResponse.resultSuccess();
         }
         return APIResponse.resultFail();
     }

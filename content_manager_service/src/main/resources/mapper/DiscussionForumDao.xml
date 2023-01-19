@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getAllDiscussionForums" resultMap="allForumsResult">
-        SELECT D.discussion_forum_id,D.discussion_forum_id AS __id,D.user_id,D.title,D.tags,D.description,D.created_at,D.updated_at,A.first_name,A.last_name,
+        SELECT D.discussion_forum_id,D.discussion_forum_id AS __id,D.user_id,D.views,D.title,D.tags,D.description,D.created_at,D.updated_at,A.first_name,A.last_name,
         A.email,A.profile_picture_path
         FROM discussion_forum D
         INNER JOIN
@@ -37,14 +37,19 @@
 
 
     <select id="selectDiscussionForumAnswers" resultType="Map">
-        SELECT D.forum_answer_id,D.forum_id,D.user_id,D.comment,D.parent,D.created_at,A.first_name,A.last_name,
+        SELECT D.forum_answer_id,D.forum_id,D.user_id,SUM(U.up_vote_id) AS totalUpVotes,D.comment,D.parent,D.created_at,A.first_name,A.last_name,
         A.email,A.profile_picture_path
         FROM discussion_forum_answer D
         INNER JOIN
         app_user A
         ON
         A.user_id = D.user_id
+        INNER JOIN
+        forum_answer_up_vote U
+        ON
+        U.forum_answer_id = D.forum_answer_id
         WHERE D.forum_id = #{__id}
+        GROUP BY D.forum_answer_id,A.user_id
     </select>
 
     <update id="updateDiscussionForum" parameterType="com.model.DiscussionForumVO">
@@ -62,6 +67,15 @@
     <delete id="deleteDiscussionForum" parameterType="Long">
         DELETE FROM discussion_forum WHERE discussion_forum_id = #{forumId}
     </delete>
+
+
+    <update id="incrementForumViewsCount" parameterType="com.model.DiscussionForumVO">
+        UPDATE discussion_forum
+        SET
+        views = views + 1
+        WHERE
+        discussion_forum_id = #{discussionForumId}
+    </update>
 
 
 

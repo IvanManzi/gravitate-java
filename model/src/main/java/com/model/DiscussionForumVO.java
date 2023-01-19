@@ -19,6 +19,8 @@ public class DiscussionForumVO implements Serializable {
 
     private Long userId;
 
+    private Integer views;
+
     private String title;
 
     private String tags;
