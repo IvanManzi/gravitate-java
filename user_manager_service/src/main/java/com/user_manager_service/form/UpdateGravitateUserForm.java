@@ -1,5 +1,6 @@
 package com.user_manager_service.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -28,9 +29,9 @@ public record UpdateGravitateUserForm(@NotNull
                                       String billing,
                                       @NotBlank
                                       String phoneNumber,
-                                      @NotBlank
+                                      @Email @NotBlank
                                       String email,
-                                      @NotBlank
+                                      @Email @NotBlank
                                       String alternativeEmail,
                                       Long roleId,
                                       @NotBlank
