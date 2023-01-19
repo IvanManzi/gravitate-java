@@ -14,7 +14,7 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       @NotBlank
                                       String lastName,
                                       @NotBlank
-                                      String password,
+                                      String otp,
                                       @NotBlank
                                       String country,
                                       @NotBlank
@@ -39,9 +39,9 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
-
                                       String jiraId,
 
+                                      String[] pageAccess,
                                       List<Long> projects,
                                       Long managerId) {
 }

@@ -4,9 +4,13 @@
 
     <insert id="createGravitateUser" parameterType="com.model.UserVO" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO app_user
-        (user_type,managed_by,role_id,user_level,jira_id,email,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number)
+        (user_type,managed_by,role_id,user_level,jira_id,email,otp,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number,admin_page_access)
         VALUES
-        (#{userType},#{managedBy},#{roleId},#{userLevel},#{jiraId},#{email},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber})
+        (#{userType},#{managedBy},#{roleId},#{userLevel},#{jiraId},#{email},#{otp},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber},ARRAY[
+        <foreach item="access" collection="adminPageAccess" separator=",">
+            #{access}
+        </foreach>
+        ])
     </insert>
 
     <select id="checkIfUsernameExists" parameterType="String" resultType="int">
@@ -19,9 +23,17 @@
         THEN 1 ELSE 0
         END
     </select>
-    
-    <select id="getGravitateUserByUsername" resultType="com.model.UserVO" parameterType="String">
-        SELECT * FROM app_user WHERE email = #{username} LIMIT 1
+
+    <resultMap type="com.model.UserVO" id="userMap">
+        <result column="admin_page_access" property="adminPageAccess" javaType="[Ljava.lang.String;" typeHandler="com.util.AdminPageAccessTypeHandler"/>
+    </resultMap>
+
+
+
+    <select id="getGravitateUserByUsername" resultMap="userMap" parameterType="String">
+        SELECT *, CASE WHEN admin_page_access IS NULL THEN null ELSE admin_page_access END as admin_page_access FROM app_user
+        WHERE email = #{username}
+        LIMIT 1
     </select>
 
     <select id="getGravitateUserInfo" resultType="Map" parameterType="String">
@@ -32,6 +44,8 @@
         A.is_account_non_expired,
         A.is_account_non_locked,
         A.status,
+        A.admin_page_access,
+        A.otp,
         A.user_level,
         A.managed_by,
         A.email,
@@ -99,6 +113,8 @@
         user_type = #{userType},
         managed_by = #{managedBy},
         role_id = #{roleId},
+        otp = #{otp},
+        password = #{password},
         user_level = #{userLevel},
         jira_id = #{jiraId},
         email = #{email},
@@ -114,7 +130,12 @@
         joining_date = #{joiningDate},
         billing = #{billing},
         bank_name = #{bankName},
-        account_number = #{accountNumber}
+        account_number = #{accountNumber},
+        admin_page_access = ARRAY[
+        <foreach item="access" collection="adminPageAccess" separator=",">
+            #{access}
+        </foreach>
+        ]
         WHERE
         user_id = #{userId}
     </update>
@@ -139,6 +160,8 @@
         A.is_account_non_expired,
         A.is_account_non_locked,
         A.status,
+        A.admin_page_access,
+        A.otp,
         A.user_level,
         A.managed_by,
         A.jira_id,

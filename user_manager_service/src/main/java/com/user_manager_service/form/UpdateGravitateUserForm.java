@@ -13,6 +13,8 @@ public record UpdateGravitateUserForm(@NotNull
                                       @NotBlank
                                       String firstName,
                                       @NotBlank
+                                      String otp,
+                                      @NotBlank
                                       String lastName,
                                       @NotBlank
                                       String country,
@@ -40,6 +42,9 @@ public record UpdateGravitateUserForm(@NotNull
                                       @NotBlank
                                       String contractPath,
                                       String jiraId,
+
+                                      String[] pageAccess,
+
                                       List<Long> projects,
                                       Long managerId) {
 }

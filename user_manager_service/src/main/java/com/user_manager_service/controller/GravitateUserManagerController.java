@@ -38,13 +38,15 @@ public class GravitateUserManagerController {
         emailDetailsV0.setRecipient(createGravitateUserForm.email());
         emailDetailsV0.setRecipientFirstName(createGravitateUserForm.firstName());
         emailDetailsV0.setRecipientLastName(createGravitateUserForm.lastName());
-        emailDetailsV0.setPassword(createGravitateUserForm.password());
+        emailDetailsV0.setPassword(createGravitateUserForm.otp());
         emailDetailsV0.setSubject("Welcome To Gravitate");
 
         //create user obj
         userVO.setUserType(createGravitateUserForm.userType());
+        userVO.setAdminPageAccess(createGravitateUserForm.pageAccess());
         userVO.setEmail(createGravitateUserForm.email());
-        userVO.setPassword(passwordEncoder.encode(createGravitateUserForm.password()));
+        userVO.setOtp(createGravitateUserForm.otp());
+        userVO.setPassword(passwordEncoder.encode(createGravitateUserForm.otp()));
         userVO.setAlternateEmail(createGravitateUserForm.alternativeEmail());
         userVO.setFirstName(createGravitateUserForm.firstName());
         userVO.setLastName(createGravitateUserForm.lastName());
@@ -91,7 +93,9 @@ public class GravitateUserManagerController {
         userVO.setUserId(updateGravitateUserForm.userId());
         userVO.setUserType(updateGravitateUserForm.userType());
         userVO.setEmail(updateGravitateUserForm.email());
-        //userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.password()));
+        userVO.setOtp(updateGravitateUserForm.otp());
+        userVO.setAdminPageAccess(updateGravitateUserForm.pageAccess());
+        userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.otp()));
         userVO.setAlternateEmail(updateGravitateUserForm.alternativeEmail());
         userVO.setFirstName(updateGravitateUserForm.firstName());
         userVO.setLastName(updateGravitateUserForm.lastName());
