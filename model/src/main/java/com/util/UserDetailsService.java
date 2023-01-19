@@ -21,6 +21,8 @@ public class UserDetailsService implements UserDetails {
 
     private String username;
 
+    private String[] adminPageAccess;
+
     private boolean isAccountNonLocked;
 
     private boolean hasSecurityQuestion;
@@ -30,11 +32,12 @@ public class UserDetailsService implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsService(Long userId,String jiraId, String userType, String username, String password,  boolean isAccountNonLocked, boolean hasSecurityQuestion,
+    public UserDetailsService(Long userId,String jiraId, String userType,String[] adminPageAccess, String username, String password,  boolean isAccountNonLocked, boolean hasSecurityQuestion,
                               Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.jiraId = jiraId;
         this.userType = userType;
+        this.adminPageAccess = adminPageAccess;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -47,6 +50,7 @@ public class UserDetailsService implements UserDetails {
             user.getUserId(),
             user.getJiraId(),
             user.getUserType(),
+            user.getAdminPageAccess(),
             user.getEmail(),
             user.getPassword(),
             user.isAccountNonLocked(),
@@ -59,6 +63,10 @@ public class UserDetailsService implements UserDetails {
       return authorities;
     }
 
+
+    public String[] getAdminPageAccess(){
+        return adminPageAccess;
+    }
     public Long getUserId() {
       return userId;
     }
