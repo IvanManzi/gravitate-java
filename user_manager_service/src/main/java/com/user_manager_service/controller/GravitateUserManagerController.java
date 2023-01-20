@@ -117,7 +117,7 @@ public class GravitateUserManagerController {
     }
 
     @DeleteMapping(value = "/{userId}")
-    public ResponseEntity deleteGravitateUser(Long userId){
+    public ResponseEntity deleteGravitateUser(@PathVariable("userId") Long userId){
         return gravitateUserManagerService.deleteGravitateUser(userId);
     }
 

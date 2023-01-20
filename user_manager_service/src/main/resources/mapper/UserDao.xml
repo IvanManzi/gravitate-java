@@ -106,10 +106,7 @@
     </select>
 
     <delete id="deleteGravitateUser" parameterType="Long">
-        DELETE payment_id,user_id,project_id,SUM(total_amount),month,year
-        FROM app_user
-        WHERE user_id = #{userId}
-        GROUP BY payment_id
+        DELETE FROM app_user WHERE user_id = #{userId}
     </delete>
 
     <update id="updateGravitateUser" parameterType="com.model.UserVO">
