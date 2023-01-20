@@ -6,11 +6,16 @@
         INSERT INTO app_user
         (user_type,managed_by,role_id,user_level,jira_id,email,otp,password,alternate_email,first_name,last_name,country,date_of_birth,phone_number,profile_picture_path,contract_path,employment_status,joining_date,billing,bank_name,account_number,admin_page_access)
         VALUES
-        (#{userType},#{managedBy},#{roleId},#{userLevel},#{jiraId},#{email},#{otp},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber},ARRAY[
-        <foreach item="access" collection="adminPageAccess" separator=",">
-            #{access}
-        </foreach>
-        ])
+        (#{userType},#{managedBy},#{roleId},#{userLevel},#{jiraId},#{email},#{otp},#{password},#{alternateEmail},#{firstName},#{lastName},#{country},#{dateOfBirth},#{phoneNumber},#{profilePicturePath},#{contractPath},#{employmentStatus},#{joiningDate},#{billing},#{bankName},#{accountNumber},<if test="adminPageAccess != null">
+            ARRAY[
+            <foreach item="access" collection="adminPageAccess" separator=",">
+                #{access}
+            </foreach>
+            ]
+        </if>
+        <if test="adminPageAccess == null">
+            null
+        </if> )
     </insert>
 
     <select id="checkIfUsernameExists" parameterType="String" resultType="int">
@@ -131,11 +136,16 @@
         billing = #{billing},
         bank_name = #{bankName},
         account_number = #{accountNumber},
-        admin_page_access = ARRAY[
-        <foreach item="access" collection="adminPageAccess" separator=",">
-            #{access}
-        </foreach>
-        ]
+        admin_page_access = <if test="adminPageAccess != null">
+                            ARRAY[
+                            <foreach item="access" collection="adminPageAccess" separator=",">
+                                #{access}
+                            </foreach>
+                            ]
+                        </if>
+                            <if test="adminPageAccess == null">
+                                null
+                            </if>
         WHERE
         user_id = #{userId}
     </update>
