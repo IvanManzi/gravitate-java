@@ -9,6 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -24,7 +25,8 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Override
+
+    @Async
     public String sendSimpleMail(EmailDetailsV0 emailDetailsV0) {
         String emailBody = "Dear " + emailDetailsV0.getRecipientFirstName() + ", \n\n" +
                 "You are now officially a member of the gravitate team. Please use the following credentials to set up your account.\n\n" +
@@ -32,22 +34,19 @@ public class EmailServiceImpl implements EmailService {
                 "password: " + emailDetailsV0.getPassword();
         emailDetailsV0.setMsgBody(emailBody);
         try {
-            SimpleMailMessage mailMessage
-                    = new SimpleMailMessage();
-
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(sender);
             mailMessage.setTo(emailDetailsV0.getRecipient());
             mailMessage.setText(emailDetailsV0.getMsgBody());
             mailMessage.setSubject(emailDetailsV0.getSubject());
-
             javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
-        }
-
-        catch (Exception e) {
-            return "Error while Sending Mail";
+            return "Send Mail Success";
+        } catch (Exception e) {
+            //log the exception
+            return "Sending mail failed.";
         }
     }
+
 
     @Override
     public String sendMailWithAttachment(EmailDetailsV0 emailDetailsV0) {
