@@ -116,7 +116,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) {
         int result = userDao.updateGravitateUser(userVO);
         if(result > 0){
-            if(ValidationUtil.isNullObject(projects)){
+            if(ValidationUtil.isNullObject(projects) || projects.isEmpty()){
                 return  APIResponse.resultSuccess();
             }
             HttpHeaders headers = new HttpHeaders();
