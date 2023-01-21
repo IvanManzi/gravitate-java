@@ -29,7 +29,7 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request){
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request) throws IOException {
         UserVO userVO = new UserVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
 

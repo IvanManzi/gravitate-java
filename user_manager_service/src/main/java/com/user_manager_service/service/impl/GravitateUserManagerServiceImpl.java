@@ -3,7 +3,7 @@ package com.user_manager_service.service.impl;
 import com.model.EmailDetailsV0;
 import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
-import com.user_manager_service.service.EmailService;
+import com.user_manager_service.service.EmailJobService;
 import com.util.APIResponse;
 import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 import java.util.*;
 
 import static com.util.Constants.*;
@@ -30,7 +32,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     private final UserDao userDao;
     private final RestTemplate restTemplate;
     private final SecurityQuestionDao securityQuestionDao;
-    private final EmailService emailService;
+    private final EmailJobService emailJobService;
 
     @Override
     @Transactional
@@ -55,13 +57,13 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
 
     @Override
-    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) {
+    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) throws IOException {
         //check if email is unique
         int check = userDao.checkIfUsernameExists(userVO.getEmail());
         if(check == 1){
             return APIResponse.resultFail("Email already taken.");
         }
-        emailService.sendSimpleMail(emailDetailsV0);
+        emailJobService.serializeEmailDetailsVO(emailDetailsV0);
         int result = userDao.createGravitateUser(userVO);
         if(result > 0){
             //check if user has assigned projects

@@ -6,11 +6,12 @@ import com.model.UserVO;
 import com.util.APIResponse;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface GravitateUserManagerService {
 
-    ResponseEntity createGravitateUser(UserVO userVO, List<Long> projects, String token, EmailDetailsV0 emailDetailsV0);
+    ResponseEntity createGravitateUser(UserVO userVO, List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) throws IOException;
     ResponseEntity getAllGravitateUsers(String search,Long roleId);
     ResponseEntity getGravitateUserById(Long userId);
     ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token);
