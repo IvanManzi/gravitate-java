@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.user_manager_service.dao.JobDao" >
+
+    <insert id="createJob" parameterType="com.model.JobVO">
+        INSERT INTO job (data)
+        VALUES(#{data})
+    </insert>
+
+
+
+    <select id="getAllJobs" resultType="com.model.JobVO">
+        SELECT * FROM job
+    </select>
+
+    <delete id="removeJob" parameterType="Long">
+        DELETE FROM job WHERE job_id = #{jobId}
+    </delete>
+
+
+
+
+</mapper>
