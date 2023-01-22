@@ -3,6 +3,7 @@ package com.project_manager_service.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.ProjectVO;
+import com.model.UserProjectVO;
 import com.project_manager_service.form.CreateProjectRequest;
 import com.project_manager_service.form.UpdateProjectRequest;
 import com.project_manager_service.service.ProjectManagerService;
@@ -73,9 +74,18 @@ public class ProjectManagerController {
         return projectManagerService.deleteProject(projectId);
     }
 
-    @PutMapping(value = "/{projectId}/mark-favorite")
-    public ResponseEntity markProjectAsFavorite(@PathVariable("projectId") Long projectId){
-        return projectManagerService.markProjectAsFavorite(projectId);
+    @PutMapping(value = "/{projectId}/mark-favorite/{status}")
+    public ResponseEntity markProjectAsFavorite(@PathVariable("projectId") Long projectId,@PathVariable("status") boolean isFavorite, HttpServletRequest request) throws IOException {
+        ProjectVO projectVO = new ProjectVO();
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+
+        UserProjectVO userProjectVO = new UserProjectVO();
+        userProjectVO.setProjectId(projectId);
+        userProjectVO.setFavorite(isFavorite);
+        userProjectVO.setUserId(Long.valueOf(userId));
+
+        return projectManagerService.markProjectAsFavorite(userProjectVO);
     }
 
     @PutMapping(value = "/{projectId}/phase/{phaseId}")

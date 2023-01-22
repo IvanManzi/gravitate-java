@@ -2,17 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project_manager_service.dao.UserProjectDao" >
 
-    <insert id="assignUserToProjects" >
+   <!-- <insert id="assignUserToProjects" >
         INSERT INTO user_project
         (user_id, project_id)
         VALUES
         <foreach collection="projects" item="element" index="index" separator=",">
             (#{userId},#{element.projectId})
         </foreach>
-    </insert>
+    </insert>-->
 
-
-    <insert id="assignUserToProjects2" >
+    <insert id="assignUserToProjects2">
         INSERT INTO user_project
         (user_id, project_id)
         VALUES
@@ -21,6 +20,16 @@
         </foreach>
 
     </insert>
+
+    <update id="markAsFavorite" parameterType="com.model.UserProjectVO">
+        UPDATE user_project
+        SET
+        is_favorite = #{isFavorite}
+        WHERE
+        project_id = #{projectId}
+        AND
+        user_id = #{userId}
+    </update>
 
     <resultMap id="projectResult" type="Map">
         <collection property="assigned_users" ofType="com.model.UserVO" select="getUsersAssignedToProject" column="project_id" />

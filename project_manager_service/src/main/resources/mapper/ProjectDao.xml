@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.project_manager_service.dao.ProjectDao" >
 
-    <insert id="createProject" parameterType="com.model.ProjectVO">
+    <insert id="createProject" parameterType="com.model.ProjectVO" useGeneratedKeys="true" keyProperty="projectId">
         INSERT INTO project
         (client_email, client_name, lead_jira_account_id, jira_project_key, phone_number, project_description,start_date,technologies, project_name, admin_id, project_lead)
         VALUES
@@ -16,17 +16,14 @@
     <select id="getAllProjects" resultMap="allProjectsResult">
         SELECT * FROM project P
         <where>
-            <if test="userLevel == 'ROLE_NON_ADMIN_USER' ">
-                P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId}) AND P.status = 1
-            </if>
-            <if test="userLevel == 'ROLE_PROJECT_MANAGER' ">
-                AND P.project_lead = #{userId} AND P.status = 1
+            <if test="userLevel != 'ROLE_ADMIN_USER' ">
+                P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId} ORDER BY is_favorite DESC) AND P.status = 1
             </if>
             <if test="phase != null">
-                AND P.phase = #{phase}
+                AND P.phase = #{phase} AND P.status = 1
             </if>
         </where>
-        ORDER BY P.created_at DESC
+
     </select>
 
     <select id="getProjectLead" resultType="com.model.UserVO">
@@ -61,11 +58,6 @@
     <delete id="deleteProject" parameterType="String">
         DELETE FROM project WHERE jira_project_key = #{jiraProjectKey}
     </delete>
-
-
-    <update id="markAsFavorite" parameterType="Long">
-        UPDATE project SET is_favorite = true WHERE project_id = #{projectId}
-    </update>
 
     <update id="updateProjectPhase" parameterType="com.model.ProjectVO">
         UPDATE project SET phase = #{phase} WHERE project_id = #{projectId}

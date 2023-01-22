@@ -41,8 +41,6 @@ public class ProjectVO implements Serializable {
 
     private Date startDate;
 
-    private boolean isFavorite;
-
     //0 for investigation(Default),1 for Design, 2 Build, 3 for Testing, 4 for launch
     private Integer phase;
 

@@ -17,7 +17,6 @@ public interface ProjectDao {
                              @Param("userLevel")String role,@Param("phase")Integer phase);
     int updateProject(ProjectVO projectVO);
     int deleteProject(String jiraProjectKey);
-    int markAsFavorite(Long projectId);
     int updateProjectPhase(ProjectVO projectVO);
     int updateProjectStatus(ProjectVO projectVO);
 }

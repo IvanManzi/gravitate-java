@@ -17,6 +17,9 @@ public class UserProjectVO implements Serializable {
 
     private Long userProjectId;
 
+    //set to false by default
+    private boolean isFavorite;
+
     private Long userId;
 
     private Long projectId;

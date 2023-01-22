@@ -3,6 +3,7 @@ package com.project_manager_service.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.ProjectVO;
+import com.model.UserProjectVO;
 import com.project_manager_service.dao.ProjectDao;
 import com.project_manager_service.dao.UserProjectDao;
 import com.project_manager_service.service.ProjectManagerService;
@@ -29,10 +30,13 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
 
     @Override
     public ResponseEntity createProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
+        List<Long> projects = new ArrayList<>();
         projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ"));
         int result = projectDao.createProject(projectVO);
         if(result > 0){
-            JiraUtils.createJiraProject(projectVO.getProjectName(),
+            projects.add(projectVO.getProjectId());
+            int result2 = userProjectDao.assignUserToProjects2(projectVO.getProjectLead(),projects);
+            String response = JiraUtils.createJiraProject(projectVO.getProjectName(),
                     projectVO.getJiraProjectKey(),
                     projectVO.getProjectDescription(),
                     projectVO.getLeadJiraAccountId());
@@ -68,8 +72,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     }
 
     @Override
-    public ResponseEntity<APIResponse> markProjectAsFavorite(Long projectId) {
-        int result = projectDao.markAsFavorite(projectId);
+    public ResponseEntity<APIResponse> markProjectAsFavorite(UserProjectVO userProjectVO) {
+        int result = userProjectDao.markAsFavorite(userProjectVO);
         if(result > 0){
             return APIResponse.resultSuccess("Project successfully marked as favorite!");
         }
