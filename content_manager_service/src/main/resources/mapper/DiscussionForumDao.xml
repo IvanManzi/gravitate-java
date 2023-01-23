@@ -25,6 +25,9 @@
             <if test="title != null">
                 D.title LIKE '%' || #{title} || '%'
             </if>
+            <if test="forumId != null">
+                AND D.discussion_forum_id = #{forumId}
+            </if>
             <if test="search != null">
                 AND A.first_name LIKE '%' || #{search} || '%' OR A.last_name LIKE '%' || #{search} || '%'
             </if>

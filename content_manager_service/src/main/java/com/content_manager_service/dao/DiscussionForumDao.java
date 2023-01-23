@@ -13,7 +13,8 @@ public interface DiscussionForumDao {
 
     int createDiscussionForum(DiscussionForumVO discussionForumVO);
 
-    List<DiscussionForumVO> getAllDiscussionForums(@Param("search")String search,
+    List<DiscussionForumVO> getAllDiscussionForums(@Param("forumId") Long forumId,
+                                                   @Param("search")String search,
                                                    @Param("title")String title,
                                                    @Param("tags")String tags);
 

@@ -53,10 +53,11 @@ public class DiscussionForumManagerController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity getAllDiscussionForums(@RequestParam(value = "search",required = false) String search,
+    public ResponseEntity getAllDiscussionForums(@RequestParam(value = "forumId",required = false) Long forumId,
+                                                 @RequestParam(value = "search",required = false) String search,
                                                  @RequestParam(value = "title",required = false) String title,
                                                  @RequestParam(value = "tags",required = false) String tags) {
-        return discussionForumManagerService.getAllDiscussionForums(search,title,tags);
+        return discussionForumManagerService.getAllDiscussionForums(forumId,search,title,tags);
     }
 
     @GetMapping(value = "/quarter")

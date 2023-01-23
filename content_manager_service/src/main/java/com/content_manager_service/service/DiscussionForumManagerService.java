@@ -11,7 +11,7 @@ public interface DiscussionForumManagerService {
 
     ResponseEntity createDiscussionForumComment(DiscussionForumAnswerVO discussionForumAnswerVO);
 
-    ResponseEntity getAllDiscussionForums(String search,String title,String tags);
+    ResponseEntity getAllDiscussionForums(Long forumId,String search,String title,String tags);
 
     ResponseEntity getUserAcceptedDiscussionSolutionsByQuarter(Long userId, Integer quarter, Integer year);
 

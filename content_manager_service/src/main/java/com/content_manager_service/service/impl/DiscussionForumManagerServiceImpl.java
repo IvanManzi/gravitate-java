@@ -44,8 +44,8 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
     }
 
     @Override
-    public ResponseEntity getAllDiscussionForums(String search,String title,String tags) {
-        List<DiscussionForumVO> discussionForums = discussionForumDao.getAllDiscussionForums(search,title,tags);
+    public ResponseEntity getAllDiscussionForums(Long forumId,String search,String title,String tags) {
+        List<DiscussionForumVO> discussionForums = discussionForumDao.getAllDiscussionForums(forumId,search,title,tags);
         if(discussionForums.isEmpty()){
           return APIResponse.resourceNotFound();
         }
