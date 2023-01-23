@@ -44,7 +44,7 @@
         app_user A
         ON
         A.user_id = D.user_id
-        INNER JOIN
+        LEFT JOIN
         forum_answer_up_vote U
         ON
         U.forum_answer_id = D.forum_answer_id
