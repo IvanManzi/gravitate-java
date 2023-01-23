@@ -37,7 +37,7 @@
 
 
     <select id="selectDiscussionForumAnswers" resultType="Map">
-        SELECT D.forum_answer_id,D.forum_id,D.user_id,COUNT(U.up_vote_id) AS totalUpVotes,D.comment,D.parent,D.created_at,A.first_name,A.last_name,
+        SELECT D.forum_answer_id,D.forum_id,D.user_id,COUNT(U.up_vote_id) AS totalUpVotes,D.is_accepted,D.comment,D.parent,D.created_at,A.first_name,A.last_name,
         A.email,A.profile_picture_path
         FROM discussion_forum_answer D
         INNER JOIN
