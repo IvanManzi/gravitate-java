@@ -14,15 +14,27 @@
     </resultMap>
 
     <select id="getAllProjects" resultMap="allProjectsResult">
-        SELECT * FROM project P
-        <where>
-            <if test="userLevel != 'ROLE_ADMIN_USER' ">
-                P.project_id IN (SELECT U.project_id FROM user_project U WHERE U.user_id = #{userId} ORDER BY is_favorite DESC) AND P.status = 1
-            </if>
-            <if test="phase != null">
-                AND P.phase = #{phase} AND P.status = 1
-            </if>
-        </where>
+
+        <if test="userLevel != 'ROLE_ADMIN_USER' ">
+            SELECT P.project_id,U.is_favorite,P.project_lead,P.lead_jira_account_id,P.project_name,P.technologies,P.jira_project_key,P.project_description,P.phone_number,P.client_name,P.client_email,P.start_date,P.created_at
+            FROM project P
+            INNER JOIN
+            user_project U
+            ON
+            U.project_id = P.project_id
+            WHERE
+            P.project_id IN (
+                        SELECT U.project_id
+                        FROM user_project U
+                        WHERE U.user_id = #{userId}
+                        ORDER BY is_favorite DESC
+                        ) AND U.user_id = #{userId} AND P.status = 1
+            ORDER BY U.is_favorite DESC
+        </if>
+
+        <if test="userLevel == 'ROLE_ADMIN_USER' ">
+            SELECT * FROM project P
+        </if>
 
     </select>
 
