@@ -350,7 +350,7 @@ public class JiraUtils {
         JSONArray userTasks = new JSONArray();
 
         //check cache has issues key
-        if(cacheEntry.data.has("issues")){
+        if(!cacheEntry.data.has("issues")){
             statsObj.put("doneCounter", doneCounter);
             statsObj.put("inProgressCounter", inProgressCounter);
             statsObj.put("notStartedCounter", notStartedCounter);
