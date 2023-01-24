@@ -58,15 +58,21 @@ public class JiraUtils {
                     .asJson();
             cacheEntry = new CacheEntry(response.getBody().getObject(), currentTime);
             projectsCache.put("ALL_PROJECTS",cacheEntry);
-
         }
         JSONObject jsonObject = cacheEntry.data;
-        JSONArray jiraProjectsArray = jsonObject.getJSONArray("values");
+        //Deep clone the jsonObject to avoid manipulations of jiraProjectsArray from affecting future method calls
+        ObjectMapper mapper1 = new ObjectMapper();
+        Map<String, Object> map1 = mapper1.readValue(jsonObject.toString(), new TypeReference<Map<String, Object>>() {});
+        JSONObject jsonObjectClone = new JSONObject(mapper1.writeValueAsString(map1));
+        JSONArray jiraProjectsArray = jsonObjectClone.getJSONArray("values");
+
+        System.out.println(jiraProjectsArray.length());
         for (int i = 0; i < jiraProjectsArray.length(); i++) {
-            String id = jiraProjectsArray.getJSONObject(i).get("id").toString();
+            //String id = jiraProjectsArray.getJSONObject(i).get("id").toString();
             String key = jiraProjectsArray.getJSONObject(i).get("key").toString();
             // Check if the project has a corresponding id in the HashMap
-            if (projectsById.containsKey(id) || projectsById.containsKey(key)) {
+            if (projectsById.containsKey(key)) {
+                System.out.println(key);
                 // Check if the result for the given project id is in the cache
                 Integer doneIssues = getProjectDoneIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
                 Integer pendingIssues = getProjectPendingIssues(jiraProjectsArray.getJSONObject(i).get("key").toString());
@@ -92,7 +98,7 @@ public class JiraUtils {
             ObjectMapper mapper = new ObjectMapper();
 
             // Convert the JSONObject to a Java object
-            Map<String, Object> map = mapper.readValue(jsonObject.toString(), new TypeReference<Map<String, Object>>() {
+            Map<String, Object> map = mapper.readValue(jsonObjectClone.toString(), new TypeReference<Map<String, Object>>() {
             });
 
             // Convert the Java object to a JSON string
