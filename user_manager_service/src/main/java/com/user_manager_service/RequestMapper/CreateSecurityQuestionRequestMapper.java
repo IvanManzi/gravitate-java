@@ -6,10 +6,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "default")
 public interface CreateSecurityQuestionRequestMapper {
 
     CreateSecurityQuestionRequestMapper INSTANCE = Mappers.getMapper( CreateSecurityQuestionRequestMapper.class);
 
-    CreateUserSecurityQuestionRequest createSecurityQuestionDto(SecurityQuestionVO securityQuestionVO);
+    SecurityQuestionVO map(CreateUserSecurityQuestionRequest createUserSecurityQuestionRequest);
 }

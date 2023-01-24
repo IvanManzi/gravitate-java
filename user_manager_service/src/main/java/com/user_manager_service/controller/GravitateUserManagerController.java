@@ -2,6 +2,8 @@ package com.user_manager_service.controller;
 
 import com.model.EmailDetailsV0;
 import com.model.UserVO;
+import com.user_manager_service.RequestMapper.CreateGravitateUserFormMapper;
+import com.user_manager_service.RequestMapper.UpdateUserMapper;
 import com.user_manager_service.form.CreateGravitateUserForm;
 import com.user_manager_service.form.ForgetPasswordRequest;
 import com.user_manager_service.form.UpdateGravitateUserForm;
@@ -30,7 +32,8 @@ public class GravitateUserManagerController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request) throws IOException {
-        UserVO userVO = new UserVO();
+        UserVO userVO = CreateGravitateUserFormMapper.INSTANCE.map(createGravitateUserForm);
+        userVO.setPassword(passwordEncoder.encode(createGravitateUserForm.otp()));
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
 
         //create email details obj
@@ -40,30 +43,6 @@ public class GravitateUserManagerController {
         emailDetailsV0.setRecipientLastName(createGravitateUserForm.lastName());
         emailDetailsV0.setPassword(createGravitateUserForm.otp());
         emailDetailsV0.setSubject("Welcome To Gravitate");
-
-        //create user obj
-        userVO.setUserType(createGravitateUserForm.userType());
-        userVO.setAdminPageAccess(createGravitateUserForm.pageAccess());
-        userVO.setEmail(createGravitateUserForm.email());
-        userVO.setOtp(createGravitateUserForm.otp());
-        userVO.setPassword(passwordEncoder.encode(createGravitateUserForm.otp()));
-        userVO.setAlternateEmail(createGravitateUserForm.alternativeEmail());
-        userVO.setFirstName(createGravitateUserForm.firstName());
-        userVO.setLastName(createGravitateUserForm.lastName());
-        userVO.setCountry(createGravitateUserForm.country());
-        userVO.setDateOfBirth(createGravitateUserForm.dob());
-        userVO.setJoiningDate(createGravitateUserForm.joinedOn());
-        userVO.setPhoneNumber(createGravitateUserForm.phoneNumber());
-        userVO.setProfilePicturePath(createGravitateUserForm.profilePicture());
-        userVO.setContractPath(createGravitateUserForm.contractPath());
-        userVO.setEmploymentStatus(createGravitateUserForm.employmentStatus());
-        userVO.setBankName(createGravitateUserForm.bankName());
-        userVO.setAccountNumber(createGravitateUserForm.accountNumber());
-        userVO.setBilling(createGravitateUserForm.billing());
-        userVO.setUserLevel(createGravitateUserForm.userLevel());
-        userVO.setJiraId(createGravitateUserForm.jiraId());
-        userVO.setRoleId(createGravitateUserForm.roleId());
-        userVO.setManagedBy(createGravitateUserForm.managerId());
         return gravitateUserManagerService.createGravitateUser(userVO,createGravitateUserForm.projects(),token,emailDetailsV0);
     }
     @GetMapping(value = "/all")
@@ -87,32 +66,9 @@ public class GravitateUserManagerController {
 
     @PutMapping(value = "/update")
     public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm,HttpServletRequest request){
-        UserVO userVO = new UserVO();
-        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-
-        userVO.setUserId(updateGravitateUserForm.userId());
-        userVO.setUserType(updateGravitateUserForm.userType());
-        userVO.setEmail(updateGravitateUserForm.email());
-        userVO.setOtp(updateGravitateUserForm.otp());
-        userVO.setAdminPageAccess(updateGravitateUserForm.pageAccess());
+        UserVO userVO = UpdateUserMapper.INSTANCE.map(updateGravitateUserForm);
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.otp()));
-        userVO.setAlternateEmail(updateGravitateUserForm.alternativeEmail());
-        userVO.setFirstName(updateGravitateUserForm.firstName());
-        userVO.setLastName(updateGravitateUserForm.lastName());
-        userVO.setCountry(updateGravitateUserForm.country());
-        userVO.setDateOfBirth(updateGravitateUserForm.dob());
-        userVO.setJoiningDate(updateGravitateUserForm.joinedOn());
-        userVO.setPhoneNumber(updateGravitateUserForm.phoneNumber());
-        userVO.setProfilePicturePath(updateGravitateUserForm.profilePicture());
-        userVO.setContractPath(updateGravitateUserForm.contractPath());
-        userVO.setEmploymentStatus(updateGravitateUserForm.employmentStatus());
-        userVO.setBankName(updateGravitateUserForm.bankName());
-        userVO.setAccountNumber(updateGravitateUserForm.accountNumber());
-        userVO.setBilling(updateGravitateUserForm.billing());
-        userVO.setUserLevel(updateGravitateUserForm.userLevel());
-        userVO.setJiraId(updateGravitateUserForm.jiraId());
-        userVO.setRoleId(updateGravitateUserForm.roleId());
-        userVO.setManagedBy(updateGravitateUserForm.managerId());
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         return gravitateUserManagerService.updateGravitateUser(userVO,updateGravitateUserForm.projects(),token);
     }
 

@@ -7,11 +7,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "default")
 public interface CreateSkillRequestMapper {
 
     CreateSkillRequestMapper INSTANCE = Mappers.getMapper(CreateSkillRequestMapper.class);
 
-    @Mapping(source = "certificatePath", target = "certificateUrl")
-    CreateUserSkillRequest createSkillDto(UserSkillVO userSkillVO);
+    @Mapping(source = "certificateUrl", target = "certificatePath")
+    UserSkillVO map(CreateUserSkillRequest createUserSkillRequest);
 }

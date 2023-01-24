@@ -6,10 +6,10 @@ import com.user_manager_service.form.CreateAdditionalPointRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "default")
 public interface CreateAdditionalPointRequestMapper {
 
     CreateAdditionalPointRequestMapper INSTANCE = Mappers.getMapper(CreateAdditionalPointRequestMapper.class);
 
-    CreateAdditionalPointRequest toAdditionalPointVO(AdditionalPointVO additionalPointVO);
+    AdditionalPointVO map(CreateAdditionalPointRequest createAdditionalPointRequest);
 }

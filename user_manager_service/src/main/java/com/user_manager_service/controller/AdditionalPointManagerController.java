@@ -1,6 +1,7 @@
 package com.user_manager_service.controller;
 
 import com.model.AdditionalPointVO;
+import com.user_manager_service.RequestMapper.CreateAdditionalPointRequestMapper;
 import com.user_manager_service.form.CreateAdditionalPointRequest;
 import com.user_manager_service.service.AdditionalPointsManagerService;
 import com.util.JwtUtils;
@@ -26,15 +27,10 @@ public class AdditionalPointManagerController {
     @PostMapping(value = "/create")
     public ResponseEntity createAdditionalPoint(@Valid @RequestBody CreateAdditionalPointRequest createAdditionalPointRequest,
                                                 HttpServletRequest request) throws IOException {
-        AdditionalPointVO additionalPointVO = new AdditionalPointVO();
+        AdditionalPointVO additionalPointVO = CreateAdditionalPointRequestMapper.INSTANCE.map(createAdditionalPointRequest);
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String adminId = JwtUtils.getUserIdFromJwtToken(token);
         additionalPointVO.setAdminId(Long.valueOf(adminId));
-        additionalPointVO.setPoints(createAdditionalPointRequest.points());
-        additionalPointVO.setQuarter(createAdditionalPointRequest.quarter());
-        additionalPointVO.setCategory(createAdditionalPointRequest.category());
-        additionalPointVO.setComment(createAdditionalPointRequest.comment());
-        additionalPointVO.setUserId(createAdditionalPointRequest.userId());
         return additionalPointsManagerService.createAdditionalPoint(additionalPointVO);
     }
 

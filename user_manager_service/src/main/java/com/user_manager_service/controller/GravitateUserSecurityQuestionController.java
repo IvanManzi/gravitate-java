@@ -2,6 +2,8 @@ package com.user_manager_service.controller;
 
 import com.model.SecurityQuestionVO;
 import com.model.UserVO;
+import com.user_manager_service.RequestMapper.CreateSecurityQuestionRequestMapper;
+import com.user_manager_service.RequestMapper.UpdateSecurityQuestionRequestMapper;
 import com.user_manager_service.form.CreateUserSecurityQuestionRequest;
 import com.user_manager_service.form.UpdateUserSecurityQuestionRequest;
 import com.user_manager_service.service.GravitateSecurityQuestionService;
@@ -26,12 +28,10 @@ public class GravitateUserSecurityQuestionController {
     @PostMapping(value = "/create")
     public ResponseEntity createUserSecurityQuestion(@Valid @RequestBody CreateUserSecurityQuestionRequest createUserSecurityQuestionRequest,
                                                 HttpServletRequest request) throws IOException {
-        SecurityQuestionVO securityQuestionVO = new SecurityQuestionVO();
+        SecurityQuestionVO securityQuestionVO = CreateSecurityQuestionRequestMapper.INSTANCE.map(createUserSecurityQuestionRequest);
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         securityQuestionVO.setUserId(Long.valueOf(userId));
-        securityQuestionVO.setQuestion(createUserSecurityQuestionRequest.question());
-        securityQuestionVO.setAnswer(createUserSecurityQuestionRequest.answer());
         return gravitateSecurityQuestionService.createSecurityQuestion(securityQuestionVO);
     }
 
@@ -45,13 +45,10 @@ public class GravitateUserSecurityQuestionController {
     @PutMapping(value = "/")
     public ResponseEntity updateUserSecurityQuestion(@Valid @RequestBody UpdateUserSecurityQuestionRequest updateUserSecurityQuestionRequest,
                                        HttpServletRequest request) throws IOException {
-        SecurityQuestionVO securityQuestionVO = new SecurityQuestionVO();
+        SecurityQuestionVO securityQuestionVO = UpdateSecurityQuestionRequestMapper.INSTANCE.map(updateUserSecurityQuestionRequest);
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         securityQuestionVO.setUserId(Long.valueOf(userId));
-        securityQuestionVO.setSecurityQuestionId(updateUserSecurityQuestionRequest.securityQuestionId());
-        securityQuestionVO.setQuestion(updateUserSecurityQuestionRequest.question());
-        securityQuestionVO.setAnswer(updateUserSecurityQuestionRequest.answer());
         return gravitateSecurityQuestionService.updateSecurityQuestion(securityQuestionVO);
     }
     @DeleteMapping(value = "/{questionId}")

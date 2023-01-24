@@ -2,6 +2,7 @@ package com.user_manager_service.controller;
 
 
 import com.model.UserSkillVO;
+import com.user_manager_service.RequestMapper.CreateSkillRequestMapper;
 import com.user_manager_service.form.CreateUserSkillRequest;
 import com.user_manager_service.service.UserSkillManagerService;
 import com.util.JwtUtils;
@@ -24,14 +25,10 @@ public class UserSkillManagerController {
 
     @PostMapping(value = "/add")
     public ResponseEntity createUserSkill(@Valid @RequestBody CreateUserSkillRequest createUserSkillRequest, HttpServletRequest request) throws IOException {
-        UserSkillVO userSkillVO = new UserSkillVO();
+        UserSkillVO userSkillVO = CreateSkillRequestMapper.INSTANCE.map(createUserSkillRequest);
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
         userSkillVO.setUserId(Long.valueOf(userId));
-        userSkillVO.setTitle(createUserSkillRequest.title());
-        userSkillVO.setCategory(createUserSkillRequest.category());
-        userSkillVO.setExpertise(createUserSkillRequest.expertise());
-        userSkillVO.setCertificatePath(createUserSkillRequest.certificateUrl());
         return userSkillManagerService.createUserSkill(userSkillVO);
     }
 
