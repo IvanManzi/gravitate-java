@@ -18,7 +18,7 @@
         P.project_id = T.project_id
         <where>
             <if test="userLevel != 'ROLE_ADMIN_USER' ">
-                WHERE T.user_id = #{userId}
+                T.user_id = #{userId}
             </if>
             <if test="isArchived != null">
                 AND is_archived = #{isArchived}
