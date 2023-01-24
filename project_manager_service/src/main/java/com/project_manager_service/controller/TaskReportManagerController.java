@@ -55,6 +55,9 @@ public class TaskReportManagerController {
         TaskReportVO taskReportVO = new TaskReportVO();
         taskReportVO.setTaskReportId(updateTaskReportRequest.reportId());
         taskReportVO.setJiraProjectId(updateTaskReportRequest.projectId());
+        taskReportVO.setStartDate(updateTaskReportRequest.date());
+        taskReportVO.setHoursSpent(updateTaskReportRequest.hours());
+        taskReportVO.setTaskName(updateTaskReportRequest.name());
         taskReportVO.setJiraTaskId(updateTaskReportRequest.taskId());
         return taskReportManagerService.updateTaskReport(taskReportVO);
     }

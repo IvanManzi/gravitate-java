@@ -35,7 +35,10 @@
         UPDATE task_report
         SET
         jira_task_id = #{jiraTaskId},
-        jira_project_id = #{jiraProjectId}
+        jira_project_id = #{jiraProjectId},
+        start_date = #{startDate},
+        task_name = #{taskName},
+        hours_spent = #{hoursSpent}
         WHERE
         task_report_id = #{taskReportId}
     </update>
