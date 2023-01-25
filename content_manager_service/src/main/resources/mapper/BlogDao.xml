@@ -20,8 +20,11 @@
         ON
         T.user_id = U.user_id
         <where>
+            <if test="blogId != null">
+                T.blog_id = #{blogId}
+            </if>
             <if test="topic != null">
-                LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
+                AND LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
             </if>
             <if test="search != null">
                 AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')

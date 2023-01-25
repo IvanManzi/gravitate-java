@@ -53,8 +53,9 @@ public class GravitateBlogController {
 
     @GetMapping(value = "/all")
     public ResponseEntity getAllBlogs(@RequestParam(value = "search",required = false) String search,
-                                      @RequestParam(value = "topic",required = false)String topic){
-        return gravitateBlogManagerService.getAllBlogs(search,topic);
+                                      @RequestParam(value = "topic",required = false)String topic,
+                                      @RequestParam(value = "blogId",required = false)Long blogId){
+        return gravitateBlogManagerService.getAllBlogs(search,topic,blogId);
     }
 
     @GetMapping(value = "/quarter")
