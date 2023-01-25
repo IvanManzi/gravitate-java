@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,9 +73,18 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
 
     @Override
     public ResponseEntity getUserPerformanceEvaluationPoints(Long userId, List<Integer> quarter, List<Integer> sprint, Integer year, String groupBy) {
-        List<Map> userPerformances = performanceEvaluationCriteriaScoreDao.getAllUsersPerformanceEvaluationCriteria(userId,quarter,sprint,year,groupBy);
+        List<PerformanceEvaluationCriteriaScoreVO> scores = new ArrayList<>();
+        List<Map> userPerformances = performanceEvaluationCriteriaScoreDao.getAllUsersPerformanceEvaluations(userId,quarter,sprint,year,groupBy);
         if(userPerformances.isEmpty()){
             return APIResponse.resourceNotFound();
+        }
+        for(Map userPerformance : userPerformances){
+            if(userPerformance.get("type").equals(1)) //1 for quarter , 0 for sprint
+                scores = performanceEvaluationCriteriaScoreDao.getUserPerformanceScores(userId,year,(Integer) userPerformance.get("type"),(Integer) userPerformance.get("key"),sprint);
+            else
+                scores = performanceEvaluationCriteriaScoreDao.getUserPerformanceScores(userId,year,(Integer) userPerformance.get("type"),(Integer) userPerformance.get("key"),quarter);
+
+            userPerformance.put("performance",scores);
         }
         Map<String,Object> data = new HashMap<>();
         data.put("USER_PERFORMANCES",userPerformances);

@@ -107,8 +107,6 @@ public class RolePerformanceEvaluationController {
                 quarterValues.add(Integer.parseInt(s.trim()));
             }
         }
-        System.out.println(quarterValues);
-        System.out.println(sprintValues);
         return rolePerformanceEvaluationService.getUserPerformanceEvaluationPoints(userId,quarterValues,sprintValues,year,groupBy);
     }
 

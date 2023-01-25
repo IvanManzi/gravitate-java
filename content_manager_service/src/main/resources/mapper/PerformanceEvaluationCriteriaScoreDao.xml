@@ -10,12 +10,12 @@
     </insert>
 
 
-    <resultMap id="performanceCriteriaResult" type="Map">
+    <!--<resultMap id="performanceCriteriaResult" type="Map">
         <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,key=key,userId=user_id,type=type" />
-    </resultMap>
+    </resultMap>-->
 
 
-    <select id="getAllUsersPerformanceEvaluationCriteria" resultMap="performanceCriteriaResult">
+    <select id="getAllUsersPerformanceEvaluations" resultType="Map">
         SELECT S.user_id,S.year,
         <choose>
             <when test="groupBy == 'quarter'">S.quarter AS key, 1 AS type</when>
@@ -80,8 +80,18 @@
         user_id = #{userId}
         AND
         <choose>
-            <when test="type == '1' ">quarter = #{key}</when>
-            <otherwise>sprint = #{key}</otherwise>
+            <when test="type == 1 ">
+                quarter = #{key} AND sprint IN
+                <foreach item="key" index="index" collection="keys" open="(" separator="," close=")">
+                    #{key}
+                </foreach>
+            </when>
+            <otherwise>
+                sprint = #{key} AND quarter IN
+                <foreach item="key" index="index" collection="keys" open="(" separator="," close=")">
+                    #{key}
+                </foreach>
+            </otherwise>
         </choose>
         AND
         year = #{year}
