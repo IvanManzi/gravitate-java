@@ -89,18 +89,27 @@ public class RolePerformanceEvaluationController {
 
     @GetMapping(value = "/{userId}/points")
     public ResponseEntity<APIResponse> getUserPerformanceScores(@PathVariable("userId") Long userId,
-                                                           @RequestParam(value = "quarter") Integer quarter,
-                                                           @RequestParam(value = "sprint")Integer sprint,
-                                                           @RequestParam(value = "year") Integer year
-                                                           /*@RequestParam(value = "groupBy") String groupBy*/) {
-        /*List<Integer> sprintValues = new ArrayList<>();
-        if(!ValidationUtil.isNullObject(sprints)){
+                                                           @RequestParam(value = "quarter") String quarter,
+                                                           @RequestParam(value = "sprint")String sprint,
+                                                           @RequestParam(value = "year") Integer year,
+                                                           @RequestParam(value = "groupBy",required = false) String groupBy) {
+        List<Integer> sprintValues = new ArrayList<>();
+        List<Integer> quarterValues = new ArrayList<>();
+        if(!ValidationUtil.isNullObject(sprint)){
             sprintValues = new ArrayList<>();
-            for(String s : sprints.split(",")) {
+            for(String s : sprint.split(",")) {
                 sprintValues.add(Integer.parseInt(s.trim()));
             }
-        }*/
-        return rolePerformanceEvaluationService.getUserPerformanceEvaluationPoints(userId,quarter,sprint,year);
+        }
+        if(!ValidationUtil.isNullObject(quarter)){
+            quarterValues = new ArrayList<>();
+            for(String s : quarter.split(",")) {
+                quarterValues.add(Integer.parseInt(s.trim()));
+            }
+        }
+        System.out.println(quarterValues);
+        System.out.println(sprintValues);
+        return rolePerformanceEvaluationService.getUserPerformanceEvaluationPoints(userId,quarterValues,sprintValues,year,groupBy);
     }
 
 

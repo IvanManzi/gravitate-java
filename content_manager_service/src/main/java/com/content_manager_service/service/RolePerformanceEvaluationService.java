@@ -16,7 +16,7 @@ public interface RolePerformanceEvaluationService {
 
     ResponseEntity awardPointsOnPerformanceEvaluationCriteria(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO);
 
-    ResponseEntity getUserPerformanceEvaluationPoints(Long userId, Integer quarter, Integer sprints, Integer year);
+    ResponseEntity getUserPerformanceEvaluationPoints(Long userId, List<Integer> quarter, List<Integer> sprints, Integer year, String groupBy);
 
     ResponseEntity updateRolePerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO);
 

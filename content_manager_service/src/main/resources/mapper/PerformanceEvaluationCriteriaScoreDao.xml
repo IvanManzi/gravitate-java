@@ -11,12 +11,16 @@
 
 
     <resultMap id="performanceCriteriaResult" type="Map">
-        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,quarter=quarter,userId=user_id,performanceEvaluationId=performance_evaluation_id" />
+        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,key=key,userId=user_id,type=type" />
     </resultMap>
 
 
     <select id="getAllUsersPerformanceEvaluationCriteria" resultMap="performanceCriteriaResult">
-        SELECT P.role_performance_evaluation_id AS performance_evaluation_id,P.criteria,P.description,S.quarter,S.user_id,S.year
+        SELECT S.user_id,S.year,
+        <choose>
+            <when test="groupBy == 'quarter'">S.quarter AS key, 1 AS type</when>
+            <otherwise>S.sprint AS key, 0 AS type</otherwise>
+        </choose>
         FROM performance_evaluation P
         INNER JOIN
         performance_evaluation_criteria_score S
@@ -26,22 +30,27 @@
             <if test="userId != null">
                 S.user_id = #{userId}
             </if>
-            <if test="quarter != null">
-                AND S.quarter = #{quarter}
+            <if test="quarters != null">
+                AND S.quarter IN
+                <foreach item="quarter" index="index" collection="quarters" open="(" separator="," close=")">
+                    #{quarter}
+                </foreach>
             </if>
-            <if test="sprint != null">
-                AND S.sprint = (#{sprint})
+            <if test="sprints != null">
+                AND S.sprint IN
+                <foreach item="sprint" index="index" collection="sprints" open="(" separator="," close=")">
+                    #{sprint}
+                </foreach>
             </if>
             <if test="year != null">
                 AND S.year = #{year}
             </if>
         </where>
-        GROUP BY P.role_performance_evaluation_id,S.year,S.quarter,S.user_id
-        <!--<if test="groupByItems != null">
-            <foreach collection="groupByItems" item="item" index="index" open="" separator="," close="">
-                ,CONCAT('S.', #{item})
-            </foreach>
-        </if>-->
+        GROUP BY S.year,S.user_id,
+        <choose>
+            <when test="groupBy == 'quarter'">S.quarter</when>
+            <otherwise>S.sprint</otherwise>
+        </choose>
     </select>
 
     <select id="checkIfEvaluationExists" resultType="int" parameterType="com.model.PerformanceEvaluationCriteriaScoreVO">
@@ -70,11 +79,12 @@
         WHERE
         user_id = #{userId}
         AND
-        quarter = #{quarter}
+        <choose>
+            <when test="type == '1' ">quarter = #{key}</when>
+            <otherwise>sprint = #{key}</otherwise>
+        </choose>
         AND
         year = #{year}
-        AND
-        performance_evaluation_id = #{performanceEvaluationId}
     </select>
 
 

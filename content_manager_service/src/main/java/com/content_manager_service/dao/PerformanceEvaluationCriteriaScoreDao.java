@@ -14,10 +14,10 @@ public interface PerformanceEvaluationCriteriaScoreDao {
     int createPerformanceEvaluationCriteriaScore(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO);
 
     List<Map> getAllUsersPerformanceEvaluationCriteria(@Param("userId") Long userId,
-                                                    @Param("quarter") Integer quarter,
-                                                    @Param("sprint") Integer sprints,
-                                                    @Param("year") Integer year
-                                                    /*@Param("groupBy") String groupBy*/);
+                                                    @Param("quarters") List<Integer> quarters,
+                                                    @Param("sprints") List<Integer> sprints,
+                                                    @Param("year") Integer year,
+                                                    @Param("groupBy") String groupBy);
 
     int checkIfEvaluationExists(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO);
 }
