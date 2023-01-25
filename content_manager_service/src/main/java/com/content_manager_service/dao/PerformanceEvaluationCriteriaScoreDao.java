@@ -19,7 +19,7 @@ public interface PerformanceEvaluationCriteriaScoreDao {
                                                 @Param("year") Integer year,
                                                 @Param("groupBy") String groupBy);
 
-    List<PerformanceEvaluationCriteriaScoreVO> getUserPerformanceScores(@Param("userId")Long userId,
+    List<Map> getUserPerformanceScores(@Param("userId")Long userId,
                                                                         @Param("year")Integer year,
                                                                         @Param("type") Integer type,
                                                                         @Param("key") Integer key,

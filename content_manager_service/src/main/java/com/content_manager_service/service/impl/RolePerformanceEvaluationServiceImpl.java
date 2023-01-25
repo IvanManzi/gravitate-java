@@ -73,7 +73,7 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
 
     @Override
     public ResponseEntity getUserPerformanceEvaluationPoints(Long userId, List<Integer> quarter, List<Integer> sprint, Integer year, String groupBy) {
-        List<PerformanceEvaluationCriteriaScoreVO> scores = new ArrayList<>();
+        List<Map> scores = new ArrayList<>();
         List<Map> userPerformances = performanceEvaluationCriteriaScoreDao.getAllUsersPerformanceEvaluations(userId,quarter,sprint,year,groupBy);
         if(userPerformances.isEmpty()){
             return APIResponse.resourceNotFound();

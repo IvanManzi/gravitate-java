@@ -74,8 +74,13 @@
 
 
 
-    <select id="getUserPerformanceScores" resultType="com.model.PerformanceEvaluationCriteriaScoreVO">
-        SELECT * FROM performance_evaluation_criteria_score
+    <select id="getUserPerformanceScores" resultType="Map">
+        SELECT S.performance_evaluation_criteria_score_id,S.performance_evaluation_id,S.quarter,S.sprint,S.year,S.points,S.created_at,P.criteria,P.description
+        FROM performance_evaluation_criteria_score S
+        INNER JOIN
+        performance_evaluation P
+        ON
+        P.role_performance_evaluation_id = S.performance_evaluation_id
         WHERE
         user_id = #{userId}
         AND
