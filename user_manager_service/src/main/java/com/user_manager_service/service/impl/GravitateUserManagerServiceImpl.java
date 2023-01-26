@@ -116,6 +116,15 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
     @Override
     public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) {
+        //check if otp is updated to override user password
+        UserVO user = userDao.getGravitateUserByUsername(userVO.getEmail());
+        if (ValidationUtil.isNullObject(user)){
+            return APIResponse.resultFail();
+        }
+        //check
+        if(user.getOtp().equals(userVO.getOtp())){
+            userVO.setPassword(null);
+        }
         int result = userDao.updateGravitateUser(userVO);
         if(result > 0){
             if(ValidationUtil.isNullObject(projects) || projects.isEmpty()){

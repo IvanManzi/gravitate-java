@@ -116,7 +116,9 @@
         managed_by = #{managedBy},
         role_id = #{roleId},
         otp = #{otp},
-        password = #{password},
+        <if test="password != null">
+            password = #{password},
+        </if>
         user_level = #{userLevel},
         jira_id = #{jiraId},
         email = #{email},
@@ -139,7 +141,7 @@
                                 #{access}
                             </foreach>
                             ]
-                        </if>
+                            </if>
                             <if test="adminPageAccess == null">
                                 null
                             </if>

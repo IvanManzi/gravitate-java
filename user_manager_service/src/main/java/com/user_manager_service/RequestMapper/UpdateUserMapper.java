@@ -17,5 +17,6 @@ public interface UpdateUserMapper {
     @Mapping(source = "managerId", target = "managedBy")
     @Mapping(source = "joinedOn", target = "joiningDate")
     @Mapping(source = "profilePicture", target = "profilePicturePath")
+    @Mapping(source = "alternativeEmail", target = "alternateEmail")
     UserVO map(UpdateGravitateUserForm updateGravitateUserForm);
 }
