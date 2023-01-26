@@ -69,7 +69,7 @@ public class GravitateBlogController {
         BlogVO blogVO = new BlogVO();
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         String userId = JwtUtils.getUserIdFromJwtToken(token);
-        blogVO.setBlogId(updateBlogRequest.topicId());
+        blogVO.setBlogId(updateBlogRequest.blogId());
         blogVO.setUserId(Long.valueOf(userId));
         blogVO.setTitle(updateBlogRequest.title());
         blogVO.setTags(updateBlogRequest.tags());
@@ -78,9 +78,9 @@ public class GravitateBlogController {
         return gravitateBlogManagerService.updateBlog(blogVO);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity deleteBlog(@PathVariable("topicId") Long topicId){
-        return gravitateBlogManagerService.deleteBlog(topicId);
+    @DeleteMapping("{blogId}")
+    public ResponseEntity deleteBlog(@PathVariable("blogId") Long blogId){
+        return gravitateBlogManagerService.deleteBlog(blogId);
     }
 
 }
