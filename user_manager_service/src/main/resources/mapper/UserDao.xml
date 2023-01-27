@@ -269,7 +269,10 @@
         INNER JOIN
         wish W
         ON W.user_id = A.user_id
-        WHERE W.user_id = #{userId}
+        WHERE
+        W.user_id = #{userId}
+        AND
+        W.created_at = CURRENT_DATE
         ORDER BY W.created_at DESC
     </select>
 
