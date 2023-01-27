@@ -693,7 +693,7 @@ public class JiraUtils {
     }
 
 
-    public static String createJiraProject(String name,String projectKey, String description, String leadAccountId) throws UnirestException, JsonProcessingException {
+    public static boolean createJiraProject(String name,String projectKey, String description, String leadAccountId) throws UnirestException, JsonProcessingException {
         JSONObject payload = new JSONObject();
         JSONObject returnObject = new JSONObject();
 
@@ -711,29 +711,12 @@ public class JiraUtils {
                 .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
                 .body(payload)
                 .asJson();
-
+        System.out.println(response.getBody().getObject());
         if(response.getStatus() == 201){
-            returnObject.put("message", "Project successfully created. ");
-            //add project lead to project role
-            assignProjectToUser(projectKey,leadAccountId);
-        }
-        else if(response.getStatus() == 401){
-            returnObject.put("message", "Incorrect Credentials. ");
-        }
-        else if(response.getStatus() == 403){
-            returnObject.put("message", "Unauthorised to perform this action. ");
-        }
-        else if(response.getStatus() == 404){
-            returnObject.put("message", "Issue not found. ");
+            return true;
         }else{
-            returnObject = response.getBody().getObject();
+            return false;
         }
-        System.out.println(returnObject);
-        System.out.println(response.getBody());
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> map = mapper.readValue(returnObject.toString(), new TypeReference<Map<String, Object>>() {});
-        return mapper.writeValueAsString(map);
     }
 
     public static String updateJiraProject(String projectKey,String name,String description, String leadAccountId) throws UnirestException, JsonProcessingException {
