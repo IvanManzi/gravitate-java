@@ -1,5 +1,6 @@
 package com.user_manager_service.controller;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.EmailDetailsV0;
 import com.model.UserVO;
 import com.user_manager_service.RequestMapper.CreateGravitateUserFormMapper;
@@ -31,7 +32,7 @@ public class GravitateUserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request) throws IOException {
+    public ResponseEntity<?> createGravitateUser(@RequestBody CreateGravitateUserForm createGravitateUserForm, HttpServletRequest request) throws IOException, UnirestException {
         UserVO userVO = CreateGravitateUserFormMapper.INSTANCE.map(createGravitateUserForm);
         userVO.setPassword(passwordEncoder.encode(createGravitateUserForm.otp()));
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
@@ -65,7 +66,7 @@ public class GravitateUserManagerController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm,HttpServletRequest request){
+    public ResponseEntity updateGravitateUser(@RequestBody UpdateGravitateUserForm updateGravitateUserForm,HttpServletRequest request) throws UnirestException {
         UserVO userVO = UpdateUserMapper.INSTANCE.map(updateGravitateUserForm);
         userVO.setPassword(passwordEncoder.encode(updateGravitateUserForm.otp()));
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());

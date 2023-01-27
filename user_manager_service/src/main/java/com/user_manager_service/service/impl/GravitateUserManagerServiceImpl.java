@@ -1,5 +1,6 @@
 package com.user_manager_service.service.impl;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.model.EmailDetailsV0;
 import com.user_manager_service.dao.SecurityQuestionDao;
 import com.user_manager_service.form.AssignProjectsToUserRequest;
@@ -9,6 +10,7 @@ import com.model.UserVO;
 import com.user_manager_service.dao.UserDao;
 import com.user_manager_service.service.GravitateUserManagerService;
 import com.google.gson.Gson;
+import com.util.JiraUtils;
 import com.util.UserDetailsService;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +59,18 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
 
 
     @Override
-    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) throws IOException {
+    public ResponseEntity createGravitateUser(UserVO userVO,List<Long> projects, String token, EmailDetailsV0 emailDetailsV0) throws IOException, UnirestException {
         //check if email is unique
         int check = userDao.checkIfUsernameExists(userVO.getEmail());
         if(check == 1){
             return APIResponse.resultFail("Email already taken.");
+        }
+        //check if jira id is valid(if provided)
+        if(!ValidationUtil.isNullObject(userVO.getJiraId())){
+            boolean isValid = JiraUtils.isJiraIdValid(userVO.getJiraId());
+            if(!isValid){
+                return APIResponse.resultFail("Invalid Jira account ID. ");
+            }
         }
         emailJobService.serializeEmailDetailsVO(emailDetailsV0);
         int result = userDao.createGravitateUser(userVO);
@@ -115,7 +124,7 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
     }
 
     @Override
-    public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) {
+    public ResponseEntity updateGravitateUser(UserVO userVO,List<Long> projects, String token) throws UnirestException {
         //check if otp is updated to override user password
         UserVO user = userDao.getGravitateUserByUsername(userVO.getEmail());
         if (ValidationUtil.isNullObject(user)){
@@ -125,9 +134,16 @@ public class GravitateUserManagerServiceImpl implements GravitateUserManagerServ
         if(user.getOtp().equals(userVO.getOtp())){
             userVO.setPassword(null);
         }
+        //check if jira id is valid(if provided)
+        if(!ValidationUtil.isNullObject(userVO.getJiraId())){
+            boolean isValid = JiraUtils.isJiraIdValid(userVO.getJiraId());
+            if(!isValid){
+                return APIResponse.resultFail("Invalid Jira account ID. ");
+            }
+        }
         int result = userDao.updateGravitateUser(userVO);
         if(result > 0){
-            if(ValidationUtil.isNullObject(projects) || projects.isEmpty()){
+            if(ValidationUtil.isNullObject(projects)){
                 return  APIResponse.resultSuccess();
             }
             HttpHeaders headers = new HttpHeaders();
