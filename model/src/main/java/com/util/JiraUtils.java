@@ -36,6 +36,28 @@ public class JiraUtils {
     private static Map<String, CacheEntry> cache2 = new LinkedHashMap<>();
 
     private static Map<String, CacheEntry> projectsCache = new LinkedHashMap<>();
+
+
+
+    public static boolean isJiraIdValid(String jiraId) throws UnirestException {
+        if(ValidationUtil.isNullObject(jiraId)){
+            return false;
+        }
+        HttpResponse<JsonNode> response = Unirest.get(API_BASE_URL + "/user")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .header("Accept", "application/json")
+                .queryString("accountId", jiraId)
+                .asJson();
+        System.out.println(response.getBody());
+        if(response.getStatus() == 200){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
     public static String getAllProjects(List<Map> projects) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
         if(projects.isEmpty()){
             return null;
@@ -776,7 +798,7 @@ public class JiraUtils {
         return mapper.writeValueAsString(map);
     }
 
-    public static JSONObject assignProjectToUser(String projectKey,String accountId) throws UnirestException {
+    public static boolean assignProjectToUser(String projectKey,String accountId) throws UnirestException {
         JSONObject returnOBJ = new JSONObject();
         JSONObject payload = new JSONObject();
         JSONArray array = new JSONArray();
@@ -803,17 +825,14 @@ public class JiraUtils {
                 .routeParam("roleId",roleId)
                 .body(payload)
                 .asJson();
-
+        System.out.println(response.getBody().getObject());
         int status = response.getStatus();
         if (status == 200) {
-            returnOBJ.put("message","User successfully assigned to project.");
+            return true;
         } else {
-            returnOBJ = response.getBody().getObject();
+            return false;
         }
 
-        System.out.println(returnOBJ);
-
-        return returnOBJ;
     }
 
 
