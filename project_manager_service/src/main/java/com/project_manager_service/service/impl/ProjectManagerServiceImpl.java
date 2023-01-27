@@ -31,15 +31,20 @@ public class ProjectManagerServiceImpl implements ProjectManagerService {
     @Override
     public ResponseEntity createProject(ProjectVO projectVO) throws UnirestException, JsonProcessingException {
         List<Long> projects = new ArrayList<>();
+        //check if project name is unique
+        int check = projectDao.checkIfProjectNameIsUnique(projectVO);
+        if(check == 1){
+            return APIResponse.resultFail("Project name already exists. ");
+        }
         projectVO.setJiraProjectKey(VerifyCodeUtils.generateVerifyCode(4,"ABCDEFGHIJKLKMNOPQRSTUVWXYZ"));
-        int result = projectDao.createProject(projectVO);
-        if(result > 0){
+        boolean response = JiraUtils.createJiraProject(projectVO.getProjectName(),
+                projectVO.getJiraProjectKey(),
+                projectVO.getProjectDescription(),
+                projectVO.getLeadJiraAccountId());
+        if(response){
+            projectDao.createProject(projectVO);
             projects.add(projectVO.getProjectId());
-            int result2 = userProjectDao.assignUserToProjects2(projectVO.getProjectLead(),projects);
-            String response = JiraUtils.createJiraProject(projectVO.getProjectName(),
-                    projectVO.getJiraProjectKey(),
-                    projectVO.getProjectDescription(),
-                    projectVO.getLeadJiraAccountId());
+            userProjectDao.assignUserToProjects2(projectVO.getProjectLead(),projects);
             return APIResponse.resultSuccess("Project successfully created.");
         }else{
             return APIResponse.resultFail();
