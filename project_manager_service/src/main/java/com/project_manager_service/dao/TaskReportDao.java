@@ -10,6 +10,8 @@ import java.util.Map;
 @Mapper
 public interface TaskReportDao {
     int createTaskReport(TaskReportVO taskReportVO);
+
+    int isTaskReported(TaskReportVO taskReportVO);
     List<TaskReportVO> getUserTaskReports(@Param("userId") Long userId,@Param("projectId") Long projectId);
     int updateTaskReport(TaskReportVO taskReportVO);
     List<Map> getAllTaskReports(@Param("userId")Long userId,

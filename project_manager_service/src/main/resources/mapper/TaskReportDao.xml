@@ -9,6 +9,17 @@
         (#{projectId},#{userId},#{jiraProjectId},#{jiraTaskId},#{startDate},#{taskName},#{hoursSpent})
     </insert>
 
+    <select id="isTaskReported" resultType="int" parameterType="com.model.TaskReportVO">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM task_report
+        WHERE
+        jira_task_id = #{jiraTaskId} AND project_id = #{projectId} AND user_id = #{userId} LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
     <select id="getAllTaskReports" resultType="Map">
         SELECT P.project_name,T.task_report_id,T.project_id,T.user_id,T.jira_project_id,T.jira_task_id,T.start_date,T.task_name,T.hours_spent,T.created_at
         FROM task_report T

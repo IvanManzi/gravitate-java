@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +25,30 @@ public class TaskReportManagerServiceImpl implements TaskReportManagerService {
     private final TaskReportDao taskReportDao;
 
     private final ProjectIncentiveDao projectIncentiveDao;
+
     private final ProjectDao projectDao;
 
     @Override
     public ResponseEntity<APIResponse> createTaskReport(TaskReportVO taskReportVO) {
+        Calendar ca =  Calendar.getInstance();
+        int currentMonth = ca.get(Calendar.MONTH);
+        currentMonth++;
         //check if project jira id exists
         ProjectVO project = projectDao.getProjectByJiraId(taskReportVO.getJiraProjectId());
+        int check2 = taskReportDao.checkIfMonthlyTaskReportsArePaid(taskReportVO.getProjectId(),taskReportVO.getUserId(),currentMonth);
         if(ValidationUtil.isNullObject(project)){
             return APIResponse.resultFail("Project with given jira id doesn't exists. ");
         }
         taskReportVO.setProjectId(project.getProjectId());
+        //check if task wasn't reported
+        int check = taskReportDao.isTaskReported(taskReportVO);
+        if(check == 1){
+            return APIResponse.resultFail("Task was already reported. ");
+        }
+        //check if current month task reports we're marked as paid
+        if(check2 == 1){
+            return APIResponse.resultFail("Task reports from current month we're marked as paid. ");
+        }
         int result = taskReportDao.createTaskReport(taskReportVO);
         if(result > 0){
             return APIResponse.resultSuccess("Task report successfully created. ");
