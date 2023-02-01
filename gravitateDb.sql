@@ -43,7 +43,7 @@ CREATE TABLE public.additional_point (
     user_id bigint NOT NULL,
     admin_id bigint NOT NULL,
     comment character varying NOT NULL,
-    quarter character varying NOT NULL,
+    quarter integer NOT NULL,
     category character varying(255) NOT NULL,
     points integer NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
