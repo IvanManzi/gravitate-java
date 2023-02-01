@@ -14,6 +14,6 @@ public interface AdditionalPointDao {
     int createAdditionalPoint(AdditionalPointVO additionalPointVO);
 
     List<Map> getUserAdditionalPoints(@Param("userId") Long userId,
-                                      @Param("quarter") String quarter,
+                                      @Param("quarters") List<Integer> quarters,
                                       @Param("year") Integer year);
 }

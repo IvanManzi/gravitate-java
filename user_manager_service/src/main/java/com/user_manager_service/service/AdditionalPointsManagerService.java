@@ -5,9 +5,10 @@ import com.model.AdditionalPointVO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 public interface AdditionalPointsManagerService {
     ResponseEntity createAdditionalPoint(AdditionalPointVO additionalPointVO);
 
-    ResponseEntity getUserAdditionalPoints(Long userId, String quarter, Integer year);
+    ResponseEntity getUserAdditionalPoints(Long userId, List<Integer> quarters, Integer year);
 }

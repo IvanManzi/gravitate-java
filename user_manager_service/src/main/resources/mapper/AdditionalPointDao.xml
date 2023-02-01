@@ -19,11 +19,14 @@
             <if test="year != null">
                 AND extract(year from created_at) = #{year}
             </if>
-            <if test="quarter != null">
-                AND quarter = #{quarter}
+            <if test="quarters != null">
+                AND quarter IN
+                <foreach item="quarter" index="index" collection="quarters" open="(" separator="," close=")">
+                    #{quarter}
+                </foreach>
             </if>
         </where>
-        ORDER BY created_at DESC
+        GROUP BY quarter ORDER BY created_at DESC
     </select>
 
 
