@@ -13,9 +13,16 @@ public interface BlogDao {
 
     int createBlog(BlogVO blogVO);
 
-    List<Map> getAllBlogs(@Param("search") String search,@Param("topic") String topic,@Param("blogId") Long blogId);
+    List<Map> getAllBlogs(@Param("search") String search,
+                          @Param("topic") String topic,
+                          @Param("blogId") Long blogId,
+                          @Param("quarter") Integer quarter,
+                          @Param("year") Integer year,
+                          @Param("userId") Long userId);
 
-    List<BlogVO> getUserBlogsByQuarter(@Param("userId") Long userId,@Param("quarter") Integer quarter);
+    /*List<BlogVO> getUserBlogsByQuarter(@Param("userId") Long userId,
+                                       @Param("quarter") Integer quarter,
+                                       @Param("year") Integer year);*/
 
 
     List<Map> getBlogComments(@Param("blogId") Long blogId,@Param("parent") Long parent);
@@ -23,4 +30,6 @@ public interface BlogDao {
     int updateBlog(BlogVO blogVO);
 
     int deleteBlog(Long topicId);
+
+    int updateIsAwardedStatus(@Param("blogId") Long blogId,@Param("status") boolean status);
 }

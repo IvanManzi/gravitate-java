@@ -29,6 +29,9 @@
             <if test="search != null and search != '' ">
                 AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
             </if>
+            <if test="userId != null and year != null and quarter != null">
+                AND U.user_id = #{userId} AND extract(quarter FROM T.created_at) = #{quarter} AND extract(year FROM T.created_at) = #{year} AND T.is_awarded = false
+            </if>
         </where>
         ORDER BY T.created_at DESC
     </select>
@@ -66,9 +69,17 @@
         </if>
     </select>
 
-    <select id="getUserBlogsByQuarter" resultType="com.model.BlogVO">
-        SELECT * FROM blog WHERE user_id = #{userId} AND extract(quarter FROM created_at) = #{quarter}
-    </select>
+    <!--<select id="getUserBlogsByQuarter" resultType="com.model.BlogVO">
+        SELECT * FROM blog
+        WHERE
+        user_id = #{userId}
+        AND
+        extract(quarter FROM created_at) = #{quarter}
+        AND
+        extract(year FROM created_at) = #{year}
+        AND
+        is_awarded = false
+    </select>-->
 
     <update id="updateBlog" parameterType="com.model.BlogVO">
         UPDATE blog
@@ -84,6 +95,11 @@
     <delete id="deleteBlog" parameterType="Long">
         DELETE FROM blog WHERE blog_id = #{blogId}
     </delete>
+
+
+    <update id="updateIsAwardedStatus" >
+        UPDATE blog SET is_awarded = #{status} WHERE blog_id = #{blogId}
+    </update>
 
 
 
