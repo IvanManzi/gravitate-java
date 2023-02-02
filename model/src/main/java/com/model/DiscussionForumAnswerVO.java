@@ -19,6 +19,8 @@ public class DiscussionForumAnswerVO implements Serializable {
     //set to false by default
     private boolean isAccepted;
 
+    private boolean isAwarded;
+
     private boolean upVotes;
 
     private Long forumId;
