@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdditionalPointVO implements Serializable {
+public class    AdditionalPointVO implements Serializable {
 
     private static final long serialVersionUID=1L;
 
@@ -20,6 +20,12 @@ public class AdditionalPointVO implements Serializable {
     private Long adminId;
 
     private Long userId;
+
+    private Long blogId;
+
+    private Long forumAnswerId;
+
+    private Long userSkillId;
 
     private Integer quarter;
 
