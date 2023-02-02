@@ -1,5 +1,5 @@
 --
--- PostgreSQL database dump (version 13)
+-- PostgreSQL database dump
 --
 
 -- Dumped from database version 10.22 (Ubuntu 10.22-0ubuntu0.18.04.1)
@@ -17,14 +17,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -42,6 +42,9 @@ CREATE TABLE public.additional_point (
     additional_point_id bigint NOT NULL,
     user_id bigint NOT NULL,
     admin_id bigint NOT NULL,
+    blog_id bigint,
+    forum_answer_id bigint,
+    user_skill_id bigint,
     comment character varying NOT NULL,
     quarter integer NOT NULL,
     category character varying(255) NOT NULL,
@@ -96,6 +99,48 @@ ALTER SEQUENCE public.additional_point_admin_id_seq OWNED BY public.additional_p
 
 
 --
+-- Name: additional_point_blog_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_blog_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_blog_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_blog_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_blog_id_seq OWNED BY public.additional_point.blog_id;
+
+
+--
+-- Name: additional_point_forum_answer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_forum_answer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_forum_answer_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_forum_answer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_forum_answer_id_seq OWNED BY public.additional_point.forum_answer_id;
+
+
+--
 -- Name: additional_point_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -114,6 +159,27 @@ ALTER TABLE public.additional_point_user_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.additional_point_user_id_seq OWNED BY public.additional_point.user_id;
+
+
+--
+-- Name: additional_point_user_skill_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.additional_point_user_skill_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.additional_point_user_skill_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_point_user_skill_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.additional_point_user_skill_id_seq OWNED BY public.additional_point.user_skill_id;
 
 
 --
@@ -230,7 +296,8 @@ CREATE TABLE public.blog (
     title character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     user_id bigint NOT NULL,
-    topic_thumbnail character varying
+    topic_thumbnail character varying,
+    is_awarded boolean DEFAULT false
 );
 
 
@@ -368,7 +435,8 @@ CREATE TABLE public.discussion_forum_answer (
     comment character varying NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    is_accepted boolean DEFAULT false
+    is_accepted boolean DEFAULT false,
+    is_awarded boolean DEFAULT false
 );
 
 
@@ -876,6 +944,88 @@ ALTER TABLE public.performance_evaluation_role_performance_evaluation_id_seq OWN
 --
 
 ALTER SEQUENCE public.performance_evaluation_role_performance_evaluation_id_seq OWNED BY public.performance_evaluation.role_performance_evaluation_id;
+
+
+--
+-- Name: performance_feedback; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.performance_feedback (
+    performance_feedback_id bigint NOT NULL,
+    done_by bigint NOT NULL,
+    user_id bigint NOT NULL,
+    year integer NOT NULL,
+    quarter integer,
+    sprint integer,
+    feedback character varying NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.performance_feedback OWNER TO postgres;
+
+--
+-- Name: performance_feedback_done_by_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.performance_feedback_done_by_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.performance_feedback_done_by_seq OWNER TO postgres;
+
+--
+-- Name: performance_feedback_done_by_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.performance_feedback_done_by_seq OWNED BY public.performance_feedback.done_by;
+
+
+--
+-- Name: performance_feedback_performance_feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.performance_feedback_performance_feedback_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.performance_feedback_performance_feedback_id_seq OWNER TO postgres;
+
+--
+-- Name: performance_feedback_performance_feedback_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.performance_feedback_performance_feedback_id_seq OWNED BY public.performance_feedback.performance_feedback_id;
+
+
+--
+-- Name: performance_feedback_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.performance_feedback_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.performance_feedback_user_id_seq OWNER TO postgres;
+
+--
+-- Name: performance_feedback_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.performance_feedback_user_id_seq OWNED BY public.performance_feedback.user_id;
 
 
 --
@@ -1745,7 +1895,8 @@ CREATE TABLE public.user_skill (
     expertise character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint NOT NULL
+    user_id bigint NOT NULL,
+    is_awarded boolean DEFAULT false
 );
 
 
@@ -2075,6 +2226,27 @@ ALTER TABLE ONLY public.additional_point ALTER COLUMN admin_id SET DEFAULT nextv
 
 
 --
+-- Name: additional_point blog_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN blog_id SET DEFAULT nextval('public.additional_point_blog_id_seq'::regclass);
+
+
+--
+-- Name: additional_point forum_answer_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN forum_answer_id SET DEFAULT nextval('public.additional_point_forum_answer_id_seq'::regclass);
+
+
+--
+-- Name: additional_point user_skill_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point ALTER COLUMN user_skill_id SET DEFAULT nextval('public.additional_point_user_skill_id_seq'::regclass);
+
+
+--
 -- Name: app_user user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -2282,6 +2454,27 @@ ALTER TABLE ONLY public.performance_evaluation_criteria_score ALTER COLUMN admin
 --
 
 ALTER TABLE ONLY public.performance_evaluation_criteria_score ALTER COLUMN user_id SET DEFAULT nextval('public.performance_evaluation_criteria_score_user_id_seq'::regclass);
+
+
+--
+-- Name: performance_feedback performance_feedback_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback ALTER COLUMN performance_feedback_id SET DEFAULT nextval('public.performance_feedback_performance_feedback_id_seq'::regclass);
+
+
+--
+-- Name: performance_feedback done_by; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback ALTER COLUMN done_by SET DEFAULT nextval('public.performance_feedback_done_by_seq'::regclass);
+
+
+--
+-- Name: performance_feedback user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback ALTER COLUMN user_id SET DEFAULT nextval('public.performance_feedback_user_id_seq'::regclass);
 
 
 --
@@ -2663,6 +2856,14 @@ ALTER TABLE ONLY public.performance_evaluation
 
 
 --
+-- Name: performance_feedback performance_feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback
+    ADD CONSTRAINT performance_feedback_pkey PRIMARY KEY (performance_feedback_id);
+
+
+--
 -- Name: policy policy_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2820,6 +3021,30 @@ ALTER TABLE ONLY public.additional_point
 
 ALTER TABLE ONLY public.additional_point
     ADD CONSTRAINT additional_point_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: additional_point additional_point_fk3; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk3 FOREIGN KEY (forum_answer_id) REFERENCES public.discussion_forum_answer(forum_answer_id) ON DELETE CASCADE;
+
+
+--
+-- Name: additional_point additional_point_fk4; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk4 FOREIGN KEY (blog_id) REFERENCES public.blog(blog_id) ON DELETE CASCADE;
+
+
+--
+-- Name: additional_point additional_point_fk5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.additional_point
+    ADD CONSTRAINT additional_point_fk5 FOREIGN KEY (user_skill_id) REFERENCES public.user_skill(user_skill_id) ON DELETE CASCADE;
 
 
 --
@@ -3012,6 +3237,22 @@ ALTER TABLE ONLY public.performance_evaluation_criteria_score
 
 ALTER TABLE ONLY public.performance_evaluation
     ADD CONSTRAINT performance_evaluation_fk2 FOREIGN KEY (admin_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: performance_feedback performance_feedback_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback
+    ADD CONSTRAINT performance_feedback_fk1 FOREIGN KEY (done_by) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: performance_feedback performance_feedback_fk2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.performance_feedback
+    ADD CONSTRAINT performance_feedback_fk2 FOREIGN KEY (user_id) REFERENCES public.app_user(user_id) ON DELETE CASCADE;
 
 
 --
