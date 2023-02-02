@@ -56,7 +56,9 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                                         "/api/v1/content/policy/all",
                                                         "/api/v1/content/wish/comment").hasAnyAuthority(NON_ADMIN,ADMIN_USER, PROJECT_MANAGER);
 
-        http.authorizeRequests().antMatchers("/api/v1/content/performance-evaluation/**").hasAnyAuthority(ADMIN_USER, PROJECT_MANAGER);
+        http.authorizeRequests().antMatchers("/api/v1/content/performance-evaluation/**",
+                "/api/v1/content/blog/{blogId}/isAwarded/{status}",
+                "/api/v1/content/forum/solution/{solutionId}/isAwarded/{status}").hasAnyAuthority(ADMIN_USER, PROJECT_MANAGER);
         http.authorizeRequests().antMatchers("/api/v1/content/**").hasAuthority(ADMIN_USER);
         http.authorizeRequests().anyRequest().authenticated();
 
