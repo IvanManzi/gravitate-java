@@ -23,10 +23,10 @@
             <if test="blogId != null">
                 T.blog_id = #{blogId}
             </if>
-            <if test="topic != null">
+            <if test="topic != null and topic != '' ">
                 AND LOWER(T.title) LIKE LOWER('%' || #{topic} || '%')
             </if>
-            <if test="search != null">
+            <if test="search != null and search != '' ">
                 AND LOWER(U.first_name) LIKE LOWER('%' || #{search} || '%') OR LOWER(U.last_name) LIKE LOWER('%' || #{search} || '%')
             </if>
         </where>
