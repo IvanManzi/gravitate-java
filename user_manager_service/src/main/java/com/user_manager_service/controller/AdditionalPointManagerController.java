@@ -30,11 +30,8 @@ public class AdditionalPointManagerController {
     @PostMapping(value = "/create")
     public ResponseEntity createAdditionalPoint(@Valid @RequestBody CreateAdditionalPointRequest createAdditionalPointRequest,
                                                 HttpServletRequest request) throws IOException {
-        AdditionalPointVO additionalPointVO = CreateAdditionalPointRequestMapper.INSTANCE.map(createAdditionalPointRequest);
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        String adminId = JwtUtils.getUserIdFromJwtToken(token);
-        additionalPointVO.setAdminId(Long.valueOf(adminId));
-        return additionalPointsManagerService.createAdditionalPoint(additionalPointVO);
+        return additionalPointsManagerService.createAdditionalPoint(createAdditionalPointRequest,token);
     }
 
     @GetMapping(value = "/")

@@ -16,4 +16,10 @@ public interface AdditionalPointDao {
     List<Map> getUserAdditionalPoints(@Param("userId") Long userId,
                                       @Param("quarters") List<Integer> quarters,
                                       @Param("year") Integer year);
+
+    int isBlogAwarded(AdditionalPointVO additionalPointVO);
+
+    int isForumAnswerAwarded(AdditionalPointVO additionalPointVO);
+
+    int isSkillAwarded(AdditionalPointVO additionalPointVO);
 }

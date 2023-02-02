@@ -4,9 +4,9 @@
 
     <insert id="createAdditionalPoint" parameterType="com.model.AdditionalPointVO">
         INSERT INTO additional_point
-        (admin_id,user_id,quarter,points,category,comment)
+        (admin_id,user_id,blog_id,forum_answer_id,user_skill_id,quarter,points,category,comment)
         VALUES
-        (#{adminId},#{userId},#{quarter},#{points},#{category},#{comment})
+        (#{adminId},#{userId},#{blogId},#{forumAnswerId},#{userSkillId},#{quarter},#{points},#{category},#{comment})
     </insert>
 
     <select id="getUserAdditionalPoints" resultType="com.model.AdditionalPointVO">
@@ -27,6 +27,41 @@
             </if>
         </where>
         GROUP BY additional_point_id,quarter ORDER BY created_at DESC
+    </select>
+
+    <select id="isBlogAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM additional_point
+        WHERE
+        user_id = #{userId} AND blog_id = #{blogId}  LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+
+    <select id="isForumAnswerAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM additional_point
+        WHERE
+        user_id = #{userId} AND forum_answer_id = #{forumAnswerId}  LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
+    </select>
+
+
+    <select id="isSkillAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">
+        SELECT CASE
+        WHEN EXISTS(
+        SELECT 1 FROM additional_point
+        WHERE
+        user_id = #{userId} AND user_skill_id = #{userSkillId}  LIMIT 1
+        )
+        THEN 1 ELSE 0
+        END
     </select>
 
 
