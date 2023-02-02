@@ -5,13 +5,11 @@ import com.content_manager_service.dao.BlogReplyDao;
 import com.content_manager_service.service.GravitateBlogManagerService;
 import com.model.BlogReplyVO;
 import com.model.BlogVO;
-import com.model.UserVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +43,8 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
     }
 
     @Override
-    public ResponseEntity getAllBlogs(String search, String topic,Long blogId) {
-        List<Map> teamBlogs = blogDao.getAllBlogs(search,topic,blogId);
+    public ResponseEntity getAllBlogs(String search, String topic,Long blogId, Integer quarter, Integer year, Long userId) {
+        List<Map> teamBlogs = blogDao.getAllBlogs(search,topic,blogId,quarter,year,userId);
         if(teamBlogs.isEmpty()){
             return APIResponse.resourceNotFound();
         }
@@ -82,16 +80,16 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
         return parentComments;
     }
 
-    @Override
-    public ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter) {
-        List<BlogVO> userBlogs = blogDao.getUserBlogsByQuarter(userId,quarter);
+    /*@Override
+    public ResponseEntity getUserBlogsByQuarter(Long userId, Integer quarter,Integer year) {
+        List<BlogVO> userBlogs = blogDao.getUserBlogsByQuarter(userId,quarter,year);
         if(userBlogs.isEmpty()){
             return APIResponse.resourceNotFound();
         }
         Map<String,Object> data = new HashMap<>();
         data.put("USER_BLOGS",userBlogs);
         return APIResponse.resultSuccess(data);
-    }
+    }*/
 
     @Override
     public ResponseEntity updateBlog(BlogVO blogVO) {
@@ -111,5 +109,14 @@ public class GravitateBlogManagerServiceImpl implements GravitateBlogManagerServ
         }else{
             return APIResponse.resultFail();
         }
+    }
+
+    @Override
+    public boolean updateIsAwardedStatus(Long blogId, boolean status) {
+        int result = blogDao.updateIsAwardedStatus(blogId,status);
+        if(result > 0){
+            return true;
+        }
+        return false;
     }
 }

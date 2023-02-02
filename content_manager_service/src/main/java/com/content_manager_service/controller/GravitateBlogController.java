@@ -54,14 +54,17 @@ public class GravitateBlogController {
     @GetMapping(value = "/all")
     public ResponseEntity getAllBlogs(@RequestParam(value = "search",required = false) String search,
                                       @RequestParam(value = "topic",required = false)String topic,
-                                      @RequestParam(value = "blogId",required = false)Long blogId){
-        return gravitateBlogManagerService.getAllBlogs(search,topic,blogId);
+                                      @RequestParam(value = "blogId",required = false)Long blogId,
+                                      @RequestParam(value = "quarter",required = false)Integer quarter,
+                                      @RequestParam(value = "year",required = false)Integer year,
+                                      @RequestParam(value = "userId",required = false)Long userId){
+        return gravitateBlogManagerService.getAllBlogs(search,topic,blogId,quarter,year,userId);
     }
 
-    @GetMapping(value = "/quarter")
-    public ResponseEntity getGravitateUserBlogsByQuarter(@RequestParam("userId") Long userId,
-                                                         @RequestParam("quarter") Integer quarter){
-        return gravitateBlogManagerService.getUserBlogsByQuarter(userId,quarter);
+    @PutMapping(value = "/{blogId}/isAwarded/{status}")
+    public boolean getGravitateUserBlogsByQuarter(@PathVariable("blogId") Long blogId,
+                                                         @PathVariable("status") boolean status){
+        return gravitateBlogManagerService.updateIsAwardedStatus(blogId,status);
     }
 
     @PutMapping(value = "/")
