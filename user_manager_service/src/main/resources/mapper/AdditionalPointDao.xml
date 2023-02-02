@@ -38,7 +38,7 @@
                 </foreach>
             </if>
         </where>
-        GROUP BY A.additional_point_id,A.quarter ORDER BY A.created_at DESC
+        GROUP BY A.additional_point_id,A.quarter,B.blog_id,S.user_skill_Id,F.forum_answer_id ORDER BY A.created_at DESC
     </select>
 
     <select id="isBlogAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">
