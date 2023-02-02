@@ -1,0 +1,80 @@
+version: '1'
+services:
+  content-manager:
+    image: content-manager:latest
+    build:
+      context: .
+      dockerfile: content_manager_service/Dockerfile
+    ports:
+      - "1072:1072"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
+
+  user-manager:
+    image: user-manager:latest
+    build:
+      context: .
+      dockerfile: user_manager_service/Dockerfile
+    ports:
+      - "1071:1071"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
+
+  api-gateway:
+    image: api-gateway:latest
+    build:
+      context: .
+      dockerfile: gravitate_apigw/Dockerfile
+    ports:
+      - "9192:9192"
+    depends_on:
+      - content-manager
+      - user-manager
+      - project-manager
+      - eureka-server
+    environment:
+      - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
+
+  project-manager:
+    image: project-manager:latest
+    build:
+      context: .
+      dockerfile: project_manager_service/Dockerfile
+    ports:
+      - "1073:1073"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
+
+  eureka-server:
+    image: containerprince/gravitate-api-services:eureka-latest
+    build:
+      context: .
+      dockerfile: gravitate_service_registry/Dockerfile
+    ports:
+      - "8762:8762"
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=?Mfptnj123@hview2022
+      - POSTGRES_DB=gravitatedb
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
