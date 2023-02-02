@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-manager
+  labels:
+    app: user-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-manager
+  template:
+    metadata:
+      labels:
+        app: user-manager
+    spec:
+      containers:
+        - name: user-manager
+          image: user-manager:latest
+          ports:
+            - containerPort: 1071
+          env:
+            - name: JAVA_OPTS
+              value: -Xmx256m -Xms256m
+            - name: EUREKA_SERVER_URL
+              value: http://eureka-server:8762/eureka
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 1071
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 1071
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "100Mi"
+            requests:
+              cpu: "100m"
+              memory: "100Mi"

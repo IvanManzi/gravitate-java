@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-server-service
+spec:
+  selector:
+    app: eureka-server
+  ports:
+    - name: eureka-server-port
+      port: 8762
+      targetPort: 8762
+  type: LoadBalancer

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: api-gateway:latest
+          ports:
+            - containerPort: 9192
+          env:
+            - name: JAVA_OPTS
+              value: -Xmx4m -Xms8m
+            - name: EUREKA_SERVICE_URL
+              value: http://eureka-server:8762/eureka
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 1072
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 1072
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "100Mi"
+            requests:
+              cpu: "100m"
+              memory: "100Mi"

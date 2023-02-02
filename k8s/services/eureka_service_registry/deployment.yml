@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-server
+  template:
+    metadata:
+      labels:
+        app: eureka-server
+    spec:
+      imagePullSecrets:
+        - name: docker-hub-secret
+      volumes:
+        - name: docker-hub-secret
+          secret:
+            secretName: docker-hub-secret
+      containers:
+        - name: eureka-server
+          image: containerprince/gravitate-api-services:eureka-latest
+          ports:
+            - containerPort: 8762
+          env:
+            - name: DOCKER_REGISTRY_SERVER
+              value: https://index.docker.io/v1/
+            - name: JAVA_OPTS
+              value: -Xmx256m -Xms256m
+          volumeMounts:
+            - name: docker-hub-secret
+              mountPath: /k8s/services/docker-hub-secret
+              readOnly: true
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
