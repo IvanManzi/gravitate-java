@@ -19,6 +19,8 @@ public class BlogVO implements Serializable {
 
     private Long userId;
 
+    private boolean isAwarded;
+
     private String title;
 
     private String tags;
