@@ -1,10 +1,12 @@
 package com.content_manager_service.controller;
 
+import com.content_manager_service.form.AddPerformanceFeedbackRequest;
 import com.content_manager_service.form.AwardPerformancePointsRequest;
 import com.content_manager_service.form.CreateRolePerformanceRequest;
 import com.content_manager_service.form.UpdateRolePerformanceRequest;
 import com.content_manager_service.service.RolePerformanceEvaluationService;
 import com.model.PerformanceEvaluationCriteriaScoreVO;
+import com.model.PerformanceFeedbackVO;
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
 import com.util.JwtUtils;
@@ -71,6 +73,7 @@ public class RolePerformanceEvaluationController {
         return rolePerformanceEvaluationService.getUserRolePerformanceEvaluationCriterias(userId);
     }
 
+
     @PostMapping(value = "/award-points")
     public ResponseEntity<APIResponse> awardPointsOnUserPerformanceEvaluationCriteria(@Valid @RequestBody AwardPerformancePointsRequest awardPerformancePointsRequest, HttpServletRequest request) throws IOException {
         PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO = new PerformanceEvaluationCriteriaScoreVO();
@@ -86,6 +89,24 @@ public class RolePerformanceEvaluationController {
         performanceEvaluationCriteriaScoreVO.setPoints(awardPerformancePointsRequest.points());
         return rolePerformanceEvaluationService.awardPointsOnPerformanceEvaluationCriteria(performanceEvaluationCriteriaScoreVO);
     }
+
+
+    @PostMapping(value = "/feedback")
+    public ResponseEntity<APIResponse> givePerformanceFeedback(@Valid @RequestBody AddPerformanceFeedbackRequest addPerformanceFeedbackRequest,
+                                                               HttpServletRequest request) throws IOException {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        String userId = JwtUtils.getUserIdFromJwtToken(token);
+        PerformanceFeedbackVO performanceFeedbackVO = new PerformanceFeedbackVO();
+
+        performanceFeedbackVO.setDoneBy(Long.valueOf(userId));
+        performanceFeedbackVO.setUserId(addPerformanceFeedbackRequest.userId());
+        performanceFeedbackVO.setYear(addPerformanceFeedbackRequest.year());
+        performanceFeedbackVO.setQuarter(addPerformanceFeedbackRequest.quarter());
+        performanceFeedbackVO.setSprint(addPerformanceFeedbackRequest.sprint());
+        performanceFeedbackVO.setFeedback(addPerformanceFeedbackRequest.feedback());
+        return rolePerformanceEvaluationService.addPerformanceFeedback(performanceFeedbackVO);
+    }
+
 
     @GetMapping(value = "/{userId}/points")
     public ResponseEntity<APIResponse> getUserPerformanceScores(@PathVariable("userId") Long userId,

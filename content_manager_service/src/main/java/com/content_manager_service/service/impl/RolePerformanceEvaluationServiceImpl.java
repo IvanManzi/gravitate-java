@@ -2,9 +2,11 @@ package com.content_manager_service.service.impl;
 
 
 import com.content_manager_service.dao.PerformanceEvaluationCriteriaScoreDao;
+import com.content_manager_service.dao.PerformanceFeedbackDao;
 import com.content_manager_service.dao.RolePerformanceEvaluationDao;
 import com.content_manager_service.service.RolePerformanceEvaluationService;
 import com.model.PerformanceEvaluationCriteriaScoreVO;
+import com.model.PerformanceFeedbackVO;
 import com.model.RolePerformanceEvaluationVO;
 import com.util.APIResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
     private final RolePerformanceEvaluationDao rolePerformanceEvaluationDao;
 
     private final PerformanceEvaluationCriteriaScoreDao performanceEvaluationCriteriaScoreDao;
+
+    private final PerformanceFeedbackDao performanceFeedbackDao;
 
     @Override
     public ResponseEntity createPerformanceEvaluation(RolePerformanceEvaluationVO rolePerformanceEvaluationVO) {
@@ -67,6 +71,15 @@ public class RolePerformanceEvaluationServiceImpl implements RolePerformanceEval
         int result = performanceEvaluationCriteriaScoreDao.createPerformanceEvaluationCriteriaScore(performanceEvaluationCriteriaScoreVO);
         if(result > 0){
             return APIResponse.resultSuccess("Score successfully awarded.");
+        }
+        return APIResponse.resultFail();
+    }
+
+    @Override
+    public ResponseEntity addPerformanceFeedback(PerformanceFeedbackVO performanceFeedbackVO) {
+        int result = performanceFeedbackDao.addPerformanceFeedback(performanceFeedbackVO);
+        if(result > 0){
+            return APIResponse.resultSuccess("Performance successfully added. ");
         }
         return APIResponse.resultFail();
     }

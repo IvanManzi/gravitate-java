@@ -1,6 +1,7 @@
 package com.content_manager_service.service;
 
 import com.model.PerformanceEvaluationCriteriaScoreVO;
+import com.model.PerformanceFeedbackVO;
 import com.model.RolePerformanceEvaluationVO;
 import org.springframework.http.ResponseEntity;
 
@@ -15,6 +16,8 @@ public interface RolePerformanceEvaluationService {
     ResponseEntity getUserRolePerformanceEvaluationCriterias(Long userId);
 
     ResponseEntity awardPointsOnPerformanceEvaluationCriteria(PerformanceEvaluationCriteriaScoreVO performanceEvaluationCriteriaScoreVO);
+
+    ResponseEntity addPerformanceFeedback(PerformanceFeedbackVO performanceFeedbackVO);
 
     ResponseEntity getUserPerformanceEvaluationPoints(Long userId, List<Integer> quarter, List<Integer> sprints, Integer year, String groupBy);
 

@@ -10,12 +10,12 @@
     </insert>
 
 
-    <!--<resultMap id="performanceCriteriaResult" type="Map">
-        <collection property="performance" ofType="com.model.PerformanceEvaluationCriteriaScoreVO" select="getUserPerformanceScores" column="year=year,key=key,userId=user_id,type=type" />
-    </resultMap>-->
+    <resultMap id="performanceCriteriaResult" type="Map">
+        <collection property="feedback" ofType="com.model.PerformanceFeedbackVO" select="getPerformanceFeedback" column="year=year,key=key,userId=user_id,type=type" />
+    </resultMap>
 
 
-    <select id="getAllUsersPerformanceEvaluations" resultType="Map">
+    <select id="getAllUsersPerformanceEvaluations" resultMap="performanceCriteriaResult">
         SELECT S.user_id,S.year,
         <choose>
             <when test="groupBy == 'quarter'">S.quarter AS key, 1 AS type</when>
@@ -50,6 +50,19 @@
         <choose>
             <when test="groupBy == 'quarter'">S.quarter</when>
             <otherwise>S.sprint</otherwise>
+        </choose>
+    </select>
+
+    <select id="getPerformanceFeedback" resultType="com.model.PerformanceFeedbackVO">
+        SELECT * FROM performance_feedback
+        WHERE
+        user_id = #{userId}
+        AND
+        year = #{year}
+        AND
+        <choose>
+            <when test="type == 1 ">quarter = #{key}</when>
+            <otherwise>sprint = #{key}</otherwise>
         </choose>
     </select>
 
