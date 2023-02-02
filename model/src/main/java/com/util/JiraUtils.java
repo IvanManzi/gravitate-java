@@ -67,7 +67,7 @@ public class JiraUtils {
         Map<String, Map> projectsById = new HashMap<>();
         for (Map project : projects) {
             String id = (String) project.get("jira_project_key");
-            projectsById.put(id, project); 
+            projectsById.put(id, project);
         }
 
         CacheEntry cacheEntry = projectsCache.get("ALL_PROJECTS");
@@ -796,7 +796,7 @@ public class JiraUtils {
                 .asJson();
 
         JSONObject jsonObject = rolesResponse.getBody().getObject();
-        String url = (String) jsonObject.get("Administrator");
+        String url = (String) jsonObject.get("Member");
         String[] parts = url.split("/");
         // The ID is the last element in the array
         String roleId = parts[parts.length - 1];
@@ -818,12 +818,42 @@ public class JiraUtils {
 
     }
 
+    public static boolean removeActorFromProject(String accountId, String projectKey) throws UnirestException {
+        //get project roles
+        HttpResponse<JsonNode> rolesResponse = Unirest.get(API_BASE_URL + "/project/{projectKey}/role")
+                .header("accept", "application/json")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .routeParam("projectKey", projectKey)
+                .asJson();
+
+        JSONObject jsonObject = rolesResponse.getBody().getObject();
+        System.out.println(jsonObject);
+        String url = (String) jsonObject.get("Administrator");
+        String[] parts = url.split("/");
+        // The ID is the last element in the array
+        String roleId = parts[parts.length - 1];
+
+        HttpResponse<String> response = Unirest.delete(API_BASE_URL+ "/project/{projectIdOrKey}/role/{id}")
+                .basicAuth(JIRA_USERNAME, JIRA_TOKEN)
+                .routeParam("projectIdOrKey", projectKey)
+                .routeParam("id",roleId)
+                .queryString("user", accountId)
+                .asString();
+        if (response.getStatus() == 204) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public static void main(String[] args) throws UnirestException, ExecutionException, InterruptedException, JsonProcessingException {
-        List<String> labels = new ArrayList<>();
+        /*List<String> labels = new ArrayList<>();
         labels.add("testing");
         labels.add("launch");
         updateIssue("10158","10001","UPDATED BY TERMINAL","UPDATED TO X DESCRIPTION","10006","633aed432eaaa5dcfa163fbd",labels);
+        */
+        removeActorFromProject("63ce51d716dfc2b1fbc9cd7e","SAWA");
     }
 
 
