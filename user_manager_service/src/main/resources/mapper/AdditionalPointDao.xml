@@ -4,29 +4,41 @@
 
     <insert id="createAdditionalPoint" parameterType="com.model.AdditionalPointVO">
         INSERT INTO additional_point
-        (admin_id,user_id,blog_id,forum_answer_id,user_skill_id,quarter,points,category,comment)
+        (admin_id,user_id,blog_id,forum_answer_id,user_skill_id,quarter,points,comment)
         VALUES
-        (#{adminId},#{userId},#{blogId},#{forumAnswerId},#{userSkillId},#{quarter},#{points},#{category},#{comment})
+        (#{adminId},#{userId},#{blogId},#{forumAnswerId},#{userSkillId},#{quarter},#{points},#{comment})
     </insert>
 
-    <select id="getUserAdditionalPoints" resultType="com.model.AdditionalPointVO">
-        SELECT *
-        FROM additional_point
+    <select id="getUserAdditionalPoints" resultType="Map">
+        SELECT A.additional_point_id,A.admin_id,A.user_id,A.blog_id,A.user_skill_id,A.forum_answer_id,B.title As blog,S.title AS skill,F.comment As answer
+        FROM additional_point A
+        LEFT JOIN
+        blog B
+        ON
+        B.blog_id = A.blog_id
+        LEFT JOIN
+        user_skill S
+        ON
+        S.user_skill_id = A.user_skill_id
+        LEFT JOIN
+        discussion_forum_answer F
+        ON
+        F.forum_answer_id = A.forum_answer_id
         <where>
             <if test="userId != null">
-                user_id = #{userId}
+                A.user_id = #{userId}
             </if>
             <if test="year != null">
-                AND extract(year from created_at) = #{year}
+                AND extract(year from A.created_at) = #{year}
             </if>
             <if test="quarters != null">
-                AND quarter IN
+                AND A.quarter IN
                 <foreach item="quarter" index="index" collection="quarters" open="(" separator="," close=")">
                     #{quarter}
                 </foreach>
             </if>
         </where>
-        GROUP BY additional_point_id,quarter ORDER BY created_at DESC
+        GROUP BY A.additional_point_id,A.quarter ORDER BY A.created_at DESC
     </select>
 
     <select id="isBlogAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">
