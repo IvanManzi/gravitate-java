@@ -1,4 +1,6 @@
 package com.user_manager_service.form;
 
-public record CreateUserSkillRequest(String title, String category, String expertise, String certificateUrl) {
+import javax.validation.constraints.NotNull;
+
+public record CreateUserSkillRequest(@NotNull String title,@NotNull String category,@NotNull String expertise, String certificateUrl) {
 }

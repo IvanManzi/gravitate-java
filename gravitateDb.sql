@@ -1740,7 +1740,7 @@ ALTER SEQUENCE public.user_project_user_project_id_seq OWNED BY public.user_proj
 CREATE TABLE public.user_skill (
     user_skill_id bigint NOT NULL,
     category character varying(255) NOT NULL,
-    certificate_path character varying(255) NOT NULL,
+    certificate_path character varying(255),
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     expertise character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
