@@ -21,4 +21,5 @@ public interface UserSkillDao {
                                          @Param("quarter") Integer quarter,
                                          @Param("year")Integer year);
 
+    int markSkillAsAwarded(Long userSkillId);
 }

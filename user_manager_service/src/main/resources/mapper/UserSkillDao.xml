@@ -32,6 +32,12 @@
         extract(quarter FROM created_at) = #{quarter}
         AND
         extract(year FROM created_at) = #{year}
+        AND
+        is_awarded = false
     </select>
+
+    <update id="markSkillAsAwarded" parameterType="Long" >
+        UPDATE user_skill SET is_awarded = true WHERE user_skill_id = #{userSkillId}
+    </update>
 
 </mapper>
