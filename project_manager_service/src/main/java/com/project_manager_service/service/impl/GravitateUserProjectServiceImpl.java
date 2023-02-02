@@ -39,6 +39,9 @@ public class GravitateUserProjectServiceImpl implements GravitateUserProjectServ
         if(projects.isEmpty()){
             //remove all assigned projects
             userProjectDao.removeAllAssignedProjects(userId);
+            for (Long projectId : currentlyAssignedProjects) {
+                JiraUtils.removeActorFromProject(jiraAccountId,projectDao.getProjectById(projectId).getJiraProjectKey());
+            }
             return true;
         }
 
