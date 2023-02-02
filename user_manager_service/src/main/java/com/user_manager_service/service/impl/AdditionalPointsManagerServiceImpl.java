@@ -36,7 +36,6 @@ public class AdditionalPointsManagerServiceImpl implements AdditionalPointsManag
         String adminId = JwtUtils.getUserIdFromJwtToken(token);
         additionalPointVO.setAdminId(Long.valueOf(adminId));
         additionalPointVO.setUserId(createAdditionalPointRequest.userId());
-        additionalPointVO.setCategory(createAdditionalPointRequest.category());
         additionalPointVO.setComment(createAdditionalPointRequest.comment());
         additionalPointVO.setUserSkillId(createAdditionalPointRequest.userSkillId());
         additionalPointVO.setQuarter(createAdditionalPointRequest.quarter());

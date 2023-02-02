@@ -10,6 +10,5 @@ public record CreateAdditionalPointRequest(@NotNull Long userId,
                                            List<Long> blogIds,
                                            List<Long> forumAnswerIds,
                                            @NotNull Integer points,
-                                           @NotBlank String comment,
-                                           @NotBlank String category) {
+                                           @NotBlank String comment) {
 }

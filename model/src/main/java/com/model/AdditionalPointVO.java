@@ -31,8 +31,6 @@ public class    AdditionalPointVO implements Serializable {
 
     private Integer points;
 
-    private String category;
-
     private String comment;
 
     private Date createdAt;
