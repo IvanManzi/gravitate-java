@@ -16,4 +16,6 @@ public interface DiscussionForumAnswerDao {
     List<Map> getUserAcceptedDiscussionForumAnswers(@Param("userId") Long userId,
                                                     @Param("quarter") Integer quarter,
                                                     @Param("year")Integer year);
+
+    int updateIsAwardedStatus(@Param("forumAnswerId") Long forumAnswerId,@Param("status") Long status);
 }
