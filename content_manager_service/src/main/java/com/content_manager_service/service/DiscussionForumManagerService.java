@@ -24,4 +24,6 @@ public interface DiscussionForumManagerService {
     ResponseEntity incrementForumViews(DiscussionForumVO discussionForumVO);
 
     ResponseEntity deleteDiscussionForum(Long forumId);
+
+    boolean updateIsAwardedStatus(Long forumAnswerId, Long status);
 }

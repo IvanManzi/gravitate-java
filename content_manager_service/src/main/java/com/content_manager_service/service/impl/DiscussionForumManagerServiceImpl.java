@@ -113,4 +113,13 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
         }
         return APIResponse.resultFail();
     }
+
+    @Override
+    public boolean updateIsAwardedStatus(Long forumAnswerId, Long status) {
+        int result = discussionForumAnswerDao.updateIsAwardedStatus(forumAnswerId,status);
+        if(result > 0){
+            return true;
+        }
+        return false;
+    }
 }

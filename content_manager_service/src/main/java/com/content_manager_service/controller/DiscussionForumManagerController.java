@@ -39,7 +39,7 @@ public class DiscussionForumManagerController {
         return discussionForumManagerService.createDiscussionForum(discussionForumVO);
     }
 
-    @PostMapping(value = "/comment/create")
+    @PostMapping(value = "/solution/create")
     public ResponseEntity createDiscussionForumAnswer(@Valid @RequestBody CreateDiscussionForumAnswer createDiscussionForumAnswer,
                                                 HttpServletRequest request) throws IOException {
         DiscussionForumAnswerVO discussionForumAnswerVO = new DiscussionForumAnswerVO();
@@ -87,6 +87,12 @@ public class DiscussionForumManagerController {
         DiscussionForumVO discussionForumVO = new DiscussionForumVO();
         discussionForumVO.setDiscussionForumId(forumId);
         return discussionForumManagerService.incrementForumViews(discussionForumVO);
+    }
+
+    @PutMapping(value = "/solution/{solutionId}/isAwarded/{status}")
+    public boolean updateForumSolutionIsAwardedStatus(@PathVariable("solutionId") Long forumAnswerId,
+                                                             @PathVariable("status") Long status){
+        return discussionForumManagerService.updateIsAwardedStatus(forumAnswerId,status);
     }
 
 

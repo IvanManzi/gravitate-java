@@ -33,11 +33,18 @@
         extract(year FROM A.created_at) = #{year}
         AND
         A.is_accepted = true
+        AND
+        A.is_awarded = false
     </select>
 
     <select id="selectDiscussionForumById" resultType="com.model.DiscussionForumVO">
         SELECT * FROM discussion_forum WHERE discussion_forum_id = #{forumId}
     </select>
+
+
+    <update id="updateIsAwardedStatus">
+        UPDATE discussion_forum_answer SET is_awarded = #{status} WHERE forum_answer_id = #{forumAnswerId}
+    </update>
 
 
 
