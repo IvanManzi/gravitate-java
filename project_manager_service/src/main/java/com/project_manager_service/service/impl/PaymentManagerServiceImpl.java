@@ -32,24 +32,24 @@ public class PaymentManagerServiceImpl implements PaymentManagerService {
         currentMonth++;
         if(currentMonth == paymentVO.getMonth()){
             if(DateUtil.getCurrentDayEndTime().compareTo(DateUtil.getCurrentMonthEndTime()) == 0){
-                int result = taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
+                taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
                 //mark the current month incentives as paid
-                int result2 = projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
+                projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
                 //create payment record
                 int result3 = paymentDao.createPaymentRecord(paymentVO);
-                if((result > 0) && (result2 > 0) && (result3 > 0) ){
+                if(result3 > 0 ){
                     return APIResponse.resultSuccess("User task reports marked as paid.");
                 }
                 return APIResponse.resultFail();
             }
             return APIResponse.resultFail("You can't mark tasks as paid until the end of month. ");
         }
-        int result = taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
+        taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
         //mark the current month incentives as paid
-        int result2 = projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
+        projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
         //create payment record
         int result3 = paymentDao.createPaymentRecord(paymentVO);
-        if((result > 0) && (result2 > 0) && (result3 > 0) ){
+        if(result3 > 0 ){
             return APIResponse.resultSuccess("User task reports marked as paid.");
         }
         return APIResponse.resultFail();
