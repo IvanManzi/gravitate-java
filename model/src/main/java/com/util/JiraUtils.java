@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.mashape.unirest.http.JsonNode;
@@ -312,6 +310,10 @@ public class JiraUtils {
                     if(allUsers.getJSONObject(i).has("actorUser")){
                         temp2 = allUsers.getJSONObject(i).getJSONObject("actorUser");
                         if(temp2.get("accountId").equals(accountId)){
+                            user.put("displayName",allUsers.getJSONObject(i).get("displayName"));
+                            user.put("id",allUsers.getJSONObject(i).get("id"));
+                            user.put("type",allUsers.getJSONObject(i).get("type"));
+                            user.put("actorUser",allUsers.getJSONObject(i).get("actorUser"));
                             user.put("tasksInfo",getUserProjectTasks1(projectKey, (String) temp2.get("accountId"),taskLabel));
                             break ;
                         }
@@ -854,6 +856,7 @@ public class JiraUtils {
         updateIssue("10158","10001","UPDATED BY TERMINAL","UPDATED TO X DESCRIPTION","10006","633aed432eaaa5dcfa163fbd",labels);
         */
         removeActorFromProject("63ce51d716dfc2b1fbc9cd7e","SAWA");
+        System.out.println(getAssignedUsersWithTasks1("SAWA","633ae976fedc6169aed8f79b",null));
     }
 
 
