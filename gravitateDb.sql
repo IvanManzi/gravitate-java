@@ -47,7 +47,6 @@ CREATE TABLE public.additional_point (
     user_skill_id bigint,
     comment character varying NOT NULL,
     quarter integer NOT NULL,
-    category character varying(255) NOT NULL,
     points integer NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
@@ -309,7 +308,7 @@ ALTER TABLE public.blog OWNER TO postgres;
 
 CREATE TABLE public.blog_reply (
     blog_reply_id bigint NOT NULL,
-    comment character varying(255) NOT NULL,
+    comment character varying NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     user_id bigint NOT NULL,
@@ -769,8 +768,8 @@ ALTER SEQUENCE public.payment_user_id_seq OWNED BY public.payment.user_id;
 CREATE TABLE public.performance_evaluation (
     role_performance_evaluation_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    criteria character varying(255),
-    description character varying(255),
+    criteria character varying NOT NULL,
+    description character varying NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     role_id bigint NOT NULL,
     admin_id bigint NOT NULL
