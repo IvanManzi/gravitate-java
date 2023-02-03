@@ -25,5 +25,5 @@ public interface DiscussionForumManagerService {
 
     ResponseEntity deleteDiscussionForum(Long forumId);
 
-    boolean updateIsAwardedStatus(Long forumAnswerId, Long status);
+    boolean updateIsAwardedStatus(Long forumAnswerId, boolean status);
 }

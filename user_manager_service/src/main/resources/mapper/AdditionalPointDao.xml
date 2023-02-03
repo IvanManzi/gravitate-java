@@ -10,7 +10,7 @@
     </insert>
 
     <select id="getUserAdditionalPoints" resultType="Map">
-        SELECT A.additional_point_id,A.admin_id,A.user_id,A.blog_id,A.user_skill_id,A.forum_answer_id,B.title As blog,S.title AS skill,F.comment As answer
+        SELECT A.additional_point_id,A.admin_id,A.user_id,A.points,A.comment,A.quarter,A.blog_id,A.user_skill_id,A.forum_answer_id,B.title As blog,S.title AS skill,F.comment As answer
         FROM additional_point A
         LEFT JOIN
         blog B
@@ -38,7 +38,7 @@
                 </foreach>
             </if>
         </where>
-        GROUP BY A.additional_point_id,A.quarter,B.blog_id,S.user_skill_Id,F.forum_answer_id ORDER BY A.created_at DESC
+        GROUP BY A.additional_point_id,A.quarter,A.points,A.comment,B.blog_id,S.user_skill_Id,F.forum_answer_id ORDER BY A.created_at DESC
     </select>
 
     <select id="isBlogAwarded" parameterType="com.model.AdditionalPointVO" resultType="int">

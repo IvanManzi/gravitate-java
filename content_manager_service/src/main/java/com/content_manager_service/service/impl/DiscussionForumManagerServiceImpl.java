@@ -115,7 +115,7 @@ public class DiscussionForumManagerServiceImpl implements DiscussionForumManager
     }
 
     @Override
-    public boolean updateIsAwardedStatus(Long forumAnswerId, Long status) {
+    public boolean updateIsAwardedStatus(Long forumAnswerId, boolean status) {
         int result = discussionForumAnswerDao.updateIsAwardedStatus(forumAnswerId,status);
         if(result > 0){
             return true;

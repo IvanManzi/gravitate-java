@@ -91,7 +91,7 @@ public class DiscussionForumManagerController {
 
     @PutMapping(value = "/solution/{solutionId}/isAwarded/{status}")
     public boolean updateForumSolutionIsAwardedStatus(@PathVariable("solutionId") Long forumAnswerId,
-                                                             @PathVariable("status") Long status){
+                                                             @PathVariable("status") boolean status){
         return discussionForumManagerService.updateIsAwardedStatus(forumAnswerId,status);
     }
 

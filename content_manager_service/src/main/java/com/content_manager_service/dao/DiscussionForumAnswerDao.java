@@ -17,5 +17,5 @@ public interface DiscussionForumAnswerDao {
                                                     @Param("quarter") Integer quarter,
                                                     @Param("year")Integer year);
 
-    int updateIsAwardedStatus(@Param("forumAnswerId") Long forumAnswerId,@Param("status") Long status);
+    int updateIsAwardedStatus(@Param("forumAnswerId") Long forumAnswerId,@Param("status") boolean status);
 }
