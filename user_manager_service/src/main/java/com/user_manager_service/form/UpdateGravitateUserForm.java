@@ -33,6 +33,7 @@ public record UpdateGravitateUserForm(@NotNull
                                       String email,
                                       @Email @NotBlank
                                       String alternativeEmail,
+                                      @NotBlank
                                       Long roleId,
                                       @NotBlank
                                       String bankName,
@@ -42,6 +43,7 @@ public record UpdateGravitateUserForm(@NotNull
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+                                      @NotBlank
                                       String jiraId,
 
                                       String[] pageAccess,

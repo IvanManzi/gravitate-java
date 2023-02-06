@@ -31,6 +31,7 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       String email,
                                       @Email @NotBlank
                                       String alternativeEmail,
+                                      @NotBlank
                                       Long roleId,
                                       @NotBlank
                                       String bankName,
@@ -40,6 +41,7 @@ public record CreateGravitateUserForm(@NotNull String userType,
                                       String profilePicture,
                                       @NotBlank
                                       String contractPath,
+                                      @NotBlank
                                       String jiraId,
 
                                       String[] pageAccess,
