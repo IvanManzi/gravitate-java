@@ -7,6 +7,7 @@ import com.project_manager_service.dao.TaskReportDao;
 import com.project_manager_service.service.PaymentManagerService;
 import com.util.APIResponse;
 import com.util.DateUtil;
+import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class PaymentManagerServiceImpl implements PaymentManagerService {
             if(DateUtil.getCurrentDayEndTime().compareTo(DateUtil.getCurrentMonthEndTime()) == 0){
                 taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
                 //mark the current month incentives as paid
-                projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
+                projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getUserId(),paymentVO.getMonth(),paymentVO.getYear(),paymentVO.getProjectId());
                 //create payment record
                 int result3 = paymentDao.createPaymentRecord(paymentVO);
                 if(result3 > 0 ){
@@ -46,7 +47,7 @@ public class PaymentManagerServiceImpl implements PaymentManagerService {
         }
         taskReportDao.markMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
         //mark the current month incentives as paid
-        projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getMonth(),paymentVO.getYear());
+        projectIncentiveDao.markMonthlyProjectIncentiveAsPaid(paymentVO.getUserId(),paymentVO.getMonth(),paymentVO.getYear(),paymentVO.getProjectId());
         //create payment record
         int result3 = paymentDao.createPaymentRecord(paymentVO);
         if(result3 > 0 ){
@@ -55,8 +56,22 @@ public class PaymentManagerServiceImpl implements PaymentManagerService {
         return APIResponse.resultFail();
     }
 
+    @Override
+    public ResponseEntity<APIResponse> undoMarkedTasksAndIncentivesAsPaid(PaymentVO paymentVO) {
+        //check if payment exists
+        PaymentVO payment = paymentDao.checkIfPaymentExists(paymentVO);
+        if(ValidationUtil.isNullObject(payment)){
+            return APIResponse.resultFail("Payment doesn't exist. ");
+        }
+        taskReportDao.unDomarkMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
+        projectIncentiveDao.unDomarkMonthlyProjectIncentiveAsPaid(payment.getUserId(),paymentVO.getMonth(),paymentVO.getYear(),paymentVO.getProjectId());
 
-
+        int result = paymentDao.deletePaymentRecord(paymentVO);
+        if(result > 0){
+            return APIResponse.resultSuccess();
+        }
+        return APIResponse.resultFail();
+    }
 
 
 }

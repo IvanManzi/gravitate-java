@@ -20,7 +20,7 @@ public class PaymentManagerController {
     private final PaymentManagerService paymentManagerService;
 
 
-    @PutMapping(value = "/monthly/payment-status")
+    @PutMapping(value = "/monthly/pay")
     public ResponseEntity<APIResponse> markTasksAndIncentivesAsPaid(@RequestParam("userId") Long userId,
                                                                     @RequestParam("month") Integer month,
                                                                     @RequestParam("year") Integer year,
@@ -33,5 +33,20 @@ public class PaymentManagerController {
         paymentVO.setYear(year);
         paymentVO.setTotalAmount(total);
         return paymentManagerService.markMonthlyTasksAndIncentivesAsPaid(paymentVO);
+    }
+
+    @PutMapping(value = "/monthly/pay/undo")
+    public ResponseEntity<APIResponse> unDoMarkTasksAndIncentivesAsPaid(@RequestParam("userId") Long userId,
+                                                                    @RequestParam("month") Integer month,
+                                                                    @RequestParam("year") Integer year,
+                                                                    @RequestParam("total") Double total,
+                                                                    @RequestParam("projectId") Long projectId){
+        PaymentVO paymentVO = new PaymentVO();
+        paymentVO.setUserId(userId);
+        paymentVO.setProjectId(projectId);
+        paymentVO.setMonth(month);
+        paymentVO.setYear(year);
+        paymentVO.setTotalAmount(total);
+        return paymentManagerService.undoMarkedTasksAndIncentivesAsPaid(paymentVO);
     }
 }

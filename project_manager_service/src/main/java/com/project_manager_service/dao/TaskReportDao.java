@@ -25,4 +25,9 @@ public interface TaskReportDao {
     int checkIfMonthlyTaskReportsArePaid(@Param("projectId") Long projectId,
                                          @Param("userId") Long userId,
                                          @Param("month") Integer month);
+
+    int unDomarkMonthlyTasksAsPaid(@Param("userId") Long userId,
+                                   @Param("month") Integer month,
+                                   @Param("year") Integer year,
+                                   @Param("projectId") Long projectId);
 }

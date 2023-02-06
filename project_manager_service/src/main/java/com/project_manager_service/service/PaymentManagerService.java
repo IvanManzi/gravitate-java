@@ -8,4 +8,7 @@ public interface PaymentManagerService {
 
     ResponseEntity<APIResponse> markMonthlyTasksAndIncentivesAsPaid(PaymentVO paymentVO);
 
+
+    ResponseEntity<APIResponse> undoMarkedTasksAndIncentivesAsPaid(PaymentVO paymentVO);
+
 }

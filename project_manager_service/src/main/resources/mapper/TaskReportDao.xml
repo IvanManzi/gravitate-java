@@ -71,6 +71,18 @@
         AND user_id = #{userId}
     </update>
 
+    <update id="unDomarkMonthlyTasksAsPaid">
+        UPDATE task_report
+        SET
+        is_paid = false,
+        is_archived = false
+        WHERE task_report_id IN (
+        SELECT task_report_id FROM task_report  WHERE extract(month from created_at) = #{month}
+        AND extract(year from created_at) = #{year} AND project_id = #{projectId} AND user_id = #{userId}
+        )
+        AND user_id = #{userId}
+    </update>
+
 
     <select id="checkIfMonthlyTaskReportsArePaid" resultType="int">
         SELECT CASE

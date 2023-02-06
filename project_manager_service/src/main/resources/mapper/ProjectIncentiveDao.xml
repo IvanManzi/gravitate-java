@@ -33,7 +33,27 @@
         extract(month from created_at) = #{month}
         AND
         extract(year from created_at) = #{year}
+        AND
+        user_id = #{userId}
+        AND
+        project_id = #{projectId}
     </update>
+
+
+    <update id="unDomarkMonthlyProjectIncentiveAsPaid">
+        UPDATE project_incentive
+        SET
+        status = false
+        WHERE
+        extract(month from created_at) = #{month}
+        AND
+        extract(year from created_at) = #{year}
+        AND
+        user_id = #{userId}
+        AND
+        project_id = #{projectId}
+    </update>
+
 
 
 </mapper>

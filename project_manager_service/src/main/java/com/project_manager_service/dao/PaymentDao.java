@@ -7,4 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PaymentDao {
 
     int createPaymentRecord(PaymentVO paymentVO);
+
+    PaymentVO checkIfPaymentExists(PaymentVO paymentVO);
+
+    int deletePaymentRecord(PaymentVO paymentVO);
 }

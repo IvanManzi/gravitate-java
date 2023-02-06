@@ -17,5 +17,13 @@ public interface ProjectIncentiveDao {
                                              @Param("userId") Long userId,
                                              @Param("month") Integer month);
 
-    int markMonthlyProjectIncentiveAsPaid(@Param("month") Integer month,@Param("year") Integer year);
+    int markMonthlyProjectIncentiveAsPaid(@Param("userId") Long userId ,
+                                          @Param("month") Integer month,
+                                          @Param("year") Integer year,
+                                          @Param("projectId") Long projectId);
+
+    int unDomarkMonthlyProjectIncentiveAsPaid(@Param("userId") Long userId ,
+                                              @Param("month") Integer month,
+                                              @Param("year") Integer year,
+                                              @Param("projectId") Long projectId);
 }

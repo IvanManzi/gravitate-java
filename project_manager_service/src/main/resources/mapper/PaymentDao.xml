@@ -9,5 +9,13 @@
         (#{userId}, #{projectId},#{totalAmount},#{month},#{year})
     </insert>
 
+    <select id="checkIfPaymentExists" parameterType="com.model.PaymentVO">
+        SELECT * FROM payment WHERE user_id = #{userId} AND project_id = #{projectId} AND month = #{month} AND year = #{year}
+    </select>
+
+    <delete id="deletePaymentRecord" parameterType="com.model.PaymentVO">
+        DELETE FROM payment WHERE payment_id = #{paymentId}
+    </delete>
+
 
 </mapper>
