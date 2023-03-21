@@ -31,8 +31,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class GravitateWallOfWishesController {
 
     private final GravitateWishesManagerService gravitateWishesManagerService;
-    private String wishType;
-    private Date date;
 
     @PostMapping(value = "/create")
     public ResponseEntity createWish(@Valid @RequestBody CreateWishRequest createWishRequest, HttpServletRequest request) throws IOException {

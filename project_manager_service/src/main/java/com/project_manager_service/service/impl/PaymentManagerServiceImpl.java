@@ -9,15 +9,15 @@ import com.util.APIResponse;
 import com.util.DateUtil;
 import com.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentManagerServiceImpl implements PaymentManagerService {
 
     private final TaskReportDao taskReportDao;
@@ -60,13 +60,14 @@ public class PaymentManagerServiceImpl implements PaymentManagerService {
     public ResponseEntity<APIResponse> undoMarkedTasksAndIncentivesAsPaid(PaymentVO paymentVO) {
         //check if payment exists
         PaymentVO payment = paymentDao.checkIfPaymentExists(paymentVO);
+        log.info("{} ",payment.getPaymentId());
         if(ValidationUtil.isNullObject(payment)){
             return APIResponse.resultFail("Payment doesn't exist. ");
         }
         taskReportDao.unDomarkMonthlyTasksAsPaid(paymentVO.getUserId(),paymentVO.getMonth(), paymentVO.getYear(), paymentVO.getProjectId());
         projectIncentiveDao.unDomarkMonthlyProjectIncentiveAsPaid(payment.getUserId(),paymentVO.getMonth(),paymentVO.getYear(),paymentVO.getProjectId());
 
-        int result = paymentDao.deletePaymentRecord(paymentVO);
+        int result = paymentDao.deletePaymentRecord(payment);
         if(result > 0){
             return APIResponse.resultSuccess();
         }

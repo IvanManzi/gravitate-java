@@ -9,8 +9,17 @@
         (#{userId}, #{projectId},#{totalAmount},#{month},#{year})
     </insert>
 
-    <select id="checkIfPaymentExists" parameterType="com.model.PaymentVO">
-        SELECT * FROM payment WHERE user_id = #{userId} AND project_id = #{projectId} AND month = #{month} AND year = #{year}
+    <select id="checkIfPaymentExists" parameterType="com.model.PaymentVO" resultType="com.model.PaymentVO">
+        SELECT * FROM payment
+        WHERE
+        user_id = #{userId}
+        AND
+        project_id = #{projectId}
+        AND
+        month = #{month}
+        AND
+        year = #{year}
+        LIMIT 1
     </select>
 
     <delete id="deletePaymentRecord" parameterType="com.model.PaymentVO">
