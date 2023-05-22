@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk
-COPY project_manager_service/target/project_manager_service-1.0-SNAPSHOT.jar /app.jar
-COPY project_manager_service/src/main/resources/application.yml /application.yml
+COPY target/project_manager_service-1.0-SNAPSHOT.jar /app.jar
+COPY src/main/resources/application.yml /application.yml
 EXPOSE 1073
 ENV SPRING_DATASOURCE_USERNAME=postgres
 ENV SPRING_DATASOURCE_PASSWORD=?Mfptnj123@hview2022
