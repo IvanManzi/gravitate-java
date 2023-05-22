@@ -15,17 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check commit message for environment
-        id: check_commit
-        run: |
-          if [[ !"${{ github.event.head_commit.message }}" =~ (uat|production) ]]; then
-            echo "Commit message contains 'uat' or 'production'"
-            echo "::set-output name=environment::true"
-          else
-            echo "Commit message does not contain 'uat' or 'production'"
-            echo "::set-output name=environment::false"
-          fi
-
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -51,35 +40,30 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker images for content_manager
-        if: steps.check_commit.outputs.environment == 'true'
         run: |
           cd content_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager
 
       - name: Build and push Docker images for apigw
-        if: steps.check_commit.outputs.environment == 'true'
         run: |
           cd gravitate_apigw
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw
 
       - name: Build and push Docker images for user_manager
-        if: steps.check_commit.outputs.environment == 'true'
         run: |
           cd user_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager
 
       - name: Build and push Docker images for project_manager
-        if: steps.check_commit.outputs.environment == 'true'
         run: |
           cd project_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager
 
       - name: Build and push Docker image for eureka server
-        if: steps.check_commit.outputs.environment == 'true'
         run: |
           cd gravitate_service_registry
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server .
