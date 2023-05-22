@@ -1,7 +1,7 @@
 version: '3'
 services:
   content-manager:
-    image: content-manager:latest
+    image: containerprince/gravitate-apis:content-manager
     build:
       context: .
       dockerfile: content_manager_service/Dockerfile
@@ -13,7 +13,7 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
 
   user-manager:
-    image: user-manager:latest
+    image: containerprince/gravitate-apis:user-manager
     build:
       context: .
       dockerfile: user_manager_service/Dockerfile
@@ -25,7 +25,7 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
 
   api-gateway:
-    image: api-gateway:latest
+    image: containerprince/gravitate-apis:apigw
     build:
       context: .
       dockerfile: gravitate_apigw/Dockerfile
@@ -40,7 +40,7 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
 
   project-manager:
-    image: project-manager:latest
+    image: containerprince/gravitate-apis:project-manager
     build:
       context: .
       dockerfile: project_manager_service/Dockerfile
@@ -52,7 +52,7 @@ services:
       - EUREKA_SERVER_URL=http://eureka-server:8762/eureka
 
   eureka-server:
-    image: containerprince/gravitate-api-services:eureka-latest
+    image: containerprince/gravitate-api-services:eureka
     build:
       context: .
       dockerfile: gravitate_service_registry/Dockerfile
