@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk
-COPY gravitate-java/content_manager_service/target/content_manager_service-1.0-SNAPSHOT.jar /app.jar
-COPY content_manager_service/src/main/resources/application.yml /application.yml
+COPY target/content_manager_service-1.0-SNAPSHOT.jar /app.jar
+COPY src/main/resources/application.yml /application.yml
 EXPOSE 1072
 ENV SPRING_DATASOURCE_USERNAME=postgres
 ENV SPRING_DATASOURCE_PASSWORD=?Mfptnj123@hview2022
