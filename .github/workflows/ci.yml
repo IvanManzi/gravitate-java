@@ -38,11 +38,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+      
+      - name: Build Model jar
+        run: |
+          cd model
+          mvn install
+          
       - name: Build and push Docker images for content_manager
         run: |
           cd content_manager_service
-          mvn install 
           mvn clean package spring-boot:repackage
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager
