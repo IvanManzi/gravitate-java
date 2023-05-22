@@ -45,9 +45,6 @@ jobs:
           cd model
           mvn install
           
-      - name: Run docker compose file
-        run: docker compose up
-          
       - name: Build and push Docker images
         run: |
           cd ${{ matrix.module }}
