@@ -39,43 +39,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Build Model jar
+      - name: Install Dependencies
         run: |
           mvn install
           cd model
           mvn install
           
-      - name: Build and push Docker images for content_manager
+      - name: Build and push Docker images
+        if: steps.check_commit.outputs.environment == 'true'
         run: |
-          cd content_manager_service
+          cd ${{ matrix.module }}
           mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager
-
-      - name: Build and push Docker images for apigw
-        run: |
-          cd gravitate_apigw
-          mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw
-
-      - name: Build and push Docker images for user_manager
-        run: |
-          cd user_manager_service
-          mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager
-
-      - name: Build and push Docker images for project_manager
-        run: |
-          cd project_manager_service
-          mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager
-
-      - name: Build and push Docker image for eureka server
-        run: |
-          cd gravitate_service_registry
-          mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:${{ matrix.module }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:${{ matrix.module }}
+          
+          
+          
+          
+          
