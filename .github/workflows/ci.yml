@@ -14,11 +14,11 @@ jobs:
     strategy:
       matrix:
         module:
-          - content_manager
-          - apigw
-          - user_manager
-          - project_manager
-          - eureka_server
+          - content_manager_service
+          - gravitate_apigw
+          - user_manager_service
+          - project_manager_service
+          - gravitate_service_registry
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
