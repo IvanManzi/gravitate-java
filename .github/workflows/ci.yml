@@ -41,6 +41,7 @@ jobs:
       
       - name: Build Model jar
         run: |
+          mvn install
           cd model
           mvn install
           
