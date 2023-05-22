@@ -11,6 +11,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - content_manager
+          - apigw
+          - user_manager
+          - project_manager
+          - eureka_server
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
