@@ -18,7 +18,7 @@ jobs:
       - name: Check commit message for environment
         id: check_commit
         run: |
-          if [[ ${{ github.event.head_commit.message }} =~ (uat|production) ]]; then
+          if [[ ${{ github.event.head_commit.message }} =~ production ]]; then
             echo "Commit message contains 'uat' or 'production'"
             echo "::set-output name=environment::true"
           else
