@@ -1,2 +1,2 @@
 # devops_internships
-This is a repository for all internship projects &amp; POCs
+This is a repository for all interns projects &amp; POCs
