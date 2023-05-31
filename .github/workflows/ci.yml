@@ -62,11 +62,5 @@ jobs:
             echo "No modified projects found, skipping SonarCloud check..."
             exit 0
           fi
-          
-          # Split modified projects into an array
-          IFS=$'\n' read -d '' -r -a projects < modified-projects.txt
-          echo "after spliting"
-          # Define the number of parallel jobs based on the number of projects
-          num_jobs=${#projects[@]}
-          echo "number of jobs: $num_jobs"
+          echo "after"
           
