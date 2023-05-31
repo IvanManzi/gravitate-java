@@ -30,14 +30,24 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Build and test with Maven
-        run: mvn -B verify
-        
+            
       - name: Find modified projects
         run: |
           touch modified-projects.txt
           git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | grep -v -E '^(devtools|.github)/' | awk -F '/' '{print $1}' | uniq > modified-projects.txt   
+      
+      - name: Print modified projects
+        run : |
+          # Check If the file does not exists and has zero size
+          if ! [ -s modified-projects.txt ]; then
+            echo "No modified project found!"
+            exit 0
+          else
+            echo "Below are modified projects:"
+            echo "-----------------------------"
+            cat modified-projects.txt
+          fi
+      
       
       - name: Install Dependencies
         run: |
