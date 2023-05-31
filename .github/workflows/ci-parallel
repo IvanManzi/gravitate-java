@@ -44,7 +44,7 @@ jobs:
             exit 0
           else
             echo "Below are modified projects:"
-            echo "-----------------------------"
+            echo "----------------------------"
             cat modified-projects.txt
           fi
       
