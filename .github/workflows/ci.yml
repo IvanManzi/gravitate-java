@@ -34,7 +34,7 @@ jobs:
       - name: Find modified projects
         run: |
           touch modified-projects.txt
-          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | grep -v -E '^(k8s|.*)/' | awk -F '/' '{print $1}' | uniq > modified-projects.txt   
+          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | grep -v -E '^(k8s|.gitignore|model|.yml)/' | awk -F '/' '{print $1}' | uniq > modified-projects.txt   
       
       - name: Print modified projects
         run : |
