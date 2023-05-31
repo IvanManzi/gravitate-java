@@ -63,6 +63,7 @@ jobs:
             exit 0
           fi
           # Split modified projects into an array
+          cat modified-projects.txt
           IFS=$'\n' read -d '' -r -a projects < modified-projects.txt
           echo "after"
           
