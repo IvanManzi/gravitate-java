@@ -1,0 +1,81 @@
+name:  main CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+            
+      - name: Find modified projects
+        run: |
+          touch modified-projects.txt
+          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
+      
+      - name: Print modified projects
+        run : |
+          # Check If the file does not exists and has zero size
+          if ! [ -s modified-projects.txt ]; then
+            echo "No modified project found!"
+            exit 0
+          else
+            echo "Below are modified projects:"
+            echo "-----------------------------"
+            cat modified-projects.txt
+          fi
+      
+      
+      - name: Install Dependencies
+        run: |
+          mvn install
+          cd model
+          mvn install
+          
+      - name: Build and push Docker images
+        run: |
+          # Check if the file does not exist and has zero size
+          if ! [ -s modified-projects.txt ]; then
+            echo "No modified projects found, skipping SonarCloud check..."
+            exit 0
+          fi
+          while read project; do
+            # Check if $project is a directory
+            if test -d "$project"; then
+              echo "Starting quality gate check and security scan on $project"
+              (
+              cd $project
+              
+              echo "Running sonarcloud quality gate and security checks..."
+              mvn clean install spring-boot:repackage
+              cd ..
+              )&
+            else
+              echo "$dir is not a directory, skipping..."
+            fi
+
+          done < modified-projects.txt
+          
