@@ -69,23 +69,4 @@ jobs:
           # Define the number of parallel jobs based on the number of projects
           num_jobs=${#projects[@]}
           echo "number of jobs: $num_jobs"
-          # Run each project's analysis in parallel
-          for ((i = 0; i < $num_jobs; i++)); do
-            project=${projects[i]}
-
-            # Check if $project is a directory
-            if test -d "$project"; then
-              echo "Starting quality gate check and security scan on $project"
-              (
-                echo "Running SonarCloud quality gate and security checks..."
-                cd $project
-                mvn clean package spring-boot:repackage
-              ) &
-            else
-              echo "$project is not a directory, skipping..."
-            fi
-          done
-
-          # Wait for all parallel jobs to finish
-          wait
           
