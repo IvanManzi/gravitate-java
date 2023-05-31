@@ -62,8 +62,18 @@ jobs:
             echo "No modified projects found, skipping SonarCloud check..."
             exit 0
           fi
-          # Split modified projects into an array
-          cat modified-projects.txt
-          IFS=$'\n' read -d '' -r -a projects < modified-projects.txt
-          echo "after"
+          while read project; do
+            # Check if $project is a directory
+            if test -d "$project"; then
+              echo "Starting quality gate check and security scan on $project"
+              cd $project
+              
+              echo "Running sonarcloud quality gate and security checks..."
+              mvn clean install spring-boot:repackage
+              cd ..      
+            else
+              echo "$dir is not a directory, skipping..."
+            fi
+
+          done < modified-projects.txt
           
