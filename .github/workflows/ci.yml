@@ -66,13 +66,11 @@ jobs:
             # Check if $project is a directory
             if test -d "$project"; then
               echo "Starting quality gate check and security scan on $project"
-              (
               cd $project
               
               echo "Running sonarcloud quality gate and security checks..."
               mvn clean install spring-boot:repackage
               cd ..
-              )&
             else
               echo "$dir is not a directory, skipping..."
             fi
