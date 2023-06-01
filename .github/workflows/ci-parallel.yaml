@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -41,7 +44,7 @@ jobs:
             exit 0
           else
             echo "Below are modified projects:"
-            echo "-----------------------------"
+            echo "----------------------------"
             cat modified-projects.txt
           fi
       
@@ -74,4 +77,3 @@ jobs:
             fi
 
           done < modified-projects.txt
-          
