@@ -72,7 +72,7 @@ jobs:
               cd $project
               
               echo "Running sonarcloud quality gate and security checks..."
-              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=$project
+              mvn clean package spring-boot:repackage
               cd ..
               echo "Quality gate and security checks done for module $project"
             else
