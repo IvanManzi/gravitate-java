@@ -74,7 +74,7 @@ jobs:
               echo "Running sonarcloud quality gate and security checks..."
               mvn clean package spring-boot:repackage
               cd ..
-              echo "Quality gate and security checks done for module $project"
+              echo "Quality gate and security checks Completed for module $project"
             else
               echo "$dir is not a directory, skipping..."
             fi
