@@ -28,6 +28,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
             
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar      
+            
       - name: Find modified projects
         run: |
           touch modified-projects.txt
@@ -65,8 +72,9 @@ jobs:
               cd $project
               
               echo "Running sonarcloud quality gate and security checks..."
-              mvn clean install spring-boot:repackage
+              mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=$project
               cd ..
+              echo "Quality gate and security checks done for module $project"
             else
               echo "$dir is not a directory, skipping..."
             fi
