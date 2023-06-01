@@ -1,4 +1,4 @@
-name:  sequential CI
+name:  sequential CI 
 
 on:
   push:
