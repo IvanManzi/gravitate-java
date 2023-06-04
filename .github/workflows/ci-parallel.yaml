@@ -59,6 +59,7 @@ jobs:
             exit 0
           fi
           #number of parrallel jobs running 
+          file="modified-projects.txt"
           count=$(wc -l < "$file")
           echo "The number of parallel jobs is: $count"
           while read project; do
