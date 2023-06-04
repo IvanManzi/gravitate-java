@@ -58,6 +58,9 @@ jobs:
             echo "No modified projects found, skipping SonarCloud check..."
             exit 0
           fi
+          #number of parrallel jobs running 
+          count=$(wc -l < "$file")
+          echo "The number of parallel jobs is: $count"
           while read project; do
             # Check if $project is a directory
             if test -d "$project"; then
