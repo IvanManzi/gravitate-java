@@ -1,39 +1,64 @@
-name:  parallel CI
+name: Run Quality Gate Checks
 
 on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
       - dev
       - ivan-manzi-ci-pipeline
 
+
 jobs:
-  build:
+  sonarcloud:
     runs-on: ubuntu-latest
+    env:
+      JFROG_USER: ${{ secrets.JFROG_USER }}
+      JFROG_PSWD: ${{ secrets.JFROG_PSWD }}
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
+          java-version: 17
+          distribution: "temurin"
+          cache: "maven" # enable caching for Maven dependencies
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       - name: Cache Maven packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-            
-      - name: Find modified projects
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Find modified projects on PR
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           touch modified-projects.txt
           git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
-      
+
+      - name: Find modified projects on push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          touch modified-projects.txt
+          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
+
       - name: Print modified projects
         run : |
           # Check If the file does not exists and has zero size
@@ -42,33 +67,31 @@ jobs:
             exit 0
           else
             echo "Below are modified projects:"
-            echo "----------------------------"
+            echo "-----------------------------"
             cat modified-projects.txt
           fi
-      
-      
-      - name: Install Dependencies
+
+      - name: Build and analyze
         run: |
-          mvn install
-          
-      - name: Build and push Docker images
-        run: |
-          # Check if the file does not exist and has zero size
+
+          # Check If the file does not exists and has zero size
           if ! [ -s modified-projects.txt ]; then
-            echo "No modified projects found, skipping SonarCloud check..."
+            echo "No modified projects found, skipping sonarcloud check..."
             exit 0
           fi
-          #number of parrallel jobs running 
+        
+          #number of parallel jobs running 
           file="modified-projects.txt"
           count=$(wc -l < "$file")
-          echo "The number of parallel jobs is: $count"
+          echo "The number of parallel jobs needed to run is: $count"
+          
           while read project; do
             # Check if $project is a directory
             if test -d "$project"; then
-              echo "Starting quality gate check and security scan on $project"
               (
+              echo "Starting quality gate check and security scan on $project"
               cd $project
-              
+          
               echo "Running sonarcloud quality gate and security checks..."
               mvn clean install spring-boot:repackage
               cd ..
@@ -79,3 +102,4 @@ jobs:
             fi
 
           done < modified-projects.txt
+          
