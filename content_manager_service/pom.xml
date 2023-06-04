@@ -49,7 +49,7 @@
             <groupId>com.gravitate</groupId>
             <artifactId>model</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency> 
     </dependencies>
 
     <build>
