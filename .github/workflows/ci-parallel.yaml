@@ -93,7 +93,6 @@ jobs:
           
               echo "Running sonarcloud quality gate and security checks..."
               mvn clean install spring-boot:repackage
-	      echo "checks completed for module $project. "	
               cd ..
               )&
             else
