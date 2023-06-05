@@ -45,7 +45,6 @@
             <scope>runtime</scope>
         </dependency>
 
-
         <dependency>
             <groupId>com.gravitate</groupId>
             <artifactId>model</artifactId>

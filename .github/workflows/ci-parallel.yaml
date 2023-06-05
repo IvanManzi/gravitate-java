@@ -73,7 +73,6 @@ jobs:
 
       - name: Build and analyze
         run: |
-
           # Check If the file does not exists and has zero size
           if ! [ -s modified-projects.txt ]; then
             echo "No modified projects found, skipping sonarcloud check..."
