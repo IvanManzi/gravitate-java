@@ -86,9 +86,9 @@ jobs:
           echo "The number of parallel jobs needed to run is: $count"
           
           while read project; do
+            (
             # Check if $project is a directory
             if test -d "$project"; then
-              (
               echo "Starting quality gate check and security scan on $project"
               cd $project
           
@@ -96,10 +96,10 @@ jobs:
               mvn clean install spring-boot:repackage
               cd ..
               echo "Checks successfully completed on ${project}"
-              )&
             else
               echo "$dir is not a directory, skipping..."
             fi
 
           done < modified-projects.txt
+            )&
           
