@@ -102,6 +102,5 @@ jobs:
             fi
 
           done < modified-projects.txt
-          # Wait for all parallel jobs to finish
           wait
           
