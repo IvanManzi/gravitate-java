@@ -9,6 +9,6 @@ import java.util.List;
 public interface GravitateUserProjectService {
 
     boolean assignUserToProject(String jiraAccountId,Long userId, List<Long> projects) throws UnirestException;
-    ResponseEntity getAllAssignedProjectBillingInformation();
+    ResponseEntity getAllAssignedProjectBillingInformation()
     ResponseEntity getUserBillingInformation(Long userId, Date from, Date to);
 }
