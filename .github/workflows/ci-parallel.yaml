@@ -1,11 +1,6 @@
-name: Run Quality Gate Checks
+name: parallel CI
 
 on:
-  pull_request:
-    branches:
-      - main
-      - develop
-    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
@@ -47,14 +42,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Find modified projects on PR
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          touch modified-projects.txt
-          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
-
       - name: Find modified projects on push
-        if: ${{ github.event_name == 'push' }}
         run: |
           touch modified-projects.txt
           git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
@@ -96,7 +84,7 @@ jobs:
               cd $project
           
               echo "Running sonarcloud quality gate and security checks..."
-              mvn clean install spring-boot:repackage
+              mvn clean package spring-boot:repackage
               cd ..
               )&
             else
