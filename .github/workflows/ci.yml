@@ -52,11 +52,6 @@ jobs:
             echo "-----------------------------"
             cat modified-projects.txt
           fi
-      
-      
-      - name: Install Dependencies
-        run: |
-          mvn install
           
       - name: Build and push Docker images
         run: |

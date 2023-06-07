@@ -53,11 +53,6 @@ jobs:
             cat modified-projects.txt
           fi
 
-
-      - name: Install Dependencies
-        run: |
-          mvn install
-
       - name: Build and push Docker images
         run: |
           # Check if the file does not exist and has zero size
@@ -79,7 +74,7 @@ jobs:
               cd $project
           
               echo "Running sonarcloud quality gate and security checks..."
-              mvn clean package spring-boot:repackage
+              mvn clean install
               cd ..
               echo "Quality gate and security checks Completed for module $project"
               )&
