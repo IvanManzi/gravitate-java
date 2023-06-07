@@ -131,7 +131,7 @@ public class APIResponse<T> {
                 APIResponse.builder()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .status(HttpStatus.BAD_REQUEST)
-                        .error("Operation failed.")
+                        .error("Operation failed..")
                         .build()
         );
     }
