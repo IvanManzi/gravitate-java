@@ -87,6 +87,6 @@ jobs:
               echo "$dir is not a directory, skipping..."
             fi
 
-          done < modified-projects.txt
+          done < modified-projects.txt 
           wait
           
