@@ -1,4 +1,4 @@
-name:  sequential CI 
+name:  sequential CI
 
 on:
   push:
@@ -10,14 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module:
-          - content_manager_service
-          - gravitate_apigw
-          - user_manager_service
-          - project_manager_service
-          - gravitate_service_registry
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -36,19 +28,19 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-            
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar      
-            
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Find modified projects
         run: |
           touch modified-projects.txt
           git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
-      
+
       - name: Print modified projects
         run : |
           # Check If the file does not exists and has zero size
@@ -60,27 +52,14 @@ jobs:
             echo "-----------------------------"
             cat modified-projects.txt
           fi
-      
-<<<<<<< HEAD
-=======
 
->>>>>>> ada2ae2235b0310fa210ae678f71a031dab1d54a
+
       - name: Install Dependencies
         run: |
           mvn install
-          
+
       - name: Build and push Docker images
         run: |
-<<<<<<< HEAD
-          cd ${{ matrix.module }}
-          mvn clean package spring-boot:repackage
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:${{ matrix.module }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:${{ matrix.module }}
-          
-          
-          
-          
-=======
           # Check if the file does not exist and has zero size
           if ! [ -s modified-projects.txt ]; then
             echo "No modified projects found, skipping SonarCloud check..."
@@ -91,7 +70,7 @@ jobs:
             if test -d "$project"; then
               echo "Starting quality gate check and security scan on $project"
               cd $project
-              
+          
               echo "Running sonarcloud quality gate and security checks..."
               mvn clean package spring-boot:repackage
               cd ..
@@ -101,5 +80,3 @@ jobs:
             fi
 
           done < modified-projects.txt
->>>>>>> ada2ae2235b0310fa210ae678f71a031dab1d54a
-          

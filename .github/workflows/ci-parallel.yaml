@@ -1,4 +1,4 @@
-name:  parallel CI
+name: Parallel CI
 
 on:
   push:
@@ -10,6 +10,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [content_manager_service, gravitate_apigw, gravitate_service_registry,project_manager_service,user_manager_service]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -27,66 +31,26 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Find modified projects
-        run: |
-          touch modified-projects.txt
-          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
+            ${{ runner.os }}-maven-    
 
       - name: Print modified projects
-        run : |
-          # Check If the file does not exists and has zero size
-          if ! [ -s modified-projects.txt ]; then
-            echo "No modified project found!"
-            exit 0
-          else
-            echo "Below are modified projects:"
-            echo "-----------------------------"
-            cat modified-projects.txt
-          fi
-
-
-      - name: Install Dependencies
         run: |
-          mvn install
+          echo "Below are the projects:"
+          echo "-----------------------------"
+          echo "${{ matrix.project }}"
+
+      - name: Build model module
+        run: |
+          cd model
+          mvn clean install
 
       - name: Build and push Docker images
         run: |
-          # Check if the file does not exist and has zero size
-          if ! [ -s modified-projects.txt ]; then
-            echo "No modified projects found, skipping SonarCloud check..."
-            exit 0
-          fi
-          
-          #number of parallel jobs running 
-          file="modified-projects.txt"
-          count=$(wc -l < "$file")
-          echo "The number of parallel jobs needed to run is: $count"
-          
-          while read project; do
-            # Check if $project is a directory
-            if test -d "$project"; then
-              (
-              echo "Starting quality gate check and security scan on $project"
-              cd $project
-          
-              echo "Running sonarcloud quality gate and security checks..."
-              mvn clean package spring-boot:repackage
-              cd ..
-              echo "Quality gate and security checks Completed for module $project"
-              )&
-            else
-              echo "$dir is not a directory, skipping..."
-            fi
-
-          done < modified-projects.txt 
-          wait
-          
+          for project in ${{ matrix.project }}; do
+            echo "Build & Push docker images"
+            cd $project
+            #generate jar file with dependencies
+            mvn clean package spring-boot:repackage
+            docker build -t containerprince/$project .
+            cd ..
+          done
