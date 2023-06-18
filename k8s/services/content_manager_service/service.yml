@@ -4,9 +4,10 @@ metadata:
   name: content-manager-service
 spec:
   selector:
-    app: content-manager
+    name: content-manager-pod
+    app: content-manager-service
   ports:
-    - name: http
-      port: 1072
+    - port: 1072
       targetPort: 1072
-  type: ClusterIP
+      nodePort: 30009
+  type: NodePort

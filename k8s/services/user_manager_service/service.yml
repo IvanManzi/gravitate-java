@@ -4,9 +4,10 @@ metadata:
   name: user-manager-service
 spec:
   selector:
-    app: user-manager
+    name: user-manager-pod
+    app: user-manager-service
   ports:
-    - name: http
-      port: 1071
+    - port: 1071
       targetPort: 1071
-  type: ClusterIP
+      nodePort: 30007
+  type: NodePort

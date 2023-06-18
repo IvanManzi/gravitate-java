@@ -4,9 +4,10 @@ metadata:
   name: project-manager-service
 spec:
   selector:
-    app: project-manager
+    name: project-manager-pod
+    app: project-manager-service
   ports:
-    - name: http
-      port: 1073
+    - port: 1073
       targetPort: 1073
-  type: ClusterIP
+      nodePort: 30008
+  type: NodePort

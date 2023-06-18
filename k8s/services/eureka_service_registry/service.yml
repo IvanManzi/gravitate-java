@@ -2,11 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: eureka-server-service
+  labels:
+    name: eureka-service
+    app: eureka-server-app
 spec:
   selector:
-    app: eureka-server
+    name: eureka-server
+    app: eureka-server-app
   ports:
-    - name: eureka-server-port
-      port: 8762
+    - port: 8762
       targetPort: 8762
-  type: LoadBalancer
+      nodePort: 30005
+  type: NodePort

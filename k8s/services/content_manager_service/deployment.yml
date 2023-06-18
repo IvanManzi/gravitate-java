@@ -1,41 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: content-manager
+  name: content-manager-deployment
   labels:
-    app: content-manager
+    name: content-manager-pod
+    app: content-manager-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: content-manager
+      name: content-manager-pod
+      app: content-manager-service
   template:
     metadata:
       labels:
-        app: content-manager
+        name: content-manager-pod
+        app: content-manager-service
     spec:
       containers:
         - name: content-manager
-          image: content-manager:latest
+          image: containerprince/content-management
           ports:
             - containerPort: 1072
           env:
-            - name: JAVA_OPTS
-              value: -Xmx256m -Xms256m
-            - name: EUREKA_SERVER_URL
-              value: http://eureka-server:8762/eureka
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 1072
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 1072
-          resources:
-            limits:
-              cpu: "50m"
-              memory: "100Mi"
-            requests:
-              cpu: "100m"
-              memory: "100Mi"
+            - name: SPRING_MAIL_HOST
+              value: smtp.gmail.com
+            - name: SPRING_MAIL_PORT
+              value: "587"
+            - name: SPRING_MAIL_USERNAME
+              value: ivaanki00@gmail.com
+            - name: SPRING_MAIL_PASSWORD
+              value: svuegooshtkrpgsz
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "?Mfptnj123@hview2022"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/gravitatedb
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: create
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+              value: org.hibernate.dialect.PostgreSQLDialect
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-server-service:8762/eureka
