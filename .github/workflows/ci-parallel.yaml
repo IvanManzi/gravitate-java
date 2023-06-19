@@ -36,7 +36,7 @@ jobs:
       - name: Print modified projects
         run: |
           echo "Below are the projects:"
-          echo "-----------------------------"
+          echo "------------------------------"
           echo "${{ matrix.project }}"
 
       - name: Build model module
