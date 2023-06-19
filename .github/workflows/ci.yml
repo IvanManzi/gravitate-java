@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [content_manager_service, gravitate_apigw, gravitate_service_registry, project_manager_service, user_manager_service]
 
     steps:
       - name: Checkout code
@@ -38,6 +41,7 @@ jobs:
 
       - name: Install maven dependencies
         run: |
+          echo "Installing maven dependencies sequentially"
           for project in ${{ matrix.project }}; do
             echo "Install maven dependencies for module $project"
             cd $project
