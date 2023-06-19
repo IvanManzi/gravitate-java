@@ -1,0 +1,22 @@
+name: Parallel Execution
+
+on: [push]
+
+jobs:
+  parallel_execution:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        concurrency: [1, 2, 3, 4, 5]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Command in Parallel
+        run: |
+          echo "Running command in parallel with concurrency ${{ matrix.concurrency }}"
+          # Replace the following line with your actual command
+          # e.g., time my_command
+          sleep 3
