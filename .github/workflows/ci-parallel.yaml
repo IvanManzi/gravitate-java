@@ -39,18 +39,11 @@ jobs:
           echo "-----------------------------"
           echo "${{ matrix.project }}"
 
-      - name: Build model module
-        run: |
-          cd model
-          mvn clean install
-
-      - name: Build and push Docker images
+      - name: Install maven dependencies
         run: |
           for project in ${{ matrix.project }}; do
-            echo "Build & Push docker images"
+            echo "Install maven dependencies for module $project"
             cd $project
-            #generate jar file with dependencies
-            mvn clean package spring-boot:repackage
-            docker build -t containerprince/$project .
+            mvn clean install
             cd ..
           done
