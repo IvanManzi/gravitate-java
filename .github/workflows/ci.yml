@@ -1,4 +1,4 @@
-name:  sequential CI
+name: Sequential CI
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,54 +30,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Find modified projects
-        run: |
-          touch modified-projects.txt
-          git show --pretty="format:" --name-only -m ${GITHUB_REF_NAME} | awk -F '/' '{print $1}' | grep -vE '^(\.github|\.gitignore|\.idea|k8s|model|docker-compose\.yml|gravitateDb\.sql|payment_management_service\.iml|pom\.xml)$' | uniq > modified-projects.txt
-
       - name: Print modified projects
-        run : |
-          # Check If the file does not exists and has zero size
-          if ! [ -s modified-projects.txt ]; then
-            echo "No modified project found!"
-            exit 0
-          else
-            echo "Below are modified projects:"
-            echo "-----------------------------"
-            cat modified-projects.txt
-          fi
-
-
-      - name: Install Dependencies
         run: |
-          mvn install
+          echo "Below are the projects:"
+          echo "-----------------------------"
+          echo "${{ matrix.project }}"
 
-      - name: Build and push Docker images
+      - name: Install maven dependencies
         run: |
-          # Check if the file does not exist and has zero size
-          if ! [ -s modified-projects.txt ]; then
-            echo "No modified projects found, skipping SonarCloud check..."
-            exit 0
-          fi
-          while read project; do
-            # Check if $project is a directory
-            if test -d "$project"; then
-              echo "Starting quality gate check and security scan on $project"
-              cd $project
-          
-              echo "Running sonarcloud quality gate and security checks..."
-              mvn clean package spring-boot:repackage
-              cd ..
-              echo "Quality gate and security checks Completed for module $project"
-            else
-              echo "$dir is not a directory, skipping..."
-            fi
-
-          done < modified-projects.txt
+          for project in ${{ matrix.project }}; do
+            echo "Install maven dependencies for module $project"
+            cd $project
+            mvn clean install
+            cd ..
+          done
