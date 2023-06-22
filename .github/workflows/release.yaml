@@ -1,1 +1,26 @@
+name: Release Workflow
 
+on:
+  release:
+    types:
+      - published
+      - unpublished
+      - prereleased
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set released tag in system env vars
+        run: echo "RELEASE_VERSION=${{ github.ref#refs/*/ }}" >> $GITHUB_ENV
+
+      - name: Throw error when tag name is invalid
+        if: ${{ !contains(env.RELEASE_VERSION, '-dev') && !contains(env.RELEASE_VERSION, '-staging') && !contains(env.RELEASE_VERSION, '-uat') && !contains(env.RELEASE_VERSION, '-prod') }}
+        run: |
+          echo "Invalid tag name. Tag name should end with either -dev, -staging, -uat, or -prod"
+          exit 1
+
+
+      - name: Print success message
+        run: echo "Release workflow executed successfully."
