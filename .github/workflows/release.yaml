@@ -1,37 +1,50 @@
-name: Release Workflow
+name: Release and Docker Build
 
 on:
-  release:
-    types:
-      - published
-      - unpublished
-      - prereleased
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_PWD }}
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
-    
+    strategy:
+      matrix:
+        module:
+          - content_manager_service
+          - gravitate_apigw
+          - gravitate_service_registry
+          - project_manager_service
+          - user_manager_service
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v2
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: 'temurin'
-          cache: "maven"
-      
-      - name: Set released tag in system env vars
-        run: echo "RELEASE_VERSION=${{ env.GITHUB_REF#refs/*/ }}" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Throw error when tag name is invalid
-        if: ${{ !(contains(env.RELEASE_VERSION, '-dev')) && !(contains(env.RELEASE_VERSION, '-staging')) && !(contains(env.RELEASE_VERSION, '-uat')) && !(contains(env.RELEASE_VERSION, '-prod')) }}
+      - name: Docker Login
+        run: echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+
+      - name: Check if module contains Dockerfile
+        id: check-dockerfile
         run: |
-          echo "Invalid tag name. Tag name should end with either -dev, -staging, -uat, or -prod"
-          exit 1
+          if [ -f "$GITHUB_WORKSPACE/$module/Dockerfile" ]; then
+            echo "Dockerfile found in $module"
+            echo "::set-output name=dockerfile-found::true"
+          else
+            echo "Dockerfile not found in $module"
+            echo "::set-output name=dockerfile-found::false"
+          fi
 
-      - name: Print success message
-        run: echo "Release workflow executed successfully."
+      - name: Build and Push Docker Image
+        if: steps.check-dockerfile.outputs.dockerfile-found == 'true'
+        run: |
+          docker buildx create --use
+          docker buildx build --push --tag $module:${{ github.ref_slug }} $module
