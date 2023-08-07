@@ -1,40 +1,87 @@
-name: Release and Docker Build
+name:  main CI
 
 on:
   push:
     branches:
       - main
       - dev
-
-env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_PWD }}
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        module:
-          - content_manager_service
-          - gravitate_apigw
-          - gravitate_service_registry
-          - project_manager_service
-          - user_manager_service
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build and Push Docker Image
+      - name: Check commit message for environment
+        id: check_commit
         run: |
-          if [ -f "$GITHUB_WORKSPACE/$module/Dockerfile" ]; then
-            echo "Dockerfile found in $module"
-            docker buildx create --use
-            docker buildx build --push --tag $module:${{ github.ref_slug }} $module
+          if [[ ${{ github.event.head_commit.message }} =~ (uat|production) ]]; then
+            echo "Commit message contains 'uat' or 'production'"
+            echo "::set-output name=environment::true"
           else
-            echo "Dockerfile not found in $module"
+            echo "Commit message does not contain 'uat' or 'production'"
+            echo "::set-output name=environment::false"
           fi
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build and test with Maven
+        run: mvn -B verify
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker images for content_manager
+        if: steps.check_commit.outputs.environment == 'true'
+        run: |
+          cd content_manager_service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager
+
+      - name: Build and push Docker images for apigw
+        if: steps.check_commit.outputs.environment == 'true'
+        run: |
+          cd gravitate_apigw
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw
+
+      - name: Build and push Docker images for user_manager
+        if: steps.check_commit.outputs.environment == 'true'
+        run: |
+          cd user_manager_service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager
+
+      - name: Build and push Docker images for project_manager
+        if: steps.check_commit.outputs.environment == 'true'
+        run: |
+          cd project_manager_service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager
+
+      - name: Build and push Docker image for eureka server
+        if: steps.check_commit.outputs.environment == 'true'
+        run: |
+          cd gravitate_service_registry
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server .
+          docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server
