@@ -33,24 +33,44 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Check for changes in content_manager
-        id: content_manager_changes
-        run: echo ::set-output name=changed::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} content_manager_service)
+        id: content_manager_changed
+        run: |
+          cd content_manager_service
+          git fetch origin main
+          changes=$(git diff --name-only main)
+          echo "::set-output name=changes::${changes}"
 
-      - name: Check for changes in gravitate_apigw
-        id: gravitate_apigw_changes
-        run: echo ::set-output name=changed::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} gravitate_apigw)
+      - name: Check for changes in apigw
+        id: apigw_changed
+        run: |
+          cd gravitate_apigw
+          git fetch origin main
+          changes=$(git diff --name-only main)
+          echo "::set-output name=changes::${changes}"
 
       - name: Check for changes in user_manager
-        id: user_manager_changes
-        run: echo ::set-output name=changed::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} user_manager_service)
+        id: user_manager_changed
+        run: |
+          cd user_manager_service
+          git fetch origin main
+          changes=$(git diff --name-only main)
+          echo "::set-output name=changes::${changes}"
 
       - name: Check for changes in project_manager
-        id: project_manager_changes
-        run: echo ::set-output name=changed::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} project_manager_service)
+        id: project_manager_changed
+        run: |
+          cd project_manager_service
+          git fetch origin main
+          changes=$(git diff --name-only main)
+          echo "::set-output name=changes::${changes}"
 
       - name: Check for changes in gravitate_service_registry
-        id: gravitate_service_registry_changes
-        run: echo ::set-output name=changed::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} gravitate_service_registry)
+        id: gravitate_service_registry_changed
+        run: |
+          cd gravitate_service_registry
+          git fetch origin main
+          changes=$(git diff --name-only main)
+          echo "::set-output name=changes::${changes}"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -59,35 +79,35 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker images for content_manager
-        if: steps.content_manager_changes.outputs.changed == 'content_manager_service/Dockerfile'
+        if: steps.content_manager_changed.outputs.changes != ''
         run: |
           cd content_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:content_manager
 
       - name: Build and push Docker images for apigw
-        if: steps.gravitate_apigw_changes.outputs.changed == 'gravitate_apigw/Dockerfile'
+        if: steps.apigw_changed.outputs.changes != ''
         run: |
           cd gravitate_apigw
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:apigw
 
       - name: Build and push Docker images for user_manager
-        if: steps.user_manager_changes.outputs.changed == 'user_manager_service/Dockerfile'
+        if: steps.user_manager_changed.outputs.changes != ''
         run: |
           cd user_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:user_manager
 
       - name: Build and push Docker images for project_manager
-        if: steps.project_manager_changes.outputs.changed == 'project_manager_service/Dockerfile'
+        if: steps.project_manager_changed.outputs.changes != ''
         run: |
           cd project_manager_service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager .
           docker push ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:project_manager
 
       - name: Build and push Docker image for eureka server
-        if: steps.gravitate_service_registry_changes.outputs.changed == 'gravitate_service_registry/Dockerfile'
+        if: steps.gravitate_service_registry_changed.outputs.changes != ''
         run: |
           cd gravitate_service_registry
           docker build -t ${{ secrets.DOCKER_USERNAME }}/gravitate-apis:eureka_server .
