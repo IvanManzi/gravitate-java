@@ -38,6 +38,31 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: get previous release tag
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=creatordate | grep -i "dev" | tail -n 2 | head -n 1)
+          echo "Previous release tag in origin/${{ github.event.release.target_commitish }} branch : $PREVIOUS_TAG"
+          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_ENV
+
+
+      - name: compare previous release tag & current release tag
+        run: |
+          CURRENT_TAG=$(git describe --abbrev=0 --tags)
+          echo "Current release tag: $CURRENT_TAG"
+          if [[ $CURRENT_TAG == $PREVIOUS_TAG ]]; then
+            echo "No changes in tag, skipping Docker build."
+            exit 0
+          fi
+          echo "CURRENT_TAG=$CURRENT_TAG" >> $GITHUB_ENV
+
+      - name: Identify changed modules and store them in changed-modules.txt (Ignore,  model,.github, & devops)
+        run: |
+          echo prev_tag=$PREVIOUS_TAG
+          echo current_tag=$CURRENT_TAG
+          
+          git diff --name-only $PREVIOUS_TAG $CURRENT_TAG | grep -v -E '^(model|.github|.idea|devops)/' | awk -F '/' '{print $1}' | uniq > modified-modules.txt
+          echo "Modified files: $(cat modified-modules.txt)"
+
 
       - name: Build and push Docker images
         run: |
