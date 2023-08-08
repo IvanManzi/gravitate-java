@@ -63,6 +63,9 @@ jobs:
           git diff --name-only $PREVIOUS_TAG $CURRENT_TAG | grep -v -E '^(model|.github|.idea|devops)/' | awk -F '/' '{print $1}' | uniq > modified-modules.txt
           echo "Modified files: $(cat modified-modules.txt)"
 
+      - name: Set released tag in environmental variables
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
 
       - name: Build and push Docker images
         run: |
@@ -70,8 +73,8 @@ jobs:
             echo "Project is in modified-modules.txt, building and pushing Docker image."
             cd ${{ matrix.project }}
             mvn clean package spring-boot:repackage
-            docker build -t containerprince/${{ matrix.project }} .
-            docker push containerprince/${{ matrix.project }}
+            docker build -t containerprince/${{ matrix.project }}:${{ env.RELEASE_VERSION }} .
+            docker push containerprince/${{ matrix.project }}:${{ env.RELEASE_VERSION }}
             cd ..
           else
             echo "Project is not in modified-modules.txt, skipping."
