@@ -66,11 +66,13 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-            for project in ${{ matrix.project }}; do
-              echo "Build maven artifact jar, build and push docker image"
-              cd $project
-              mvn clean package spring-boot:repackage
-              docker build -t containerprince/$project .
-              docker push containerprince/$project
-              cd ..
-            done
+          if grep -q -x "${{ matrix.project }}" modified-modules.txt; then
+            echo "Project is in modified-modules.txt, building and pushing Docker image."
+            cd ${{ matrix.project }}
+            mvn clean package spring-boot:repackage
+            docker build -t containerprince/${{ matrix.project }} .
+            docker push containerprince/${{ matrix.project }}
+            cd ..
+          else
+            echo "Project is not in modified-modules.txt, skipping."
+          fi
