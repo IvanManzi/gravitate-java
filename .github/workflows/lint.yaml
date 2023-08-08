@@ -35,4 +35,5 @@ jobs:
             cd $project
             mvn spotless:check
             echo "done spotless check on $project
+            cd ..
           done
