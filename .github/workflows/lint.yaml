@@ -1,0 +1,38 @@
+name:  Lint CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [content_manager_service, gravitate_apigw, gravitate_service_registry,project_manager_service,user_manager_service]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: run maven spotless linter
+        run: |
+          for project in ${{ matrix.project }}; do
+            echo "Run mvn spotless check for $project"
+            cd $project
+            mvn spotless:check
+            echo "done spotless check on $project
+          done
