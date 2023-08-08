@@ -27,7 +27,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-          
+
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
@@ -38,10 +38,10 @@ jobs:
 
       - name: run maven spotless linter
         run: |
-          for project in ${{ matrix.project }}; do
-            echo "Run mvn spotless check for $project"
-            cd $project
-            mvn spotless:check
-            echo "done spotless check on $project
-            cd ..
-          done
+            for project in ${{ matrix.project }}; do
+              echo "Run mvn spotless check for $project"
+              cd $project
+              mvn spotless:check
+              echo "done spotless check on $project
+              cd ..
+            done
