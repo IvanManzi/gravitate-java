@@ -40,7 +40,7 @@ jobs:
 
 
       - name: Build and push Docker images
-          run: |
+        run: |
             for project in ${{ matrix.project }}; do
               echo "Build maven artifact jar, build and push docker image"
               cd $project
